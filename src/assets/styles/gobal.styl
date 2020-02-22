@@ -1,0 +1,220 @@
+// unit
+head-height = 50px
+divieder = 20px
+base-size = 14px
+
+// gobal init
+
+// code syntax highlight
+pre
+  position: relative
+  margin-bottom: 24px
+  padding: 0 !important
+  border-radius: 3px
+  border: 1px solid #C3CCD0
+  background: #FFF
+  overflow: hidden
+
+code
+  display: block
+  padding: 12px 8px
+  background-color: #fff
+  overflow-y: auto
+  font-weight: 300
+  font-family: Menlo, monospace
+  font-size: 0.8em
+
+
+code.has-numbering
+  margin-left: 21px
+
+//
+
+.pre-numbering
+  position: absolute
+  top: 0
+  left: 0
+  width: 20px
+  padding: 12px 4px
+  border-right: 1px solid #C3CCD0
+  border-radius: 3px 0 0 3px
+  background-color: #EEE
+  text-align: right
+  font-family: Menlo, monospace
+  font-size: 0.8em
+  color: #AAA
+
+
+// public class
+.clearfix
+  &:before,
+  &:after
+    content: ''
+    display: table
+  &:after
+    clear: both
+
+.m-box
+  max-width: 1200px
+  min-width: 960px
+  margin: 0 auto
+
+.main_wrapper
+  position: relative
+  max-width: 1200px
+  min-width: 960px
+  margin: 40px auto
+  .content-view
+    position: relative
+    padding-left: 40px
+    padding-top: 10px
+    margin-left: 240px
+
+.active_bg
+  background-color: c-blue-light
+
+
+// iview style reset
+.ivu-table-wrapper
+  color: #333
+  font-size: 14px !important
+  &.dark
+    .ivu-table-header
+      th
+        color: #fff !important
+        font-weight: 600
+        background-color: c-blue !important
+
+  table
+    width: 100% !important
+
+.table-click
+  .ivu-table-row
+    cursor: pointer
+
+.ivu-collapse
+  border: none !important
+  .ivu-collapse-content
+    padding: 0 !important
+
+.ivu-page-item-active
+  background-color: c-blue !important;
+  border-color: c-blue !important;
+
+.ivu-page-item:hover
+  color: c-blue !important;
+
+
+// UI Kit Style
+.button
+  min-height: 30px
+  min-width: 65px
+  padding: 2px 20px
+  line-height: 30px
+  text-align: center
+  font-size: 14px
+  color: #fff
+  background-color: #1ac1d6
+  cursor: pointer
+  &:hover
+    opacity: .8
+  a,p,span
+    color: #fff
+
+.ctx-w
+  min-width: 960px
+// customs UI style
+.head-t
+  height: 70px;
+  background: #ecf1f5;
+  .m-t
+    line-height: 70px;
+
+
+.m-wrapper
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+
+.m-content
+  padding: 60px 20px;
+
+.tips
+  font-size: 12px
+  &.red
+    color: c-red
+  &.grey
+    color: c-black2
+.bottom-24
+  margin-bottom: 24px
+.pd-left
+  padding-left 20px
+.top-20
+  margin-top: 20px
+.top-10
+  margin-top: 10px
+.left-5
+  margin-left: 5px
+.right-5
+  margin-right 5px
+.left-10
+  margin-left: 10px
+.right-10
+  margin-right 10px
+.clear:after
+  content:' ';
+  display:table;
+  clear: both;
+.fl
+  float: left
+
+.fr
+  float: right
+.tpPading-10
+  padding-top 10px
+.btPading-10
+  padding-bottom 10px
+h2.set-title
+  padding 15px 38px
+  border-bottom  1px solid #dddddd;
+  a
+   color #333
+.set-title>span
+  font-weight normal
+  font-size 14px
+  margin-left 10px
+
+.lrPading-20
+  padding 0px 20px
+.tbPading-20
+  padding 20px 0px
+.pointer
+  cursor pointer
+
+.flex-r
+  display flex
+  flex-direction row
+
+.flex-c
+  display flex
+  flex-direction column
+.page-box
+  justify-content flex-end
+  padding 24px 0
+.txt-center
+  text-align center;
+.txt-right
+  text-align right;
+.set-content
+  .form-box
+    .input-w180
+      width 180px
+    .input-w300
+      width 300px
+    .input-w400
+      width 400px
+.showNoData
+  min-height 350px
+  justify-content center
+  align-items center
