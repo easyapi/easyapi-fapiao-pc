@@ -129,13 +129,11 @@
       //设置默认地址
       updateAddress(invoiceAddressId) {
         console.log(invoiceAddressId)
-        this.$ajax({
-          method: 'PUT',
-          url: addrUrl + '/' + invoiceAddressId,
+        this.$ajax.put(addrUrl + '/' + invoiceAddressId, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
             username: this.username,
-            ifDefault: true,
+            ifDefault: true
           },
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(res => {
@@ -152,9 +150,7 @@
           title: '提示',
           content: '<p>您确定要删除该地址吗？</p>',
           onOk: () => {
-            this.$ajax({
-              method: 'delete',
-              url: addrUrl + '/' + invoiceAddressId,
+            this.$ajax.delete(addrUrl + '/' + invoiceAddressId, {
               params: {
                 accessToken: localStorage.getItem('accessToken')
               }
@@ -174,9 +170,7 @@
         this.formValidate.area = data.area.value;
       },
       getAddressList() {
-        this.$ajax({
-          method: 'GET',
-          url: addressesUrl,
+        this.$ajax.get(addressesUrl, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
             username: this.username,
@@ -205,9 +199,7 @@
       },
       //获取市
       getCity() {
-        this.$ajax({
-          method: 'GET',
-          url: 'https://api2.easyapi.com/area/' + this.formValidate.province + '/cities.json',
+        this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.province + '/cities.json', {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -219,9 +211,7 @@
       },
       //获取区域
       getArea() {
-        this.$ajax({
-          method: 'GET',
-          url: 'https://api2.easyapi.com/area/' + this.formValidate.city + '/districts.json',
+        this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.city + '/districts.json', {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -234,9 +224,7 @@
       },
       //获取地址详情
       getAddress() {
-        this.$ajax({
-          method: 'GET',
-          url: addrUrl + '/' + this.addressId,
+        this.$ajax.get(addrUrl + '/' + this.addressId, {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -276,9 +264,7 @@
               return this.$Message.warning('请将省市区填写完整');
             }
             if (this.modalType === 0) {
-              this.$ajax({
-                method: 'PUT',
-                url: addrUrl + "/" + this.addressId,
+              this.$ajax.put(addrUrl + "/" + this.addressId, {
                 params: {
                   accessToken: localStorage.getItem('accessToken'),
                   username: this.username,
@@ -301,9 +287,7 @@
                 console.log(error.response)
               });
             } else if (this.modalType === 1) {
-              this.$ajax({
-                method: 'POST',
-                url: addrUrl,
+              this.$ajax.post(addrUrl, {
                 params: {
                   accessToken: localStorage.getItem('accessToken'),
                   username: this.username,

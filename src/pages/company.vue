@@ -200,7 +200,7 @@
                   },
                   style: {
                     marginRight: '5px',
-                    display: this.ifManageCompany!=0?'inline-block':'none'
+                    display: this.ifManageCompany != 0 ? 'inline-block' : 'none'
                   },
                   on: {
                     click: () => {
@@ -241,9 +241,7 @@
         if (this.formValidate.name.length < 4) {
           return;
         }
-        this.$ajax({
-          method: 'GET',
-          url: queryServiceURl,
+        this.$ajax.get(queryServiceURl, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
             name: this.formValidate.name
@@ -276,9 +274,7 @@
       //获取抬头列表
       getCompanyList() {
         let current = this.current - 1;
-        this.$ajax({
-          method: 'GET',
-          url: companiesUrl,
+        this.$ajax.get(companiesUrl, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
             username: this.username,
@@ -299,10 +295,7 @@
         });
       },
       getCompany() {
-        let _that = this;
-        this.$ajax({
-          method: 'GET',
-          url: companyUrl + '/' + this.companyId,
+        this.$ajax.get(companyUrl + '/' + this.companyId, {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -320,9 +313,7 @@
         });
       },
       getIfManageCompany() {
-        this.$ajax({
-          method: 'GET',
-          url: 'https://fapiao-api.easyapi.com/shop/0/setting?field=ifManageCompany',
+        this.$ajax.get('https://fapiao-api.easyapi.com/shop/0/setting?field=ifManageCompany', {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -370,10 +361,8 @@
               obj.phone = this.formValidate.phone;
               obj.ifDefault = this.ifDefault;
               obj.username = this.username;
-              this.$ajax({
-                method: 'PUT',
-                url: companyUrl + '/' + this.companyId,
-                data: obj,
+              this.$ajax.put(companyUrl + '/' + this.companyId, {
+                data: obj
               }).then(res => {
                 if (res.data.code === "1") {
                   this.$Message.success('编辑成功!');
@@ -394,9 +383,7 @@
               obj.phone = this.formValidate.phone;
               obj.ifDefault = this.ifDefault;
               obj.username = this.username;
-              this.$ajax({
-                method: 'POST',
-                url: companyUrl,
+              this.$ajax.post(companyUrl, {
                 data: obj
               }).then(res => {
                 if (res.data.code === "1") {

@@ -216,9 +216,7 @@
       },
       //1.获取我的开票账户信息
       getMoney() {
-        this.$ajax({
-          method: 'GET',
-          url: invoiceMoneyUrl + this.username + '/invoice/money',
+        this.$ajax.get(invoiceMoneyUrl + this.username + '/invoice/money', {
           params: {
             accessToken: localStorage.getItem('accessToken'),
           }
@@ -232,9 +230,7 @@
       },
       //2.获取我的默认抬头信息
       getDefaultCompany() {
-        this.$ajax({
-          method: 'GET',
-          url: invoiceTitleUrl + this.username + '/default',
+        this.$ajax.get(invoiceTitleUrl + this.username + '/default', {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -251,9 +247,7 @@
       },
       //3.获取默认邮寄地址
       getAddress() {
-        this.$ajax({
-          method: 'GET',
-          url: invoiceAddressUrl + this.username + '/default',
+        this.$ajax.get(invoiceAddressUrl + this.username + '/default', {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -279,9 +273,7 @@
       },
       //获取发票申请记录查询选项
       getApplicationTtem() {
-        this.$ajax({
-          method: 'GET',
-          url: applicationRecordUrl,
+        this.$ajax.get(applicationRecordUrl, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
           }
@@ -294,9 +286,7 @@
       //4.获取开票列表
       getInvoiceList() {
         let current = this.current - 1;
-        this.$ajax({
-          method: 'GET',
-          url: invoiceRecordsUrl,
+        this.$ajax.get(invoiceRecordsUrl, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
             startAddTime: this.startTime,

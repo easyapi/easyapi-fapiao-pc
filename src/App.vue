@@ -16,13 +16,11 @@
     },
     watch: {
       '$route': function () {
-
       }
     },
 
     methods: {},
     created() {
-
     },
 
   }
@@ -31,7 +29,6 @@
 
 <style lang="stylus" scoped media="screen">
   @import './assets/styles/invoice.styl'
-  /*如果宽度小于1260则执行以下CSS代码*/
   @media screen and (max-width: 1260px) {
     .main {
       width: 960px;

@@ -17,12 +17,8 @@
           >
             <span style="color: #333333;font-size: 14px;">电子发票</span>
             <span style="font-size: 12px;color: #999999;">最快5分钟开具</span>
-            <img
-              v-if=" this.property==='电子'"
-              src="../../assets/images/default.png"
-              alt
-              style="position: absolute;bottom:0px;right: 0px;"
-            >
+            <img v-if=" this.property==='电子'" src="../../assets/images/default.png" alt
+                 style="position: absolute;bottom:0px;right: 0px;">
           </div>
           <!-- <div
             class="electronic-invoice"
@@ -61,12 +57,12 @@
               :class="{'selecting':companyId === item.companyId}"
               @click="selectCompany(item.companyId)"
             >
-            <img
-              v-if="companyId === item.companyId"
-              src="../../assets/images/default.png"
-              alt
-              style="position: absolute;bottom:0px;right: 0px;"
-            >
+              <img
+                v-if="companyId === item.companyId"
+                src="../../assets/images/default.png"
+                alt
+                style="position: absolute;bottom:0px;right: 0px;"
+              >
               <ul v-if="showInfo">
                 <li class="flex-r">
                   <span>发票抬头信息：&nbsp;&nbsp;&nbsp;</span>
@@ -193,7 +189,7 @@
     invoiceMoneyUrl,
     invoiceAddressUrl,
     queryServiceURl,
-    companyUrl,orderPriceUrl,
+    companyUrl, orderPriceUrl,
     companiesUrl,
     outOrderListUrl
   } from "../../api/api";
@@ -374,27 +370,26 @@
           });
       },
       // 获取订单价格
-      getOrderPrice(){
-        if(this.$route.query.no){
-        this.$ajax({
-              method: "GET",
-              url: orderPriceUrl+this.$route.query.no,
-              params: {
-              }
+      getOrderPrice() {
+        if (this.$route.query.no) {
+          this.$ajax({
+            method: "GET",
+            url: orderPriceUrl + this.$route.query.no,
+            params: {}
+          })
+            .then(res => {
+              this.price = res.data.content.price;
+              this.outOrderId = res.data.content.outOrderId;
             })
-              .then(res => {
-                this.price = res.data.content.price;
-                this.outOrderId = res.data.content.outOrderId;
-              })
-              .catch(error => {
-                console.log(error.response);
-              });
-      }else{
-        setTimeout(()=>{
-          this.$Message.warning("未能获取到订单号；请检查是否正确传入！");
-        },2000);
+            .catch(error => {
+              console.log(error.response);
+            });
+        } else {
+          setTimeout(() => {
+            this.$Message.warning("未能获取到订单号；请检查是否正确传入！");
+          }, 2000);
 
-      }
+        }
       },
       //提交地址
       titleSubmit(name) {
@@ -649,7 +644,7 @@
     computed: {},
     created() {
       this.username = this.$route.query.username;
-      localStorage.setItem('accessToken',this.$route.query.accessToken);
+      localStorage.setItem('accessToken', this.$route.query.accessToken);
       this.accessToken = this.$route.query.accessToken;
       this.ids = this.$route.query.id;
       this.formValidate.remark = this.$route.query.remark;

@@ -61,12 +61,12 @@
               :class="{'selecting':companyId === item.companyId}"
               @click="selectCompany(item.companyId)"
             >
-            <img
-              v-if="companyId === item.companyId"
-              src="../../assets/images/default.png"
-              alt
-              style="position: absolute;bottom:0px;right: 0px;"
-            >
+              <img
+                v-if="companyId === item.companyId"
+                src="../../assets/images/default.png"
+                alt
+                style="position: absolute;bottom:0px;right: 0px;"
+              >
               <ul v-if="showInfo">
                 <li class="flex-r">
                   <span>发票抬头信息：&nbsp;&nbsp;&nbsp;</span>
@@ -301,9 +301,7 @@
           title: "提示",
           content: "<p>您确定要删除该条记录吗？</p>",
           onOk: () => {
-            this.$ajax({
-              method: "DELETE",
-              url: companyUrl + "/" + id,
+            this.$ajax.delete(companyUrl + "/" + id, {
               params: {
                 accessToken: localStorage.getItem("accessToken")
               }
@@ -319,9 +317,7 @@
         });
       },
       getCompany(id) {
-        this.$ajax({
-          method: "GET",
-          url: companyUrl + "/" + id,
+        this.$ajax.get(companyUrl + "/" + id, {
           params: {
             accessToken: localStorage.getItem("accessToken")
           }
@@ -352,9 +348,7 @@
       },
       // 设为默认
       setDefault(id) {
-        this.$ajax({
-          method: "PUT",
-          url: companyUrl + "/" + id,
+        this.$ajax.put(companyUrl + "/" + id, {
           data: {
             accessToken: localStorage.getItem("accessToken"),
             username: this.username,
@@ -386,9 +380,7 @@
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
               obj.username = this.username;
-              this.$ajax({
-                method: "PUT",
-                url: companyUrl + "/" + this.companyId,
+              this.$ajax.put(companyUrl + "/" + this.companyId, {
                 data: obj
               })
                 .then(res => {
@@ -411,9 +403,7 @@
               obj.address = this.formInline.address;
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
-              this.$ajax({
-                method: 'POST',
-                url: companyUrl,
+              this.$ajax.post(companyUrl, {
                 data: obj
               })
                 .then(res => {
@@ -448,9 +438,7 @@
         this.makeUp = [];
       },
       getCompanyList() {
-        this.$ajax({
-          method: "GET",
-          url: companiesUrl,
+        this.$ajax.get(companiesUrl, {
           params: {
             accessToken: localStorage.getItem("accessToken"),
             username: this.username
@@ -475,9 +463,7 @@
           });
       },
       getIfManageCompany() {
-        this.$ajax({
-          method: 'GET',
-          url: 'https://fapiao-api.easyapi.com/shop/0/setting?field=ifManageCompany',
+        this.$ajax.get('https://fapiao-api.easyapi.com/shop/0/setting?field=ifManageCompany', {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -495,9 +481,7 @@
       },
       //获取默认邮寄地址
       getAddressList() {
-        this.$ajax({
-          method: "GET",
-          url: invoiceAddressUrl + this.username + "/default",
+        this.$ajax.get(invoiceAddressUrl + this.username + "/default", {
           params: {
             accessToken: localStorage.getItem("accessToken"),
             username: this.username
@@ -521,9 +505,7 @@
         if (this.formInline.name.length < 4) {
           return;
         }
-        this.$ajax({
-          method: "GET",
-          url: queryServiceURl,
+        this.$ajax.get(queryServiceURl, {
           params: {
             accessToken: localStorage.getItem("accessToken"),
             name: this.formInline.name
@@ -588,29 +570,25 @@
             } else if (this.type === '企业') {
               obj.purchaserName = '';
             }
-            this.$ajax({
-              method: "POST",
-              url: 'https://fapiao-api.easyapi.com/merge-make',
+            this.$ajax.post('https://fapiao-api.easyapi.com/merge-make', {
               params: obj,
               headers: {"Content-Type": "application/x-www-form-urlencoded"}
-            })
-              .then(res => {
-                if (res.data.code === "1") {
-                  this.$Message.success("提交成功");
-                  this.$router.push({
-                    path: "/",
-                    query: {
-                      username: this.username,
-                      taxNumber: localStorage.getItem("taxNumber"),
-                      accessToken: localStorage.getItem("accessToken")
-                    }
-                  });
-                }
-              })
-              .catch(error => {
-                console.log(error);
-                this.$Message.warning(error.response.data.message);
-              });
+            }).then(res => {
+              if (res.data.code === "1") {
+                this.$Message.success("提交成功");
+                this.$router.push({
+                  path: "/",
+                  query: {
+                    username: this.username,
+                    taxNumber: localStorage.getItem("taxNumber"),
+                    accessToken: localStorage.getItem("accessToken")
+                  }
+                });
+              }
+            }).catch(error => {
+              console.log(error);
+              this.$Message.warning(error.response.data.message);
+            });
           } else {
             this.$Message.error("请将信息填写完整!");
           }

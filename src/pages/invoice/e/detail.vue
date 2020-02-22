@@ -112,7 +112,8 @@
         </Row>
       </div>
       <h3 style="margin-bottom: 20px" v-if="invoiceDetailData.serviceType==='订单开票'">订单内容</h3>
-      <Table border :stripe='true' :columns="tableTitle" :data="outOrders" v-if="invoiceDetailData.serviceType==='订单开票'"></Table>
+      <Table border :stripe='true' :columns="tableTitle" :data="outOrders"
+             v-if="invoiceDetailData.serviceType==='订单开票'"></Table>
     </div>
   </div>
 </template>
@@ -167,9 +168,7 @@
        * 获取发票详情
        */
       getInvoiceDetail() {
-        this.$ajax({
-          method: 'GET',
-          url: invoiceRecordUrl + this.invoiceId,
+        this.$ajax.get(invoiceRecordUrl + this.invoiceId, {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -183,13 +182,11 @@
           console.log(error.response)
         });
       },
-      getOutOrderList(){
-        this.$ajax({
-          method: 'GET',
-          url: 'https://fapiao-api.easyapi.com/out-orders',
+      getOutOrderList() {
+        this.$ajax.get('https://fapiao-api.easyapi.com/out-orders', {
           params: {
             accessToken: localStorage.getItem('accessToken'),
-            invoiceId:this.invoiceId
+            invoiceId: this.invoiceId
           }
         }).then(res => {
           if (res.data.code !== 0) {
