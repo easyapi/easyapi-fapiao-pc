@@ -2,7 +2,6 @@ import axios from 'axios'
 
 //拦截器
 axios.interceptors.request.use(function (config) {
-  //获取token
   let token = localStorage.getItem('accessToken');
   if (config.params) {
     config.params.accessToken = token;

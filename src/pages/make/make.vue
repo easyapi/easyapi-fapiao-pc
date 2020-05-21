@@ -570,10 +570,7 @@
             } else if (this.type === '企业') {
               obj.purchaserName = '';
             }
-            this.$ajax.post('https://fapiao-api.easyapi.com/merge-make', {
-              params: obj,
-              headers: {"Content-Type": "application/x-www-form-urlencoded"}
-            }).then(res => {
+            this.$ajax.post('https://fapiao-api.easyapi.com/merge-make', obj, {}).then(res => {
               if (res.data.code === "1") {
                 this.$Message.success("提交成功");
                 this.$router.push({
