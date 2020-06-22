@@ -167,7 +167,7 @@
                           ifDefault: true,
                         }
                       }).then(res => {
-                        if (res.data.code === "1") {
+                        if (res.data.code === 1) {
                           this.$Message.success('操作成功!');
                           this.getCompanyList()
                         }
@@ -361,10 +361,8 @@
               obj.phone = this.formValidate.phone;
               obj.ifDefault = this.ifDefault;
               obj.username = this.username;
-              this.$ajax.put(companyUrl + '/' + this.companyId, {
-                data: obj
-              }).then(res => {
-                if (res.data.code === "1") {
+              this.$ajax.put(companyUrl + '/' + this.companyId, obj).then(res => {
+                if (res.data.code === 1) {
                   this.$Message.success('编辑成功!');
                   this.handleReset('formValidate')
                   this.getCompanyList();
@@ -386,7 +384,7 @@
               this.$ajax.post(companyUrl, {
                 data: obj
               }).then(res => {
-                if (res.data.code === "1") {
+                if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
                   this.handleReset('formValidate')
                   this.getCompanyList();

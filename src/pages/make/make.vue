@@ -356,7 +356,7 @@
           }
         })
           .then(res => {
-            if (res.data.code === "1") {
+            if (res.data.code === 1) {
               this.$Message.success("操作成功!");
               this.getCompanyList();
             }
@@ -488,7 +488,7 @@
           }
         })
           .then(res => {
-            if (res.data.code === "1") {
+            if (res.data.code === 1) {
               this.defaultAddress = res.data.content;
               this.showAddressInfo = true;
             } else if (res.data.code === 0) {
@@ -534,7 +534,7 @@
           }
         })
           .then(res => {
-            if (res.data.code === "1") {
+            if (res.data.code === 1) {
               this.formValidate.email = res.data.content.email;
               this.formValidate.mobile = res.data.content.mobile;
             }
@@ -571,7 +571,7 @@
               obj.purchaserName = '';
             }
             this.$ajax.post('https://fapiao-api.easyapi.com/merge-make', obj, {}).then(res => {
-              if (res.data.code === "1") {
+              if (res.data.code === 1) {
                 this.$Message.success("提交成功");
                 this.$router.push({
                   path: "/",

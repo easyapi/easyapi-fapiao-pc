@@ -221,7 +221,7 @@
             accessToken: localStorage.getItem('accessToken'),
           }
         }).then(res => {
-          if (res.data.code === "1") {
+          if (res.data.code === 1) {
             this.onInvoicAcount = res.data.content
           }
         }).catch(error => {
@@ -235,7 +235,7 @@
             accessToken: localStorage.getItem('accessToken')
           }
         }).then(res => {
-          if (res.data.code === "1") {
+          if (res.data.code === 1) {
             this.defaultCompany = res.data.content;
             this.showInfo = true
           } else if (res.data.code === 0) {
@@ -252,7 +252,7 @@
             accessToken: localStorage.getItem('accessToken')
           }
         }).then(res => {
-          if (res.data.code === "1") {
+          if (res.data.code === 1) {
             this.defaultAddress = res.data.content;
             this.showAddressInfo = true
           } else if (res.data.code === 0) {

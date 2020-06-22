@@ -137,7 +137,7 @@
           },
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(res => {
-          if (res.data.code === "1") {
+          if (res.data.code === 1) {
             this.getAddressList()
           }
         }).catch(error => {
@@ -278,7 +278,7 @@
                 },
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
               }).then(res => {
-                if (res.data.code === "1") {
+                if (res.data.code === 1) {
                   this.$Message.success('修改成功!');
                   this.handleReset('formValidate')
                   this.getAddressList()
@@ -301,7 +301,7 @@
                 },
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
               }).then(res => {
-                if (res.data.code === "1") {
+                if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
                   this.handleReset('formValidate')
                   this.getAddressList()

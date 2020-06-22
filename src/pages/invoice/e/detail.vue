@@ -173,7 +173,7 @@
             accessToken: localStorage.getItem('accessToken')
           }
         }).then(res => {
-          if (res.data.code === "1") {
+          if (res.data.code === 1) {
             this.invoiceDetailData = res.data.content;
             this.time = this.invoiceDetailData.addTime;
             this.tableData = this.invoiceDetailData.invoiceItems;
