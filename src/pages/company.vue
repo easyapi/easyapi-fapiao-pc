@@ -12,7 +12,7 @@
           :title="modalTitle">
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
             <FormItem label="公司名称" prop="name">
-              <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete" disabled></Input>
+              <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
               <div class="query-results" v-if="this.queryTitleList!==''">
                 <ul>
                   <li v-for="(result, index) in queryTitleList" :key="index" @click="chooseRise(index)">
@@ -22,19 +22,19 @@
               </div>
             </FormItem>
             <FormItem label="纳税人识别号" prop="taxNumber">
-              <Input v-model="formValidate.taxNumber" placeholder="请输入纳税人识别号" disabled></Input>
+              <Input v-model="formValidate.taxNumber" placeholder="请输入纳税人识别号"/>
             </FormItem>
             <FormItem label="开户行" prop="bank">
-              <Input v-model="formValidate.bank" placeholder="请输入开户行"></Input>
+              <Input v-model="formValidate.bank" placeholder="请输入开户行"/>
             </FormItem>
             <FormItem label="开户行账号" prop="bankAccount">
-              <Input v-model="formValidate.bankAccount" placeholder="请输入开户行账号"></Input>
+              <Input v-model="formValidate.bankAccount" placeholder="请输入开户行账号"/>
             </FormItem>
             <FormItem label="地址" prop="address">
-              <Input v-model="formValidate.address" placeholder="请输入地址"></Input>
+              <Input v-model="formValidate.address" placeholder="请输入地址"/>
             </FormItem>
             <FormItem label="电话" prop="phone">
-              <Input v-model="formValidate.phone" placeholder="请输入电话"></Input>
+              <Input v-model="formValidate.phone" placeholder="请输入电话"/>
             </FormItem>
             <FormItem>
               <Checkbox v-model="ifDefault">设为默认</Checkbox>
@@ -381,9 +381,7 @@
               obj.phone = this.formValidate.phone;
               obj.ifDefault = this.ifDefault;
               obj.username = this.username;
-              this.$ajax.post(companyUrl, {
-                data: obj
-              }).then(res => {
+              this.$ajax.post(companyUrl, obj, {}).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
                   this.handleReset('formValidate')
