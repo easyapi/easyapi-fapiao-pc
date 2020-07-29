@@ -7,7 +7,7 @@
         <div class="openInvoice-money">
           <p class="invoice-base-title">可开票金额</p>
           <div class="txt-center" style="font-size: 24px">
-            ¥{{onInvoicAcount===null?0:onInvoicAcount.balance}}元
+            ¥{{onInvoiceAccount===null?0:onInvoiceAccount.balance}}元
           </div>
           <Button @click="jumpPage('/out-order')">索取发票</Button>
         </div>
@@ -105,7 +105,7 @@
       return {
         username: '',
         accessToken: '',
-        onInvoicAcount: null,
+        onInvoiceAccount: null,
         showInfo: true,
         defaultCompany: '',
         showAddressInfo: true,
@@ -222,7 +222,7 @@
           }
         }).then(res => {
           if (res.data.code === 1) {
-            this.onInvoicAcount = res.data.content
+            this.onInvoiceAccount = res.data.content
           }
         }).catch(error => {
           console.log(error.response)
@@ -272,7 +272,7 @@
         this.endTime = t;
       },
       //获取发票申请记录查询选项
-      getApplicationTtem() {
+      getApplicationItem() {
         this.$ajax.get(applicationRecordUrl, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
@@ -331,7 +331,7 @@
       this.getDefaultCompany();
       this.getAddress();
       this.getInvoiceList()
-      this.getApplicationTtem()
+      this.getApplicationItem()
     },
     watch: {}
   }

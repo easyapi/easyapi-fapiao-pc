@@ -83,9 +83,9 @@
                 style="padding:10px;"
               >设为默认</a>
               <a @click="addInvoiceTitleFn(0,item.companyId)" style="padding:10px;">编辑</a>
-              <a @click="handleDel(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a>
+              <a @click="handleDel(item.companyId)" style="padding:10px;" v-if="ifManageCompany">删除</a>
             </div>
-            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany!=0"></div>
+            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany"></div>
           </div>
         </Form>
       </div>
@@ -150,7 +150,8 @@
     <Modal v-model="showModal" :title="modalTitle">
       <Form ref="formInline" :model="formInline" :rules="rules" :label-width="100">
         <FormItem label="发票抬头" prop="name">
-          <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
+          <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"
+                 :disabled="!ifManageCompany"/>
           <div class="query-results" v-if="this.makeUp!==''">
             <ul>
               <li
@@ -163,7 +164,7 @@
           </div>
         </FormItem>
         <FormItem label="纳税人识别号" prop="taxNumber">
-          <Input v-model="formInline.taxNumber" placeholder="请输入纳税人识别号"/>
+          <Input v-model="formInline.taxNumber" placeholder="请输入纳税人识别号" :disabled="!ifManageCompany"/>
         </FormItem>
         <FormItem label="开户行" prop="bank">
           <Input v-model="formInline.bank" placeholder="请输入开户行及账号"/>
@@ -209,7 +210,7 @@
         ifDefault: true,
         defaultAddress: "",
         companyId: null,
-        ifManageCompany: 1,//是否可以管理公司抬头
+        ifManageCompany: true,//是否可以管理公司抬头
         showAddressInfo: false,
         modalTitle: "添加发票抬头",
         username: "",

@@ -6,13 +6,13 @@
     </h2>
     <div class="set-content">
       <div class="txt-right tbPading-20">
-        <Button type="primary" @click="addInvoiceTitleFn(1)" class="btn" v-if="ifManageCompany!=0">添加发票抬头</Button>
+        <Button type="primary" @click="addInvoiceTitleFn(1)" class="btn" v-if="ifManageCompany">添加发票抬头</Button>
         <Modal
           v-model="showModal"
           :title="modalTitle">
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
             <FormItem label="公司名称" prop="name">
-              <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
+              <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete" :disabled="!ifManageCompany"/>
               <div class="query-results" v-if="this.queryTitleList!==''">
                 <ul>
                   <li v-for="(result, index) in queryTitleList" :key="index" @click="chooseRise(index)">
@@ -22,7 +22,7 @@
               </div>
             </FormItem>
             <FormItem label="纳税人识别号" prop="taxNumber">
-              <Input v-model="formValidate.taxNumber" placeholder="请输入纳税人识别号"/>
+              <Input v-model="formValidate.taxNumber" placeholder="请输入纳税人识别号" :disabled="!ifManageCompany"/>
             </FormItem>
             <FormItem label="开户行" prop="bank">
               <Input v-model="formValidate.bank" placeholder="请输入开户行"/>
@@ -68,7 +68,7 @@
         modalType: null,
         queryTitleList: '',
         companyId: '',//保存发票抬头ID
-        ifManageCompany: 1,//是否可以管理公司抬头
+        ifManageCompany: true,//是否可以管理公司抬头
         message: '',
         code: '',
         formValidate: {
@@ -200,7 +200,7 @@
                   },
                   style: {
                     marginRight: '5px',
-                    display: this.ifManageCompany != 0 ? 'inline-block' : 'none'
+                    display: this.ifManageCompany != false ? 'inline-block' : 'none'
                   },
                   on: {
                     click: () => {
