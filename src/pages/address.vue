@@ -11,17 +11,17 @@
         :title="modalTitle">
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="90">
           <FormItem label="收件人姓名" prop="name">
-            <Input v-model="formValidate.name" placeholder="请输入收件人姓名"></Input>
+            <Input v-model="formValidate.name" placeholder="请输入收件人姓名"/>
           </FormItem>
           <FormItem label="收件人手机" prop="phone">
-            <Input v-model="formValidate.phone" placeholder="请输入收件人手机号"></Input>
+            <Input v-model="formValidate.phone" placeholder="请输入收件人手机号"/>
           </FormItem>
           <FormItem label="所在省市区">
             <v-distpicker :province="formValidate.province" :city="formValidate.city" :area="formValidate.area"
                           @selected="onSelected"></v-distpicker>
           </FormItem>
           <FormItem label="详细地址">
-            <Input v-model="formValidate.addr" placeholder="请输入详细地址"></Input>
+            <Input v-model="formValidate.addr" placeholder="请输入详细地址"/>
           </FormItem>
           <FormItem>
             <Checkbox v-model="formValidate.interest">设为默认</Checkbox>

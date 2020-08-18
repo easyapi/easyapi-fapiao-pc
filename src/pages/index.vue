@@ -92,11 +92,15 @@
 <script>
   import {
     invoiceMoneyUrl,
-    invoiceTitleUrl,
     invoiceAddressUrl,
-    invoiceRecordsUrl,
     applicationRecordUrl
   } from '../api/api'
+  import {
+    getInvoiceList
+  } from '../api/invoice'
+  import {
+    getDefaultCompany
+  } from '../api/company'
 
   export default {
     name: '',
@@ -230,11 +234,7 @@
       },
       //2.获取我的默认抬头信息
       getDefaultCompany() {
-        this.$ajax.get(invoiceTitleUrl + this.username + '/default', {
-          params: {
-            accessToken: localStorage.getItem('accessToken')
-          }
-        }).then(res => {
+        getDefaultCompany(this.username).then(res => {
           if (res.data.code === 1) {
             this.defaultCompany = res.data.content;
             this.showInfo = true
@@ -285,20 +285,17 @@
       },
       //4.获取开票列表
       getInvoiceList() {
-        let current = this.current - 1;
-        this.$ajax.get(invoiceRecordsUrl, {
-          params: {
-            accessToken: localStorage.getItem('accessToken'),
-            startAddTime: this.startTime,
-            endAddTime: this.endTime,
-            username: this.username,
-            purchaserName: this.purchaserName,
-            statements: this.state,
-            page: current,
-            size: this.pageSize,
-            property: this.select,
-          }
-        }).then(res => {
+        let params = {
+          startAddTime: this.startTime,
+          endAddTime: this.endTime,
+          username: this.username,
+          purchaserName: this.purchaserName,
+          statements: this.state,
+          page: this.current - 1,
+          size: this.pageSize,
+          property: this.select
+        };
+        getInvoiceList(params).then(res => {
           if (res.status === 200) {
             this.tableData = res.data.content;
             this.total = Number(res.data.totalElements);

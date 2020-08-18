@@ -10,8 +10,7 @@ export const baseUrl = "https://fapiao-api.easyapi.com";
 export const getInvoiceList = (params) => axios.get(`${baseUrl}/api/invoice/records`, {
   params: {
     params,
-    accessToken: localStorage.getItem("accessToken"),
-    username: this.$store.state.username
+    accessToken: localStorage.getItem("accessToken")
   }
 });
 
@@ -22,7 +21,6 @@ export const getInvoiceList = (params) => axios.get(`${baseUrl}/api/invoice/reco
  */
 export const getInvoice = (id) => axios.get(`${baseUrl}/api/invoice/record/${id}`, {
   params: {
-    accessToken: localStorage.getItem("accessToken"),
-    username: this.$store.state.username
+    accessToken: localStorage.getItem("accessToken")
   }
 });

@@ -22,10 +22,6 @@ axios.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   return response;
 }, function (error) {
-  console.log(error.response)
-  // if (error.response.data.code===-1&&error.response.data.message==="登录失败") {
-  //   return parent.location.href='https://www.easyapi.com/user/login'
-  // }
   // 对响应错误做点什么
   return Promise.reject(error);
 });

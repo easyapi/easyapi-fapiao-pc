@@ -12,7 +12,8 @@
           :title="modalTitle">
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
             <FormItem label="公司名称" prop="name">
-              <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete" :disabled="!ifManageCompany"/>
+              <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete"
+                     :disabled="!ifManageCompany"/>
               <div class="query-results" v-if="this.queryTitleList!==''">
                 <ul>
                   <li v-for="(result, index) in queryTitleList" :key="index" @click="chooseRise(index)">
@@ -46,16 +47,25 @@
           </div>
         </Modal>
       </div>
-      <Table border :stripe='true' :columns="tableTitle" :data="tableData"></Table>
+      <Table border :stripe='true' :columns="tableColumns" :data="tableData"></Table>
       <p class="tpPading-10 btPading-10">注意：发票抬头最多可以添加5个</p>
       <div class="page-box flex-r">
-        <Page :total='total' :page-size="pageSize" :current="current" @on-change="changePage" show-elevator></Page>
+        <Page :total='page.total' :page-size="page.size" :current="page.current" @on-change="changePage"
+              show-elevator></Page>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {companiesUrl, companyUrl, queryServiceURl} from '../api/api'
+  import {queryServiceURl} from '../api/api'
+  import {
+    getCompanyList,
+    getCompany,
+    createCompany,
+    updateCompany,
+    updateDefaultCompany,
+    deleteCompany
+  } from '../api/company'
 
   export default {
     name: '',
@@ -100,9 +110,8 @@
           phone: [
             {required: true, message: '请输入注册电话', trigger: 'blur'}
           ],
-
         },
-        tableTitle: [
+        tableColumns: [
           {
             title: '公司名称',
             key: 'name',
@@ -158,15 +167,7 @@
                   },
                   on: {
                     click: () => {
-                      this.$ajax({
-                        method: 'PUT',
-                        url: companyUrl + "/" + params.row.companyId,
-                        data: {
-                          accessToken: localStorage.getItem('accessToken'),
-                          username: this.username,
-                          ifDefault: true,
-                        }
-                      }).then(res => {
+                      updateDefaultCompany(params.row.companyId).then(res => {
                         if (res.data.code === 1) {
                           this.$Message.success('操作成功!');
                           this.getCompanyList()
@@ -208,13 +209,7 @@
                         title: '提示',
                         content: '<p>您确定要删除该条记录吗？</p>',
                         onOk: () => {
-                          this.$ajax({
-                            method: 'delete',
-                            url: companyUrl + '/' + params.row.companyId,
-                            params: {
-                              accessToken: localStorage.getItem('accessToken')
-                            }
-                          }).then(res => {
+                          deleteCompany(params.row.companyId).then(res => {
                             this.$Message.info('删除成功');
                             this.getCompanyList()
                           }).catch(error => {
@@ -230,9 +225,11 @@
           }
         ],
         tableData: [],
-        current: 1,
-        pageSize: 5,
-        total: 0,
+        page: {
+          current: 1,
+          size: 5,
+          total: 0,
+        }
       }
     },
     methods: {
@@ -273,21 +270,18 @@
       },
       //获取抬头列表
       getCompanyList() {
-        let current = this.current - 1;
-        this.$ajax.get(companiesUrl, {
-          params: {
-            accessToken: localStorage.getItem('accessToken'),
-            username: this.username,
-            page: current,
-            size: this.pageSize,
-          }
-        }).then(res => {
+        let params = {
+          username: this.username,
+          page: this.page.current - 1,
+          size: this.page.size,
+        }
+        getCompanyList(params).then(res => {
           if (res.data.code === 0) {
             this.tableData = [];
-            this.total = 0;
+            this.page.total = 0;
           } else {
             this.tableData = res.data.content;
-            this.total = Number(res.data.totalElements);
+            this.page.total = Number(res.data.totalElements);
           }
         }).catch(error => {
           console.log(error)
@@ -295,11 +289,7 @@
         });
       },
       getCompany() {
-        this.$ajax.get(companyUrl + '/' + this.companyId, {
-          params: {
-            accessToken: localStorage.getItem('accessToken')
-          }
-        }).then(res => {
+        getCompany(this.companyId).then(res => {
           let data = res.data.content;
           this.formValidate.name = data.name;
           this.formValidate.taxNumber = data.taxNumber;
@@ -351,17 +341,17 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             if (this.modalType === 0) {
-              let obj = {}
-              obj.accessToken = localStorage.getItem('accessToken');
-              obj.name = this.formValidate.name;
-              obj.taxNumber = this.formValidate.taxNumber;
-              obj.bank = this.formValidate.bank;
-              obj.bankAccount = this.formValidate.bankAccount;
-              obj.address = this.formValidate.address;
-              obj.phone = this.formValidate.phone;
-              obj.ifDefault = this.ifDefault;
-              obj.username = this.username;
-              this.$ajax.put(companyUrl + '/' + this.companyId, obj).then(res => {
+              let data = {}
+              data.accessToken = localStorage.getItem('accessToken');
+              data.name = this.formValidate.name;
+              data.taxNumber = this.formValidate.taxNumber;
+              data.bank = this.formValidate.bank;
+              data.bankAccount = this.formValidate.bankAccount;
+              data.address = this.formValidate.address;
+              data.phone = this.formValidate.phone;
+              data.ifDefault = this.ifDefault;
+              data.username = this.username;
+              updateCompany(this.companyId, data).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('编辑成功!');
                   this.handleReset('formValidate')
@@ -371,17 +361,17 @@
                 console.log(error.response)
               });
             } else if (this.modalType === 1) {
-              let obj = {}
-              obj.accessToken = localStorage.getItem('accessToken');
-              obj.name = this.formValidate.name;
-              obj.taxNumber = this.formValidate.taxNumber;
-              obj.bank = this.formValidate.bank;
-              obj.bankAccount = this.formValidate.bankAccount;
-              obj.address = this.formValidate.address;
-              obj.phone = this.formValidate.phone;
-              obj.ifDefault = this.ifDefault;
-              obj.username = this.username;
-              this.$ajax.post(companyUrl, obj, {}).then(res => {
+              let data = {}
+              data.accessToken = localStorage.getItem('accessToken');
+              data.name = this.formValidate.name;
+              data.taxNumber = this.formValidate.taxNumber;
+              data.bank = this.formValidate.bank;
+              data.bankAccount = this.formValidate.bankAccount;
+              data.address = this.formValidate.address;
+              data.phone = this.formValidate.phone;
+              data.ifDefault = this.ifDefault;
+              data.username = this.username;
+              createCompany(data).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
                   this.handleReset('formValidate')
@@ -403,7 +393,7 @@
       },
       //分页
       changePage(current) {
-        this.current = current;
+        this.page.current = current;
         this.getCompanyList()
       },
     },

@@ -9,7 +9,7 @@
         <Row class-name="table-title">
           <Col span="24" class-name="">
             <p class="title">
-              您的发票开票金额¥{{invoiceDetailData.price}}元
+              您的发票开票金额¥{{invoice.price}}元
             </p>
           </Col>
         </Row>
@@ -17,42 +17,44 @@
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>申请时间</span>
-              <p>{{invoiceDetailData.addTime}}</p>
+              <p>{{invoice.addTime}}</p>
             </div>
           </Col>
 
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>发票类型</span>
-              <p>{{invoiceDetailData.category}}</p>
+              <p>{{invoice.category}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>发票状态</span>
-              <p>{{invoiceDetailData.statements}}
-                <a :href="invoiceDetailData.electronicInvoiceImg" target="_blank">{{invoiceDetailData.electronicInvoiceImg?'预览发票':'暂无预览'}}</a>
-                <a :href="invoiceDetailData.electronicInvoiceUrl" target="_blank">{{invoiceDetailData.electronicInvoiceUrl?'下载发票':'暂无下载'}}</a>
+              <p>{{invoice.statements}}
+                <a :href="invoice.electronicInvoiceImg" target="_blank">{{invoice.electronicInvoiceImg
+                  ? '预览发票' : '暂无预览'}}</a>
+                <a :href="invoice.electronicInvoiceUrl" target="_blank">{{invoice.electronicInvoiceUrl
+                  ? '下载发票' : '暂无下载'}}</a>
               </p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>开票信息</span>
-              <p>{{invoiceDetailData.failMsg}}</p>
+              <p>{{invoice.failMsg}}</p>
             </div>
           </Col>
 
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>电子邮箱</span>
-              <p>{{invoiceDetailData.email}}</p>
+              <p>{{invoice.email}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>发票备注</span>
-              <p>{{invoiceDetailData.remark}}</p>
+              <p>{{invoice.remark}}</p>
             </div>
           </Col>
         </Row>
@@ -61,25 +63,25 @@
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>名称</span>
-              <p>{{invoiceDetailData.purchaserName}}</p>
+              <p>{{invoice.purchaserName}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>纳税人识别号</span>
-              <p>{{invoiceDetailData.purchaserTaxpayerNumber}}</p>
+              <p>{{invoice.purchaserTaxpayerNumber}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>开户行及账号</span>
-              <p>{{invoiceDetailData.purchaserBank}} {{invoiceDetailData.purchaserBankAccount}}</p>
+              <p>{{invoice.purchaserBank}} {{invoice.purchaserBankAccount}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>地址及电话</span>
-              <p>{{invoiceDetailData.purchaserAddress}} {{invoiceDetailData.purchaserPhone}}</p>
+              <p>{{invoice.purchaserAddress}} {{invoice.purchaserPhone}}</p>
             </div>
           </Col>
         </Row>
@@ -88,37 +90,37 @@
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>名称</span>
-              <p>{{invoiceDetailData.sellerName}}</p>
+              <p>{{invoice.sellerName}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>纳税人识别号</span>
-              <p>{{invoiceDetailData.sellerTaxpayerNumber}}</p>
+              <p>{{invoice.sellerTaxpayerNumber}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>开户行及账号</span>
-              <p>{{invoiceDetailData.sellerBank}} {{invoiceDetailData.sellerBankAccount}}</p>
+              <p>{{invoice.sellerBank}} {{invoice.sellerBankAccount}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>地址及电话</span>
-              <p>{{invoiceDetailData.sellerAddress}} {{invoiceDetailData.sellerPhone}}</p>
+              <p>{{invoice.sellerAddress}} {{invoice.sellerPhone}}</p>
             </div>
           </Col>
         </Row>
       </div>
-      <h3 style="margin-bottom: 20px" v-if="invoiceDetailData.serviceType==='订单开票'">订单内容</h3>
+      <h3 style="margin-bottom: 20px" v-if="invoice.serviceType==='订单开票'">订单内容</h3>
       <Table border :stripe='true' :columns="tableTitle" :data="outOrders"
-             v-if="invoiceDetailData.serviceType==='订单开票'"></Table>
+             v-if="invoice.serviceType==='订单开票'"></Table>
     </div>
   </div>
 </template>
 <script>
-  import {invoiceRecordUrl} from '../../../api/api'
+  import {getInvoice} from '../../../api/invoice'
 
   export default {
     name: '',
@@ -126,7 +128,7 @@
     data() {
       return {
         invoiceId: '',
-        invoiceDetailData: '',
+        invoice: '',
         time: '',
         tableTitle: [
           {
@@ -167,16 +169,12 @@
       /**
        * 获取发票详情
        */
-      getInvoiceDetail() {
-        this.$ajax.get(invoiceRecordUrl + this.invoiceId, {
-          params: {
-            accessToken: localStorage.getItem('accessToken')
-          }
-        }).then(res => {
+      getInvoice() {
+        getInvoice(this.invoiceId).then(res => {
           if (res.data.code === 1) {
-            this.invoiceDetailData = res.data.content;
-            this.time = this.invoiceDetailData.addTime;
-            this.tableData = this.invoiceDetailData.invoiceItems;
+            this.invoice = res.data.content;
+            this.time = this.invoice.addTime;
+            this.tableData = this.invoice.invoiceItems;
           }
         }).catch(error => {
           console.log(error.response)
@@ -203,7 +201,7 @@
       this.invoiceId = this.$route.query.id
     },
     mounted() {
-      this.getInvoiceDetail();
+      this.getInvoice();
       this.getOutOrderList();
     },
     watch: {}
