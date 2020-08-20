@@ -35,7 +35,7 @@
       <div class="address">
         <div style="float:left" v-for="addressData in tableData">
           <div class="get-address" v-if="addressData.ifDefault===false"
-               @click.stop="updateAddress(addressData.invoiceAddressId)">
+               @click.stop="updateAddress(addressData.addressId)">
             <p class="userName"><span>{{addressData.name}}</span>
               <span v-if="addressData.ifDefault===false" style="color: #18c1d6;">设为默认</span>
             </p>
@@ -43,12 +43,12 @@
             <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
             <p class="address-informations">{{addressData.district + addressData.addr}}</p>
             <div class="btn">
-              <Button @click.stop="addAddressFn(0,addressData.invoiceAddressId)">修改</Button>
-              <Button @click.stop="DeleteAddress(addressData.invoiceAddressId)">删除</Button>
+              <Button @click.stop="openDialog(0,addressData.addressId)">修改</Button>
+              <Button @click.stop="deleteAddress(addressData.addressId)">删除</Button>
             </div>
           </div>
           <div class="get-address" style="border: solid 1px #1cc1d6;position: relative"
-               v-if="addressData.ifDefault===true" @click.stop="updateAddress(addressData.invoiceAddressId)">
+               v-if="addressData.ifDefault===true" @click.stop="updateAddress(addressData.addressId)">
             <p class="userName"><span>{{addressData.name}}</span>
               <span
                 style="width: 40px;height: 18px;background-color: #18c1d6;border-radius: 2px; color: #fff;margin-top:8px;line-height:18px;font-size: 12px;text-align: center">默认</span>
@@ -57,13 +57,13 @@
             <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
             <p class="address-informations">{{addressData.district + addressData.addr}}</p>
             <div class="btn">
-              <Button @click.stop="addAddressFn(0,addressData.invoiceAddressId)">修改</Button>
-              <Button @click.stop="DeleteAddress(addressData.invoiceAddressId)">删除</Button>
+              <Button @click.stop="openDialog(0,addressData.addressId)">修改</Button>
+              <Button @click.stop="deleteAddress(addressData.addressId)">删除</Button>
             </div>
             <img src="../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
           </div>
         </div>
-        <div class="add-the-address" @click="addAddressFn(1)">
+        <div class="add-the-address" @click="openDialog(1)">
           <img src="../assets/images/plus.png" alt="" style="display: block;margin:61px auto;">
         </div>
       </div>
@@ -120,16 +120,15 @@
           ],
         },
         tableData: [],
-        provincData: [],
+        provinceData: [],
         cityData: [],
         areaData: [],
       }
     },
     methods: {
       //设置默认地址
-      updateAddress(invoiceAddressId) {
-        console.log(invoiceAddressId)
-        this.$ajax.put(addrUrl + '/' + invoiceAddressId, {
+      updateAddress(addressId) {
+        this.$ajax.put(addrUrl + '/' + addressId, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
             username: this.username,
@@ -145,17 +144,17 @@
         });
       },
       //删除地址
-      DeleteAddress(invoiceAddressId) {
+      deleteAddress(addressId) {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>您确定要删除该地址吗？</p>',
           onOk: () => {
-            this.$ajax.delete(addrUrl + '/' + invoiceAddressId, {
+            this.$ajax.delete(addrUrl + '/' + addressId, {
               params: {
                 accessToken: localStorage.getItem('accessToken')
               }
             }).then(res => {
-              this.$Message.info('删除成功');
+              this.$Message.info(res.data.message);
               this.getAddressList()
             }).catch(error => {
               console.log(error.response)
@@ -192,7 +191,7 @@
             accessToken: localStorage.getItem('accessToken')
           }
         }).then(res => {
-          this.provincData = res.data.provinces
+          this.provinceData = res.data.provinces
         }).catch(error => {
           console.log(error.response)
         });
@@ -241,7 +240,7 @@
           console.log(error.response)
         });
       },
-      addAddressFn(t, id) {
+      openDialog(t, id) {
         this.modalType = t;
         if (t === 0) {
           this.addressId = id;

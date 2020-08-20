@@ -34,7 +34,8 @@
           :data="tableData"
         ></Table>
       </div>
-      <div v-if="showMoreBtn" class="show-more-btn">
+      <div v-if="
+      " class="show-more-btn">
         <Button @click="handleAddMore">加载更多</Button>
       </div>
       <!-- <div class="page-box flex-r">
@@ -250,24 +251,22 @@
             page: this.current++,
             size: this.pageSize
           }
-        })
-          .then(res => {
-            if (res.data.code == 0) {
-              return this.$Message.warning("已无更多开票订单！");
-            } else {
-              if (res.data.content) {
-                for (let v of res.data.content) {
-                  this.tableData.push(v);
-                }
-              }
-              if (this.tableData.length == this.total) {
-                this.showMoreBtn = false;
+        }).then(res => {
+          if (res.data.code == 0) {
+            return this.$Message.warning("已无更多开票订单！");
+          } else {
+            if (res.data.content) {
+              for (let v of res.data.content) {
+                this.tableData.push(v);
               }
             }
-          })
-          .catch(error => {
-            console.log(error.response);
-          });
+            if (this.tableData.length == this.total) {
+              this.showMoreBtn = false;
+            }
+          }
+        }).catch(error => {
+          console.log(error.response);
+        });
       }
     },
     //计算属性
