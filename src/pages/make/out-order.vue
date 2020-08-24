@@ -1,11 +1,9 @@
 <template>
   <div class="control-over-invoices">
-    <h2 class="set-title">
-      <span @click="()=>{this.$router.go(-1)}">
-        <Icon type="ios-arrow-back"/>返回
-      </span>
-      <img src="../../assets/images/logo.png" alt style="margin-right: 10px;"/>发票索取
-    </h2>
+    <Breadcrumb>
+      <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
+      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+    </Breadcrumb>
     <div class="set-content">
       <div class="typeButton flex-r">
         <div
@@ -287,4 +285,11 @@
 </style>
 <style scoped lang="stylus">
   @import 'make.styl';
+  .ivu-breadcrumb {
+    padding: 20px 0px 14px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-weight: bold;
+  }
 </style>

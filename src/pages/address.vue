@@ -1,9 +1,9 @@
 <template>
   <div class="addressManage">
-    <h2 class="set-title">
-      <span @click="()=>{this.$router.go(-1)}"><Icon type="ios-arrow-back"/>返回</span>
-      <img src="../assets/images/logo.png" alt="" style="margin-right: 10px;">发票地址管理
-    </h2>
+    <Breadcrumb>
+      <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
+      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+    </Breadcrumb>
     <div class="set-content">
       <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-height: 57px;">邮寄地址</span>
       <Modal
@@ -362,13 +362,10 @@
 </style>
 <style scoped>
   .addressManage {
+    padding: 20px 40px;
     height: auto;
     background-color: #ffffff;
     border: solid 1px #dddddd;
-  }
-
-  .set-content {
-    margin: 0px 38px;
   }
 
   .address {
@@ -432,6 +429,14 @@
 
   .add-the-address:hover {
     box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.05);
+  }
+
+  .ivu-breadcrumb {
+    padding: 20px 0px 14px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-weight: bold;
   }
 </style>
 

@@ -1,7 +1,8 @@
 <template>
   <div class="Invoice-details">
-    <h2 class="set-title">
-      <img src="../assets/images/logo.png" alt="" style="margin-right: 10px;">发票管理</h2>
+      <h2 class="set-title">
+        <img src="../assets/images/logo.png" alt="" style="margin-right: 10px;">发票管理
+      </h2>
     <div class="set-content">
       <div class="invoice-base-info flex-r">
         <div class="openInvoice-money">
@@ -337,6 +338,10 @@
   @import '../assets/styles/invoice.styl'
 </style>
 <style scoped>
+  ivu-breadcrumb {
+    padding: 20px 40px;
+  }
+
   .Invoice-details {
     background-color: #fff;
   }
@@ -425,4 +430,5 @@
     color: #999999;
     font-size: 12px;
   }
+
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div class="Invoice-details">
-    <h2 class="set-title">
-      <span @click="()=>{this.$router.go(-1)}"><Icon type="ios-arrow-back"/>返回</span>
-      <img src="../assets/images/logo.png" alt="" style="margin-right: 10px;">发票抬头管理
-    </h2>
+    <Breadcrumb>
+      <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
+      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+    </Breadcrumb>
     <div class="set-content">
       <div class="txt-right tbPading-20">
         <Button type="primary" @click="addInvoiceTitleFn(1)" class="btn" v-if="ifManageCompany">添加发票抬头</Button>
@@ -450,5 +450,12 @@
   .btn {
     border: solid 1px #18c1d6;
     background-color: #18c1d6;
+  }
+  .ivu-breadcrumb{
+    padding:20px 0px 14px;
+    font-size:20px;
+    border-bottom:1px solid #ddd;
+    color: #666;
+    font-weight: bold;
   }
 </style>
