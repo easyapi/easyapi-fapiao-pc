@@ -1,9 +1,9 @@
 <template>
   <div class="details">
-    <h2 class="set-title">
-      <span @click="()=>{this.$router.go(-1)}"><Icon type="ios-arrow-back"/>返回</span>
-      <img src="../../../assets/images/logo.png" alt="" style="margin-right: 10px;">发票详情
-    </h2>
+    <Breadcrumb>
+      <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
+      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+    </Breadcrumb>
     <div class="set-content">
       <div class="table-container">
         <Row class-name="table-title">
@@ -240,5 +240,12 @@
 
   .item-td p {
     padding-left: 10px;
+  }
+  .ivu-breadcrumb{
+    padding:20px 0px 14px;
+    font-size:20px;
+    border-bottom:1px solid #ddd;
+    color: #666;
+    font-weight: bold;
   }
 </style>
