@@ -1,11 +1,9 @@
 <template>
   <div class="demand">
-    <h2 class="set-title">
-      <!-- <span @click="()=>{this.$router.go(-1)}">
-        <Icon type="ios-arrow-back"/>返回
-      </span> -->
-      <img src="../../assets/images/logo.png" alt style="margin-right: 10px;">发票索取
-    </h2>
+    <Breadcrumb>
+      <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
+      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+    </Breadcrumb>
     <div class="set-content">
       <div class="invoice-nature">
         <p class="invoice">发票形式</p>
@@ -582,54 +580,63 @@
           });
       },
       handleSubmit(name) {
-        this.$refs[name].validate(valid => {
-          if (valid) {
-            let obj = this.formValidate;
-            obj.accessToken = this.accessToken;
-            if (this.property === '纸质') {
-              if (this.defaultAddress == null) {
-                return this.$Message.warning("请填写邮寄地址");
-              }
-              obj.addressId = this.defaultAddress.addressId;
-            }
-            if (this.companyId === null) {
-              return this.$Message.warning("请选择开票抬头");
-            }
-            obj.companyId = this.companyId;
-            obj.username = this.username;
-            obj.outOrderIds = this.outOrderId;
-            obj.property = this.property;
-            obj.email = this.formValidate.email;
-            obj.addrMobile = this.formValidate.mobile;
-
-            if (this.type === '个人') {
-              obj.purchaserName = this.formValidate.purchaserName;
-              obj.companyId = '';
-            } else if (this.type === '企业') {
-              obj.purchaserName = '';
-            }
-            this.$ajax({
-              method: "POST",
-              url: 'https://fapiao-api.easyapi.com/merge-make',
-              data: obj,
-            }).then(res => {
-              if (res.data.code === 1) {
-                this.$Message.success("提交成功");
-                this.$router.push({
-                  path: "/",
-                  query: {
-                    username: this.username,
-                    taxNumber: localStorage.getItem("taxNumber"),
-                    accessToken: this.accessToken
+        this.$Modal.confirm({
+          title: '是否开票',
+          content: '<p>确认抬头信息并开票吗？</p>',
+          onOk: () => {
+            this.$refs[name].validate(valid => {
+              if (valid) {
+                let obj = this.formValidate;
+                obj.accessToken = this.accessToken;
+                if (this.property === '纸质') {
+                  if (this.defaultAddress == null) {
+                    return this.$Message.warning("请填写邮寄地址");
                   }
+                  obj.addressId = this.defaultAddress.addressId;
+                }
+                if (this.companyId === null) {
+                  return this.$Message.warning("请选择开票抬头");
+                }
+                obj.companyId = this.companyId;
+                obj.username = this.username;
+                obj.outOrderIds = this.outOrderId;
+                obj.property = this.property;
+                obj.email = this.formValidate.email;
+                obj.addrMobile = this.formValidate.mobile;
+
+                if (this.type === '个人') {
+                  obj.purchaserName = this.formValidate.purchaserName;
+                  obj.companyId = '';
+                } else if (this.type === '企业') {
+                  obj.purchaserName = '';
+                }
+                this.$ajax({
+                  method: "POST",
+                  url: 'https://fapiao-api.easyapi.com/merge-make',
+                  data: obj,
+                }).then(res => {
+                  if (res.data.code === 1) {
+                    this.$Message.success("提交成功");
+                    this.$router.push({
+                      path: "/",
+                      query: {
+                        username: this.username,
+                        taxNumber: localStorage.getItem("taxNumber"),
+                        accessToken: this.accessToken
+                      }
+                    });
+                  }
+                }).catch(error => {
+                  console.log(error);
+                  this.$Message.warning(error.response.data.message);
                 });
+              } else {
+
               }
-            }).catch(error => {
-              console.log(error);
-              this.$Message.warning(error.response.data.message);
             });
-          } else {
-            this.$Message.error("请将信息填写完整!");
+          },
+          onCancel: () => {
+            this.$Message.info('Clicked cancel');
           }
         });
       },
@@ -837,5 +844,13 @@
   .selecting {
     border: 1px solid #18c1d6 !important;
     color: #18c1d6;
+  }
+
+  .ivu-breadcrumb {
+    padding: 20px 0px 14px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-weight: bold;
   }
 </style>
