@@ -72,6 +72,7 @@
 </template>
 <script>
   import {addressesUrl, addrUrl} from '../api/api';
+  import {getUpdateAddress, deleteAddress,getAddressList,postAddress} from '../api/address'
   import VDistpicker from 'v-distpicker'
 
   export default {
@@ -128,18 +129,18 @@
     methods: {
       //设置默认地址
       updateAddress(addressId) {
-        this.$ajax.put(addrUrl + '/' + addressId, {
-          params: {
-            accessToken: localStorage.getItem('accessToken'),
-            username: this.username,
-            ifDefault: true
-          },
+        let data = {
+          accessToken: localStorage.getItem('accessToken'),
+          username: this.username,
+          ifDefault: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).then(res => {
-          if (res.data.code === 1) {
-            this.getAddressList()
+        }
+        getUpdateAddress(this.addressId, data).then(res => {
+            if (res.data.code === 1) {
+              this.getAddressList()
+            }
           }
-        }).catch(error => {
+        ).catch(error => {
           console.log(error.response)
         });
       },
@@ -149,11 +150,7 @@
           title: '提示',
           content: '<p>您确定要删除该地址吗？</p>',
           onOk: () => {
-            this.$ajax.delete(addrUrl + '/' + addressId, {
-              params: {
-                accessToken: localStorage.getItem('accessToken')
-              }
-            }).then(res => {
+            deleteAddress(params.row.addressId).then(res => {
               this.$Message.info(res.data.message);
               this.getAddressList()
             }).catch(error => {
@@ -161,27 +158,26 @@
             });
           }
         });
-      },
+      }
+      ,
       //选择省市区
       onSelected(data) {
         this.formValidate.province = data.province.value;
         this.formValidate.city = data.city.value;
         this.formValidate.area = data.area.value;
-      },
+      }
+      ,
       getAddressList() {
-        this.$ajax.get(addressesUrl, {
-          params: {
-            accessToken: localStorage.getItem('accessToken'),
-            username: this.username,
-          }
-        }).then(res => {
+        let params = {}
+        getAddressList(params).then(res => {
           this.tableData = res.data.content;
         }).catch(error => {
           console.log(error)
           this.$Message.warning(error.response.data.message)
         });
 
-      },
+      }
+      ,
       //获取省份
       getProvince() {
         this.$ajax({
@@ -195,7 +191,8 @@
         }).catch(error => {
           console.log(error.response)
         });
-      },
+      }
+      ,
       //获取市
       getCity() {
         this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.province + '/cities.json', {
@@ -207,7 +204,8 @@
         }).catch(error => {
           console.log(error.response)
         });
-      },
+      }
+      ,
       //获取区域
       getArea() {
         this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.city + '/districts.json', {
@@ -220,14 +218,11 @@
         }).catch(error => {
           console.log(error.response)
         });
-      },
+      }
+      ,
       //获取地址详情
       getAddress() {
-        this.$ajax.get(addrUrl + '/' + this.addressId, {
-          params: {
-            accessToken: localStorage.getItem('accessToken')
-          }
-        }).then(res => {
+        getUpdateAddress(this.addressId,data).then(res=>{
           let data = res.data.content;
           this.formValidate.name = data.name;
           this.formValidate.phone = data.mobile;
@@ -239,7 +234,8 @@
         }).catch(error => {
           console.log(error.response)
         });
-      },
+      }
+      ,
       openDialog(t, id) {
         this.modalType = t;
         if (t === 0) {
@@ -254,7 +250,8 @@
           this.modalTitle = "添加地址";
           this.showModal = true;
         }
-      },
+      }
+      ,
       //提交地址
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
@@ -263,20 +260,19 @@
               return this.$Message.warning('请将省市区填写完整');
             }
             if (this.modalType === 0) {
-              this.$ajax.put(addrUrl + "/" + this.addressId, {
-                params: {
-                  accessToken: localStorage.getItem('accessToken'),
-                  username: this.username,
-                  name: this.formValidate.name,
-                  mobile: this.formValidate.phone,
-                  province: this.formValidate.province,
-                  city: this.formValidate.city,
-                  district: this.formValidate.area,
-                  addr: this.formValidate.addr,
-                  ifDefault: this.formValidate.interest,
-                },
+              let data={
+                accessToken: localStorage.getItem('accessToken'),
+                username: this.username,
+                name: this.formValidate.name,
+                mobile: this.formValidate.phone,
+                province: this.formValidate.province,
+                city: this.formValidate.city,
+                district: this.formValidate.area,
+                addr: this.formValidate.addr,
+                ifDefault: this.formValidate.interest,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-              }).then(res => {
+              }
+              getUpdateAddress(this.addressId,data).then(res=>{
                 if (res.data.code === 1) {
                   this.$Message.success('修改成功!');
                   this.handleReset('formValidate')
@@ -286,20 +282,18 @@
                 console.log(error.response)
               });
             } else if (this.modalType === 1) {
-              this.$ajax.post(addrUrl, {
-                params: {
-                  accessToken: localStorage.getItem('accessToken'),
-                  username: this.username,
-                  name: this.formValidate.name,
-                  mobile: this.formValidate.phone,
-                  province: this.formValidate.province,
-                  city: this.formValidate.city,
-                  district: this.formValidate.area,
-                  addr: this.formValidate.addr,
-                  ifDefault: this.formValidate.interest,
-                },
+              let params={
+                username: this.username,
+                name: this.formValidate.name,
+                mobile: this.formValidate.phone,
+                province: this.formValidate.province,
+                city: this.formValidate.city,
+                district: this.formValidate.area,
+                addr: this.formValidate.addr,
+                ifDefault: this.formValidate.interest,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-              }).then(res => {
+              }
+              postAddress(params).then(res=>{
                 if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
                   this.handleReset('formValidate')
@@ -313,7 +307,8 @@
             this.$Message.error('请将信息填写完整!');
           }
         })
-      },
+      }
+      ,
       handleReset(name) {
         this.showModal = false;
         this.formValidate.name = '';
@@ -321,16 +316,20 @@
         this.formValidate.addr = '';
         this.formValidate.interest = true;
         this.$refs[name].resetFields();
-      },
+      }
+      ,
     },
     //计算属性
-    computed: {},
+    computed: {}
+    ,
     created() {
       this.username = this.$route.query.username;
-    },
+    }
+    ,
     mounted() {
       this.getAddressList();
-    },
+    }
+    ,
     watch: {}
   }
 </script>
