@@ -59,13 +59,13 @@
       <div class="search-data-container flex-r">
         <div class="search-data flex-r">
           <div>
-            <span>起止时间</span>
+            <span class="area">起止时间</span>
             <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
-                        style="width: 180px"></DatePicker>
+                        style="width: 180px;margin-right: 5px"></DatePicker>
             <span>-</span>
-            <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px"></DatePicker>
+            <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px;margin-left: 5px"></DatePicker>
           </div>
-          <Select clearable v-model="state" style="width:120px" class="left-10" placeholder="请选择发票状态...">
+          <Select clearable v-model="state" style="width:150px" class="left-10" placeholder="请选择发票状态...">
             <Option v-for="item in stateList" :value="item" :key="item">{{ item}}</Option>
           </Select>
           <Input clearable v-model="purchaserName" placeholder="请输入发票抬头..." style="width: 180px" class="left-10"/>
@@ -279,7 +279,8 @@
             accessToken: localStorage.getItem('accessToken'),
           }
         }).then(res => {
-          this.stateList = res.data
+          this.stateList = res.data.content
+          console.log(this.stateList)
         }).catch(error => {
           console.log(error)
         });
@@ -429,5 +430,9 @@
     line-height: 20px;
     color: #999999;
     font-size: 12px;
+  }
+
+  .area{
+    margin-right: 10px;
   }
 </style>
