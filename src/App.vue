@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
   export default {
     name: 'app',
     components: {},
@@ -18,11 +17,9 @@
       '$route': function () {
       }
     },
-
     methods: {},
     created() {
     },
-
   }
 </script>
 
