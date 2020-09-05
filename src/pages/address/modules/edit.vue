@@ -60,11 +60,11 @@
               <Button @click.stop="openDialog(0,addressData.addressId)">修改</Button>
               <Button @click.stop="deleteAddress(addressData.addressId)">删除</Button>
             </div>
-            <img src="../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
+            <img src="../../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
           </div>
         </div>
         <div class="add-the-address" @click="openDialog(1)">
-          <img src="../assets/images/plus.png" alt="" style="display: block;margin:61px auto;">
+          <img src="../../../assets/images/plus.png" alt="" style="display: block;margin:61px auto;">
         </div>
       </div>
     </div>
