@@ -78,7 +78,7 @@
         <span class="Nature-of-invoice" :class="{SelectedStyle:select==='电子'}" @click="SelectedType('电子')">电子发票</span>
         <span class="Nature-of-invoice" :class="{SelectedStyle:select==='纸质'}" @click="SelectedType('纸质')">纸质发票</span>
       </div>
-      <Table border :stripe='true' :columns="tableTitle" :data="tableData"></Table>
+      <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingData" :data="tableData"></Table>
       <div class="page-box flex-r" v-if="obtainCode!==0">
         <Page :total='total' :page-size="pageSize" :current="current" @on-change="changePage" show-elevator></Page>
       </div>
@@ -122,6 +122,7 @@
         stateList: '',
         state: '',
         purchaserName: '',//发票抬头
+        loadingData: '加载中',
         tableTitle: [
           {
             title: '申请日期',
@@ -287,6 +288,7 @@
       },
       //4.获取开票列表
       getInvoiceList() {
+        this.loadingData = '加载中';
         let params = {
           startAddTime: this.startTime,
           endAddTime: this.endTime,
@@ -302,10 +304,12 @@
             this.tableData = res.data.content;
             this.total = Number(res.data.totalElements);
           } else {
+            this.loadingData = '暂无数据';
             this.tableData = [];
             this.total = 0;
           }
         }).catch(error => {
+          this.loadingData = '暂无数据'
           console.log(error)
           this.$Message.warning(error.response.data.message)
         });
