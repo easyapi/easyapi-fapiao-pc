@@ -60,10 +60,11 @@
         <div class="search-data flex-r">
           <div>
             <span class="area">起止时间</span>
-            <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
+            <DatePicker type="datetimerange" placeholder="选择日期" @on-change="timeRangeChange" style="width: 330px"></DatePicker>
+            <!-- <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
                         style="width: 180px;margin-right: 5px"></DatePicker>
             <span>-</span>
-            <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px;margin-left: 5px"></DatePicker>
+            <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px;margin-left: 5px"></DatePicker> -->
           </div>
           <Select clearable v-model="state" style="width:150px" class="left-10" placeholder="请选择发票状态...">
             <Option v-for="item in stateList" :value="item" :key="item">{{ item}}</Option>
@@ -267,12 +268,16 @@
       jumpPage(url) {
         this.$router.push({path: url, query: {username: this.username}})
       },
-      startTimeChange(t) {
-        this.startTime = t;
+      timeRangeChange(t) {
+        this.startTime = t[0];
+        this.endTime = t[1];
       },
-      endTimeChange(t) {
-        this.endTime = t;
-      },
+      // startTimeChange(t) {
+      //   this.startTime = t;
+      // },
+      // endTimeChange(t) {
+      //   this.endTime = t;
+      // },
       //获取发票申请记录查询选项
       getApplicationItem() {
         this.$ajax.get(applicationRecordUrl, {
