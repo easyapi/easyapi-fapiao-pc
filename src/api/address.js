@@ -89,5 +89,5 @@ export const deleteAddress = id => {
 export const getAddressList = (params) => axios.get(`${baseUrl}/addresses`, {
   params,
   accessToken: localStorage.getItem("accessToken"),
-  username: this.username,
+  // username: this.username,
 });
