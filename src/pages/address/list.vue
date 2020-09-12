@@ -9,7 +9,7 @@
       <Modal
         v-model="showModal"
         :title="modalTitle">
-        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="90">
+        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
           <FormItem label="收件人姓名" prop="name">
             <Input v-model="formValidate.name" placeholder="请输入收件人姓名"/>
           </FormItem>
@@ -436,6 +436,12 @@
     border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
+  }
+
+  .distpicker-address-wrapper >>> select {
+    width: 32.6% !important;
+    font-size: 14px !important;
+    padding-left: 3px !important;
   }
 </style>
 
