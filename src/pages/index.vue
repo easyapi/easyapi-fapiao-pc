@@ -24,7 +24,7 @@
               <p style="	font-size: 14px;color: #333333;">{{defaultCompany.taxNumber}}</p>
             </div>
             <a class="modify-style" @click="jumpPage('/company')">更改开票信息
-              <Icon size="15" type="md-create" style="margin-left:10px;color:#999"/>
+              <Icon size="15" type="md-create" style="margin-left:1px;"/>
             </a>
           </div>
           <div class="flex-r" v-if="!showInfo">

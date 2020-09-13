@@ -2,7 +2,7 @@
   <div class="addressManage">
     <Breadcrumb>
       <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+      <BreadcrumbItem>邮寄地址管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-height: 57px;">邮寄地址</span>
