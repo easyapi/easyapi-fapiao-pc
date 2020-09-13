@@ -45,11 +45,11 @@
         ></Page>
       </div>
       <div class="askBtn">
-        <div style="float: right">
+        <div style="float: right; line-height:45px; margin-right:10px">
           <span style="color: #999999;font-size: 12px;">
             待开票金额：
-            <span style="color: #fa4747;font-size: 24px;">¥{{price}}元</span>
           </span>
+          <span style="color: #fa4747;font-size: 24px;vertical-align: middle">¥{{price}}元 </span>
           <Button type="primary" @click="submitInvoice">去开票</Button>
         </div>
       </div>

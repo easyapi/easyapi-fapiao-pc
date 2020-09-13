@@ -30,7 +30,7 @@
           <div class="flex-r" v-if="!showInfo">
             <span>您还没有填写开票信息</span>
             <a class="flex-r modify-style" @click="jumpPage('/company')">现在填写
-              <Icon size="24" type="md-create"/>
+              <Icon size="17" type="md-create" style="margin-left:6px;"/>
             </a>
           </div>
         </div>
@@ -45,7 +45,7 @@
                 {{defaultAddress.province+defaultAddress.city+defaultAddress.district+defaultAddress.addr}}</p>
             </div>
             <a class="modify-style" @click="jumpPage('/address')">更改邮寄地址
-              <Icon size="15" type="md-create" style="margin-left:10px;color:#999"/>
+              <Icon size="15" type="md-create" style="margin-left:1px;"/>
             </a>
           </div>
           <div class="flex-r" v-if="!showAddressInfo">

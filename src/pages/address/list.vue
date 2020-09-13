@@ -49,13 +49,13 @@
           </div>
           <div class="get-address" style="border: solid 1px #2d8cf0;position: relative"
                v-if="addressData.ifDefault===true" @click.stop="updateAddress(addressData.addressId)">
-            <p class="userName"><span>{{addressData.name}}</span>
+            <p class="userName">
+              <span>{{addressData.name}}</span>
               <!-- <span
                 style="width: 40px;height: 18px;background-color: #2d8cf0;border-radius: 2px; color: #fff;margin-top:8px;line-height:18px;font-size: 14px;text-align: center">默认</span> -->
-                <span style="margin-top:-3px">
-                  <Button size="small" type="primary">默认</Button>
-                </span>
-                
+              <span style="margin-top:-3px">
+                <Button size="small" type="primary">默认</Button>
+              </span>
             </p>
             <p class="address-informations" style="margin-top:10px;">{{addressData.mobile}}</p>
             <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
