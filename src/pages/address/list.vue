@@ -37,7 +37,7 @@
           <div class="get-address" v-if="addressData.ifDefault===false"
                @click.stop="updateAddress(addressData.addressId)">
             <p class="userName"><span>{{addressData.name}}</span>
-              <span v-if="addressData.ifDefault===false" style="color: #18c1d6;">设为默认</span>
+              <span v-if="addressData.ifDefault===false" style="color: #2d8cf0;">设为默认</span>
             </p>
             <p class="address-informations" style="margin-top:10px;">{{addressData.mobile}}</p>
             <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
@@ -47,11 +47,15 @@
               <Button @click.stop="deleteAddress(addressData.addressId)">删除</Button>
             </div>
           </div>
-          <div class="get-address" style="border: solid 1px #1cc1d6;position: relative"
+          <div class="get-address" style="border: solid 1px #2d8cf0;position: relative"
                v-if="addressData.ifDefault===true" @click.stop="updateAddress(addressData.addressId)">
             <p class="userName"><span>{{addressData.name}}</span>
-              <span
-                style="width: 40px;height: 18px;background-color: #18c1d6;border-radius: 2px; color: #fff;margin-top:8px;line-height:18px;font-size: 12px;text-align: center">默认</span>
+              <!-- <span
+                style="width: 40px;height: 18px;background-color: #2d8cf0;border-radius: 2px; color: #fff;margin-top:8px;line-height:18px;font-size: 14px;text-align: center">默认</span> -->
+                <span style="margin-top:-3px">
+                  <Button size="small" type="primary">默认</Button>
+                </span>
+                
             </p>
             <p class="address-informations" style="margin-top:10px;">{{addressData.mobile}}</p>
             <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
@@ -347,9 +351,9 @@
     padding-left: 10px;
 
     span {
-      color: #18c1d6;
+      color: #2d8cf0;
       font-size: 18px;
-      border-right: 2px solid #18c1d6;
+      border-right: 2px solid #2d8cf0;
       padding: 10px 10px 10px 0;
       cursor: pointer;
     }
@@ -385,7 +389,7 @@
   }
 
   .get-address:hover {
-    border: 1px solid #18c1d6;
+    border: 1px solid #2d8cf0;
   }
 
   .get-address .userName {
@@ -410,7 +414,7 @@
 
   .btn button {
     font-size: 12px;
-    color: #18c1d6;
+    color: #2d8cf0;
   }
 
   .btn button:nth-child(2) {

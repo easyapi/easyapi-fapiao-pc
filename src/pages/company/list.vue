@@ -6,7 +6,7 @@
     </Breadcrumb>
     <div class="set-content">
       <div class="txt-right tbPading-20">
-        <Button type="primary" @click="addInvoiceTitleFn(1)" class="btn" v-if="ifManageCompany">添加发票抬头</Button>
+        <Button type="primary" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany">添加发票抬头</Button>
         <Modal
           v-model="showModal"
           :title="modalTitle">
@@ -42,7 +42,7 @@
             </FormItem>
           </Form>
           <div slot="footer">
-            <Button type="primary" @click="handleSubmit('formValidate')" class="btn">确定</Button>
+            <Button type="primary" @click="handleSubmit('formValidate')">确定</Button>
             <Button @click="handleReset('formValidate')" style="margin-left: 8px">取消</Button>
           </div>
         </Modal>

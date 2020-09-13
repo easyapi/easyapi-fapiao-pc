@@ -50,7 +50,7 @@
             待开票金额：
             <span style="color: #fa4747;font-size: 24px;">¥{{price}}元</span>
           </span>
-          <Button class="btn" @click="submitInvoice">去开票</Button>
+          <Button type="primary" @click="submitInvoice">去开票</Button>
         </div>
       </div>
     </div>

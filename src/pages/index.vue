@@ -10,7 +10,7 @@
           <div class="txt-center" style="font-size: 24px">
             ¥{{onInvoiceAccount===null?0:onInvoiceAccount.balance}}元
           </div>
-          <Button @click="jumpPage('make/out-order')">索取发票</Button>
+          <Button type="primary" @click="jumpPage('make/out-order')">索取发票</Button>
         </div>
         <div class="openInvoice-info ">
           <p class="invoice-base-title">开票信息</p>
@@ -72,7 +72,7 @@
           <Input clearable v-model="purchaserName" placeholder="请输入发票抬头..." style="width: 180px" class="left-10"/>
         </div>
         <div>
-          <Button @click="getInvoiceList" class="btn">查询</Button>
+          <Button @click="getInvoiceList" type="primary">查询</Button>
         </div>
       </div>
       <div class="option">
@@ -367,19 +367,19 @@
     font-size: 14px;
   }
 
-  .openInvoice-money button {
+  /* .openInvoice-money button {
     background-color: #18c1d6;
     border-radius: 4px;
     color: #fff;
     font-size: 14px;
-  }
+  } */
 
   .invoice-base-info {
     background-color: #f5f6fa;
   }
 
   .modify-style {
-    color: #18c1d6 !important;
+    color: #2d8cf0 !important;
     font-size: 14px;
   }
 
@@ -422,7 +422,7 @@
   }
 
   .SelectedStyle {
-    color: #18c1d6 !important;
+    color: #2d8cf0!important;
     background-color: #ffffff !important;
     border-bottom: none !important;
   }
