@@ -5,9 +5,8 @@
       <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
-      <div class="txt-right tbPading-20">
-        <Button type="primary" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany">添加发票抬头</Button>
-        <Modal
+      <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-height: 57px;">发票抬头</span>
+      <Modal
           v-model="showModal"
           :title="modalTitle">
           <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
@@ -45,9 +44,54 @@
             <Button type="primary" @click="handleSubmit('formValidate')">确定</Button>
             <Button @click="handleReset('formValidate')" style="margin-left: 8px">取消</Button>
           </div>
-        </Modal>
+      </Modal>
+
+
+      <div class="address">
+        <div style="float:left" v-for="companyData in tableData">
+          <div class="get-address" v-if="companyData.ifDefault===false"
+               @click.stop="updateAddress(companyData.addressId)">
+            <p class="userName"><span>{{companyData.name}}</span>
+              <span v-if="companyData.ifDefault===false" style="color: #2d8cf0;">设为默认</span>
+            </p>
+            <p class="address-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
+            <p class="address-informations">{{companyData.bank }}</p>
+            <p class="address-informations">{{companyData.bankAccount}}</p>
+            <p class="address-informations">{{companyData.address}}</p>
+            <p class="address-informations">{{companyData.phone}}</p>
+            <div class="btn">
+              <Button @click.stop="openDialog(0,companyData.companyId)">修改</Button>
+              <Button @click.stop="deleteAddress(companyData)">删除</Button>
+            </div>
+          </div>
+          <div class="get-address" style="border: solid 1px #2d8cf0;position: relative"
+               v-if="companyData.ifDefault===true" @click.stop="updateAddress(companyData.addressId)">
+            <p class="userName">
+              <span>{{companyData.name}}</span>
+              <!-- <span
+                style="width: 40px;height: 18px;background-color: #2d8cf0;border-radius: 2px; color: #fff;margin-top:8px;line-height:18px;font-size: 14px;text-align: center">默认</span> -->
+              <span style="margin-top:-3px">
+                <Button size="small" type="primary">默认</Button>
+              </span>
+            </p>
+            <p class="address-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
+            <p class="address-informations">{{companyData.bank }}</p>
+            <p class="address-informations">{{companyData.bankAccount}}</p>
+            <p class="address-informations">{{companyData.address}}</p>
+            <p class="address-informations">{{companyData.phone}}</p>
+            <div class="btn">
+              <Button @click.stop="openDialog(0,companyData.addressId)">修改</Button>
+              <Button @click.stop="deleteAddress(companyData.addressId)">删除</Button>
+            </div>
+            <img src="../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
+          </div>
+        </div>
+        <div class="add-the-address" @click="openDialog(1)">
+          <img src="../../assets/images/plus.png" alt="" style="display: block;margin:70px auto;">
+        </div>
       </div>
-      <Table border :stripe='true' :columns="tableColumns" :data="tableData"></Table>
+
+
       <p class="tpPading-10 btPading-10">注意：发票抬头最多可以添加5个</p>
       <div class="page-box flex-r">
         <Page :total='page.total' :page-size="page.size" :current="page.current" @on-change="changePage"
@@ -111,119 +155,6 @@
             {required: true, message: '请输入注册电话', trigger: 'blur'}
           ],
         },
-        tableColumns: [
-          {
-            title: '公司名称',
-            key: 'name',
-            align: 'center',
-            width: 200
-          },
-          {
-            title: '纳税人识别号',
-            key: 'taxNumber',
-            align: 'center'
-          },
-          {
-            title: '开户行',
-            key: 'bank',
-            align: 'center'
-          },
-          {
-            title: '开户行账号',
-            key: 'bankAccount',
-            align: 'center'
-          },
-
-          {
-            title: '地址',
-            key: 'address',
-            align: 'center'
-          },
-          {
-            title: '电话',
-            key: 'phone',
-            align: 'center'
-          },
-          {
-            title: '操作',
-            align: 'center',
-            width: 200,
-            render: (h, params) => {
-              let showDisplay = "none";
-              if (params.row.ifDefault) {
-                showDisplay = 'none'
-              } else {
-                showDisplay = "inline-block";
-              }
-              return h('div', [
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px',
-                    display: showDisplay
-                  },
-                  on: {
-                    click: () => {
-                      updateDefaultCompany(params.row.companyId).then(res => {
-                        if (res.data.code === 1) {
-                          this.$Message.success('操作成功!');
-                          this.getCompanyList()
-                        }
-                      }).catch(error => {
-                        console.log(error.response)
-                      });
-                    }
-                  }
-                }, '设为默认'),
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px',
-                    background: '#18c1d6',
-                    border: 'solid 1px #18c1d6',
-                  },
-                  on: {
-                    click: () => {
-                      this.addInvoiceTitleFn(0, params.row.companyId)
-                    }
-                  }
-                }, '编辑'),
-                h('Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px',
-                    display: this.ifManageCompany != false ? 'inline-block' : 'none'
-                  },
-                  on: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        title: '提示',
-                        content: '<p>您确定要删除该条记录吗？</p>',
-                        onOk: () => {
-                          deleteCompany(params.row.companyId).then(res => {
-                            this.$Message.info('删除成功');
-                            this.getCompanyList()
-                          }).catch(error => {
-                            console.log(error.response)
-                          });
-                        }
-                      });
-                    }
-                  }
-                }, '删除'),
-              ]);
-            }
-          }
-        ],
         tableData: [],
         page: {
           current: 1,
@@ -416,9 +347,9 @@
     padding-left: 10px;
 
     span {
-      color: #18c1d6;
+      // color: #18c1d6;
       font-size: 18px;
-      border-right: 2px solid #18c1d6;
+      // border-right: 2px solid #18c1d6;
       padding: 10px 10px 10px 0;
       cursor: pointer;
     }
@@ -429,8 +360,10 @@
   }
 
   .Invoice-details {
-    background-color: #fff;
     padding: 20px 40px;
+    height: auto;
+    background-color: #ffffff;
+    border: solid 1px #dddddd;
   }
 
   .query-results {
@@ -449,8 +382,17 @@
   }
 
   .btn {
-    border: solid 1px #18c1d6;
-    background-color: #18c1d6;
+    line-height: 45px;
+    height: 45px;
+  }
+
+  .btn button {
+    font-size: 12px;
+    color: #2d8cf0;
+  }
+
+  .btn button:nth-child(2) {
+    margin-left: 10px;
   }
   .ivu-breadcrumb{
     padding:20px 0px 14px;
@@ -459,4 +401,57 @@
     color: #666;
     font-weight: bold;
   }
+  .address {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  .get-address {
+    width: 305px;
+    height: 200px;
+    border-radius: 4px;
+    border: solid 1px #dddddd;
+    padding: 10px;
+    cursor: pointer;
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+
+  .get-address:hover {
+    border: 1px solid #2d8cf0;
+  }
+
+  .get-address .userName {
+    height: 37px;
+    line-height: 37px;
+    border-bottom: solid 1px #dddddd;
+    font-size: 14px;
+    color: #333333;
+    display: flex;
+    justify-content: space-between;
+  }
+  .get-address .userName span:first-child {
+    width: 220px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .get-address .address-informations {
+    font-size: 14px;
+    color: #333333;
+  }
+  .add-the-address {
+    width: 305px;
+    height: 200px;
+    border-radius: 4px;
+    border: solid 1px #dddddd;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .add-the-address:hover {
+    box-shadow: 0px 2px 11px 0px rgba(0, 0, 0, 0.05);
+  }
+
 </style>
