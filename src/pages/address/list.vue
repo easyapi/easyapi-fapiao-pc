@@ -68,7 +68,7 @@
           </div>
         </div>
         <div class="add-the-address" @click="openDialog(1)">
-          <img src="../../assets/images/plus.png" alt="" style="display: block;margin:61px auto;">
+          <img src="../../assets/images/plus.png" alt="" style="display: block;margin:52px auto;">
         </div>
       </div>
     </div>
@@ -379,7 +379,7 @@
 
   .get-address {
     width: 305px;
-    height: 182px;
+    height: 165px;
     border-radius: 4px;
     border: solid 1px #dddddd;
     padding: 10px;
@@ -423,7 +423,7 @@
 
   .add-the-address {
     width: 305px;
-    height: 182px;
+    height: 165px;
     border-radius: 4px;
     border: solid 1px #dddddd;
     cursor: pointer;
