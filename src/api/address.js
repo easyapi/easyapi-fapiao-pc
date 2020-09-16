@@ -91,3 +91,14 @@ export const getAddressList = (params) => axios.get(`${baseUrl}/addresses`, {
   accessToken: localStorage.getItem("accessToken"),
   // username: this.username,
 });
+
+/**
+ * 获取发票地址信息
+ *
+ * @see https://www.easyai.com
+ */
+export const getAddress = id => axios.get(`${baseUrl}/address/${id}`, {
+  params: {
+    accessToken: localStorage.getItem("accessToken")
+  }
+});

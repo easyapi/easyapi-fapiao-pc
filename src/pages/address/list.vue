@@ -75,7 +75,7 @@
   </div>
 </template>
 <script>
-  import {getUpdateAddress, deleteAddress,getAddressList,postAddress} from '../../api/address'
+  import {getUpdateAddress, getAddress, deleteAddress,getAddressList,postAddress} from '../../api/address'
   import VDistpicker from 'v-distpicker'
 
   export default {
@@ -138,7 +138,7 @@
           ifDefault: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
-        getUpdateAddress(this.addressId, data).then(res => {
+        getUpdateAddress(addressId, data).then(res => {
             if (res.data.code === 1) {
               this.getAddressList()
             }
@@ -153,7 +153,7 @@
           title: '提示',
           content: '<p>您确定要删除该地址吗？</p>',
           onOk: () => {
-            deleteAddress(params.row.addressId).then(res => {
+            deleteAddress(addressId).then(res => {
               this.$Message.info(res.data.message);
               this.getAddressList()
             }).catch(error => {
@@ -225,7 +225,7 @@
       ,
       //获取地址详情
       getAddress() {
-        getUpdateAddress(this.addressId,data).then(res=>{
+        getAddress(this.addressId).then(res=>{
           let data = res.data.content;
           this.formValidate.name = data.name;
           this.formValidate.phone = data.mobile;
