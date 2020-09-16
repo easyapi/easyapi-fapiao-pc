@@ -9,7 +9,7 @@
       <Modal
           v-model="showModal"
           :title="modalTitle">
-          <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+          <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
             <FormItem label="公司名称" prop="name">
               <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete"
                      :disabled="!ifManageCompany"/>
@@ -50,7 +50,7 @@
       <div class="address">
         <div style="float:left" v-for="companyData in tableData">
           <div class="get-address" v-if="companyData.ifDefault===false"
-               @click.stop="updateAddress(companyData.addressId)">
+               @click.stop="updateDefaultCompany(companyData.companyId)">
             <p class="userName"><span>{{companyData.name}}</span>
               <span v-if="companyData.ifDefault===false" style="color: #2d8cf0;">设为默认</span>
             </p>
@@ -60,12 +60,12 @@
             <p class="address-informations">{{companyData.address}}</p>
             <p class="address-informations">{{companyData.phone}}</p>
             <div class="btn">
-              <Button @click.stop="openDialog(0,companyData.companyId)">修改</Button>
-              <Button @click.stop="deleteAddress(companyData)">删除</Button>
+              <Button @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
+              <Button @click.stop="deleteCompany(companyData.companyId)">删除</Button>
             </div>
           </div>
           <div class="get-address" style="border: solid 1px #2d8cf0;position: relative"
-               v-if="companyData.ifDefault===true" @click.stop="updateAddress(companyData.addressId)">
+               v-if="companyData.ifDefault===true">
             <p class="userName">
               <span>{{companyData.name}}</span>
               <!-- <span
@@ -80,23 +80,23 @@
             <p class="address-informations">{{companyData.address}}</p>
             <p class="address-informations">{{companyData.phone}}</p>
             <div class="btn">
-              <Button @click.stop="openDialog(0,companyData.addressId)">修改</Button>
-              <Button @click.stop="deleteAddress(companyData.addressId)">删除</Button>
+              <Button @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
+              <Button @click.stop="deleteCompany(companyData.companyId)">删除</Button>
             </div>
             <img src="../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
           </div>
         </div>
-        <div class="add-the-address" @click="openDialog(1)">
+        <div class="add-the-address" @click="addInvoiceTitleFn(1)">
           <img src="../../assets/images/plus.png" alt="" style="display: block;margin:70px auto;">
         </div>
       </div>
 
 
       <p class="tpPading-10 btPading-10">注意：发票抬头最多可以添加5个</p>
-      <div class="page-box flex-r">
+      <!-- <div class="page-box flex-r">
         <Page :total='page.total' :page-size="page.size" :current="page.current" @on-change="changePage"
               show-elevator></Page>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -164,6 +164,33 @@
       }
     },
     methods: {
+      //设置默认抬头
+      updateDefaultCompany(companyId) {
+        updateDefaultCompany(companyId).then(res => {
+            if (res.data.code === 1) {
+              this.getCompanyList()
+            }
+          }
+        ).catch(error => {
+          console.log(error.response)
+        });
+      },
+      //修改抬头
+      updateCompany(companyId) {
+        let data = {
+          accessToken: localStorage.getItem('accessToken'),
+          username: this.username,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }
+        updateCompany(companyId, data).then(res => {
+            if (res.data.code === 1) {
+              this.getCompanyList()
+            }
+          }
+        ).catch(error => {
+          console.log(error.response)
+        });
+      },
       //自动补齐
       autocomplete() {
         if (this.formValidate.name.length < 4) {
@@ -266,6 +293,21 @@
             this.$Message.warning("发票最多只能添加5个")
           }
         }
+      },
+      //删除地址
+      deleteCompany(companyId) {
+        this.$Modal.confirm({
+          title: '提示',
+          content: '<p>您确定要删除该抬头吗？</p>',
+          onOk: () => {
+            deleteCompany(companyId).then(res => {
+              this.$Message.info(res.data.message);
+              this.getCompanyList()
+            }).catch(error => {
+              console.log(error.response)
+            });
+          }
+        });
       },
       //提交地址
       handleSubmit(name) {
