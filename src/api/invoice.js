@@ -9,7 +9,7 @@ export const baseUrl = "https://fapiao-api.easyapi.com";
  */
 export const getInvoiceList = (params) => axios.get(`${baseUrl}/api/invoice/records`, {
   params: {
-    params,
+    ...params,
     accessToken: localStorage.getItem("accessToken")
   }
 });
