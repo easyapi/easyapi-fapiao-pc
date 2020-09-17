@@ -1,8 +1,9 @@
 <template>
   <div class="Invoice-details">
-      <h2 class="set-title">
-        <img src="../assets/images/logo.png" alt="" style="margin-right: 10px;">发票管理
-      </h2>
+    <Breadcrumb>
+      <img src="../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
+      <BreadcrumbItem style="color: #333">发票管理</BreadcrumbItem>
+    </Breadcrumb>
     <div class="set-content">
       <div class="invoice-base-info flex-r">
         <div class="openInvoice-money">
@@ -75,10 +76,10 @@
           <Button @click="getInvoiceList" type="primary">查询</Button>
         </div>
       </div>
-      <div class="option">
+      <!-- <div class="option">
         <span class="Nature-of-invoice" :class="{SelectedStyle:select==='电子'}" @click="SelectedType('电子')">电子发票</span>
         <span class="Nature-of-invoice" :class="{SelectedStyle:select==='纸质'}" @click="SelectedType('纸质')">纸质发票</span>
-      </div>
+      </div> -->
       <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingData" :data="tableData"></Table>
       <div class="page-box flex-r" v-if="obtainCode!==0">
         <Page :total='total' :page-size="pageSize" :current="current" @on-change="changePage" show-elevator></Page>
@@ -116,7 +117,7 @@
         defaultCompany: '',
         showAddressInfo: true,
         defaultAddress: '',
-        select: '电子',
+        select: null,
         startTime: '',
         endTime: '',
         obtainCode: '',
@@ -212,15 +213,15 @@
         ],
         tableData: [],
         current: 1,
-        pageSize: 10,
+        pageSize: 5,
         total: 0,
       }
     },
     methods: {
-      SelectedType(type) {
-        this.select = type
-        this.getInvoiceList()
-      },
+      // SelectedType(type) {
+      //   this.select = type
+      //   this.getInvoiceList()
+      // },
       //1.获取我的开票账户信息
       getMoney() {
         this.$ajax.get(invoiceMoneyUrl + this.username + '/invoice/money', {
@@ -348,18 +349,17 @@
   @import '../assets/styles/invoice.styl'
 </style>
 <style scoped>
-  ivu-breadcrumb {
-    padding: 20px 40px;
-  }
-
   .Invoice-details {
     background-color: #fff;
+    padding: 20px 40px;
+    height: auto;
+    border: solid 1px #dddddd;
   }
 
   .set-content {
     width: 100%;
     height: auto;
-    padding: 20px 40px;
+    padding: 20px 0;
   }
 
   .invoice-base-title {
@@ -443,5 +443,13 @@
 
   .area{
     margin-right: 12px;
+  }
+
+  .ivu-breadcrumb {
+    padding: 10px 0px 14px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-weight: bold;
   }
 </style>

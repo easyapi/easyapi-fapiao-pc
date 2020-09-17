@@ -1,8 +1,9 @@
 <template>
   <div class="control-over-invoices">
-    <Breadcrumb>
+    <Breadcrumb separator="<b style='color:#333; padding-right:6px'>/</b>">
+      <img src="../../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
       <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">发票抬头管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <div class="typeButton flex-r">
@@ -284,11 +285,19 @@
 </style>
 <style scoped lang="stylus">
   @import 'make.styl';
+  .control-over-invoices {
+    background-color: #fff;
+    padding: 20px 40px;
+    height: auto;
+    border: solid 1px #dddddd;
+  }
+
   .ivu-breadcrumb {
-    padding: 20px 0px 14px;
+    padding: 10px 0px 14px;
     font-size: 20px;
     border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
   }
+
 </style>

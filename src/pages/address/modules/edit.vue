@@ -431,7 +431,7 @@
   }
 
   .ivu-breadcrumb {
-    padding: 20px 0px 14px;
+    padding: 10px 0px 14px;
     font-size: 20px;
     border-bottom: 1px solid #ddd;
     color: #666;

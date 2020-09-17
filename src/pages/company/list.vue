@@ -1,8 +1,9 @@
 <template>
   <div class="Invoice-details">
-    <Breadcrumb>
+    <Breadcrumb separator="<b style='color:#333; padding-right:6px'>/</b>">
+      <img src="../../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
       <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">发票抬头管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-height: 57px;">发票抬头</span>
@@ -437,7 +438,7 @@
     margin-left: 10px;
   }
   .ivu-breadcrumb{
-    padding:20px 0px 14px;
+    padding:10px 0px 14px;
     font-size:20px;
     border-bottom:1px solid #ddd;
     color: #666;

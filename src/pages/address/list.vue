@@ -1,8 +1,9 @@
 <template>
   <div class="addressManage">
-    <Breadcrumb>
+    <Breadcrumb separator="<b style='color:#333; padding-right:6px'>/</b>">
+      <img src="../../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
       <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem>邮寄地址管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">邮寄地址管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-height: 57px;">邮寄地址</span>
@@ -439,7 +440,7 @@
   }
 
   .ivu-breadcrumb {
-    padding: 20px 0px 14px;
+    padding: 10px 0px 14px;
     font-size: 20px;
     border-bottom: 1px solid #ddd;
     color: #666;
@@ -451,5 +452,6 @@
     font-size: 14px !important;
     padding-left: 3px !important;
   }
+
 </style>
 
