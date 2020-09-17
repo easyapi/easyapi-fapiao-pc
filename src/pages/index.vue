@@ -60,16 +60,16 @@
         <div class="search-data flex-r">
           <div>
             <span class="area">起止时间</span>
-            <DatePicker type="datetimerange" placeholder="选择日期" @on-change="timeRangeChange" style="width: 330px"></DatePicker>
+            <DatePicker type="datetimerange" placeholder="选择日期" @on-change="timeRangeChange" style="width: 340px"></DatePicker>
             <!-- <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
                         style="width: 180px;margin-right: 5px"></DatePicker>
             <span>-</span>
             <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px;margin-left: 5px"></DatePicker> -->
           </div>
-          <Select clearable v-model="state" style="width:150px" class="left-10" placeholder="请选择发票状态...">
+          <Select clearable v-model="state" style="width:190px" class="left-10" placeholder="请选择发票状态...">
             <Option v-for="item in stateList" :value="item" :key="item">{{ item}}</Option>
           </Select>
-          <Input clearable v-model="purchaserName" placeholder="请输入发票抬头..." style="width: 180px" class="left-10"/>
+          <Input clearable v-model="purchaserName" placeholder="请输入发票抬头..." style="width: 190px" class="left-10"/>
         </div>
         <div>
           <Button @click="getInvoiceList" type="primary">查询</Button>
