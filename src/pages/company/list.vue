@@ -49,22 +49,22 @@
 
       <div class="address">
         <div style="float:left" v-for="companyData in tableData">
-          <div class="get-address" v-if="companyData.ifDefault===false"
+          <div class="get-company" v-if="companyData.ifDefault===false"
                @click.stop="updateDefaultCompany(companyData.companyId)">
             <p class="userName"><span>{{companyData.name}}</span>
               <span v-if="companyData.ifDefault===false" style="color: #2d8cf0;">设为默认</span>
             </p>
-            <p class="address-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
-            <p class="address-informations">{{companyData.bank }}</p>
-            <p class="address-informations">{{companyData.bankAccount}}</p>
-            <p class="address-informations">{{companyData.address}}</p>
-            <p class="address-informations">{{companyData.phone}}</p>
+            <p class="company-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
+            <p class="company-informations">{{companyData.bank }}</p>
+            <p class="company-informations">{{companyData.bankAccount}}</p>
+            <p class="company-informations">{{companyData.address}}</p>
+            <p class="company-informations">{{companyData.phone}}</p>
             <div class="btn">
               <Button @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
               <Button @click.stop="deleteCompany(companyData.companyId)">删除</Button>
             </div>
           </div>
-          <div class="get-address" style="border: solid 1px #2d8cf0;position: relative"
+          <div class="get-company" style="border: solid 1px #2d8cf0;position: relative"
                v-if="companyData.ifDefault===true">
             <p class="userName">
               <span>{{companyData.name}}</span>
@@ -74,11 +74,11 @@
                 <Button size="small" type="primary">默认</Button>
               </span>
             </p>
-            <p class="address-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
-            <p class="address-informations">{{companyData.bank }}</p>
-            <p class="address-informations">{{companyData.bankAccount}}</p>
-            <p class="address-informations">{{companyData.address}}</p>
-            <p class="address-informations">{{companyData.phone}}</p>
+            <p class="company-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
+            <p class="company-informations">{{companyData.bank }}</p>
+            <p class="company-informations">{{companyData.bankAccount}}</p>
+            <p class="company-informations">{{companyData.address}}</p>
+            <p class="company-informations">{{companyData.phone}}</p>
             <div class="btn">
               <Button @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
               <Button @click.stop="deleteCompany(companyData.companyId)">删除</Button>
@@ -448,7 +448,7 @@
     height: auto;
     margin-bottom: 20px;
   }
-  .get-address {
+  .get-company {
     width: 305px;
     height: 200px;
     border-radius: 4px;
@@ -459,11 +459,11 @@
     margin-bottom: 20px;
   }
 
-  .get-address:hover {
+  .get-company:hover {
     border: 1px solid #2d8cf0;
   }
 
-  .get-address .userName {
+  .get-company .userName {
     height: 37px;
     line-height: 37px;
     border-bottom: solid 1px #dddddd;
@@ -472,16 +472,20 @@
     display: flex;
     justify-content: space-between;
   }
-  .get-address .userName span:first-child {
+  .get-company .userName span:first-child {
     width: 220px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
-  .get-address .address-informations {
+  .get-company .company-informations {
     font-size: 14px;
     color: #333333;
+    width: 280px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
   .add-the-address {
     width: 305px;

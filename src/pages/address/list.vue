@@ -405,6 +405,10 @@
   .get-address .address-informations {
     font-size: 14px;
     color: #333333;
+    width: 280px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
 
   .btn {
