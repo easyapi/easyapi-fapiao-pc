@@ -1,18 +1,20 @@
 <template>
   <div class="details">
-    <Breadcrumb>
+    <Breadcrumb separator="<b style='color:#333; padding-right:6px'>/</b>">
+      <img src="../../../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
       <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">发票抬头管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
+      <h3 style="color: #666;font-size: 16px;display: block;height: 57px;line-height: 57px;">您的发票开票金额 ¥ {{ invoice.price }} 元</h3>
       <div class="table-container">
-        <Row class-name="table-title">
+        <!-- <Row class-name="table-title">
           <Col span="24" class-name="">
             <p class="title">
               您的发票开票金额¥{{invoice.price}}元
             </p>
           </Col>
-        </Row>
+        </Row> -->
         <Row class-name="table-body">
           <Col span="12" class-name="">
             <div class="item-td flex-r">
@@ -225,8 +227,10 @@
 </style>
 <style scoped>
   .details {
-    background-color: #fff;
     padding: 20px 40px;
+    height: auto;
+    background-color: #ffffff;
+    border: solid 1px #dddddd;
   }
 
   .item-td span {
@@ -242,7 +246,7 @@
     padding-left: 10px;
   }
   .ivu-breadcrumb{
-    padding:20px 0px 14px;
+    padding:10px 0px 14px;
     font-size:20px;
     border-bottom:1px solid #ddd;
     color: #666;

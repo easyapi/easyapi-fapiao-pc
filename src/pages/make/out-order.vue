@@ -20,7 +20,7 @@
       </div>
       <div class="ivu-form">
         <div class="select-btn">
-          <Button @click="handleSelectAll(true)">设置全选</Button>
+          <Button @click="handleSelectAll(true)" style="margin:10px 10px 10px 0">设置全选</Button>
           <Button @click="handleSelectAll(false)">取消全选</Button>
         </div>
 

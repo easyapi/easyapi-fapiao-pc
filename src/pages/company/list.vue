@@ -52,7 +52,8 @@
         <div style="float:left" v-for="companyData in tableData">
           <div class="get-company" v-if="companyData.ifDefault===false"
                @click.stop="updateDefaultCompany(companyData.companyId)">
-            <p class="userName"><span>{{companyData.name}}</span>
+            <p class="userName">
+              <span style="color: #515a6e;">{{companyData.name}}</span>
               <span v-if="companyData.ifDefault===false" style="color: #2d8cf0;">设为默认</span>
             </p>
             <p class="company-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
@@ -68,7 +69,7 @@
           <div class="get-company" style="border: solid 1px #2d8cf0;position: relative"
                v-if="companyData.ifDefault===true">
             <p class="userName">
-              <span>{{companyData.name}}</span>
+              <span style="color: #515a6e;">{{companyData.name}}</span>
               <!-- <span
                 style="width: 40px;height: 18px;background-color: #2d8cf0;border-radius: 2px; color: #fff;margin-top:8px;line-height:18px;font-size: 14px;text-align: center">默认</span> -->
               <span style="margin-top:-3px">
@@ -482,7 +483,7 @@
 
   .get-company .company-informations {
     font-size: 14px;
-    color: #333333;
+    color: #515a6e;;
     width: 280px;
     overflow: hidden;
     white-space: nowrap;

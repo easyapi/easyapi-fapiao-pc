@@ -52,7 +52,7 @@
           <div class="flex-r" v-if="!showAddressInfo">
             <span>您还没有填写邮寄信息</span>
             <a class=" flex-r modify-style" @click="jumpPage('/address')">现在填写
-              <Icon size="24" type="md-create"/>
+              <Icon size="17" type="md-create" style="margin-left:6px;"/>
             </a>
           </div>
         </div>
