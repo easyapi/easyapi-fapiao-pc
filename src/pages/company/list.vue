@@ -6,7 +6,8 @@
       <BreadcrumbItem style="color: #333">发票抬头管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
-      <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-height: 57px;">发票抬头</span>
+      <!-- <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-sheight: 57px;">发票抬头</span> -->
+      <h3 style="color: #666;font-size: 16px;display: block;height: 57px;line-height: 57px;">发票抬头</h3>
       <Modal
           v-model="showModal"
           :title="modalTitle">
