@@ -6,7 +6,7 @@
       <BreadcrumbItem style="color: #333">发票抬头管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
-      <h3 style="color: #666;font-size: 16px;display: block;height: 57px;line-height: 57px;">您的发票开票金额 ¥ {{ invoice.price }} 元</h3>
+      <h3 class="h3-title">您的发票开票金额 ¥ {{ invoice.price }} 元</h3>
       <div class="table-container">
         <!-- <Row class-name="table-title">
           <Col span="24" class-name="">

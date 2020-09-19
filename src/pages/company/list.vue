@@ -7,7 +7,7 @@
     </Breadcrumb>
     <div class="set-content">
       <!-- <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-sheight: 57px;">发票抬头</span> -->
-      <h3 style="color: #666;font-size: 16px;display: block;height: 57px;line-height: 57px;">发票抬头</h3>
+      <h3 class="h3-title">发票抬头</h3>
       <Modal
           v-model="showModal"
           :title="modalTitle">

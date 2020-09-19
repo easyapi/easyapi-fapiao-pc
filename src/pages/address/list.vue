@@ -7,7 +7,7 @@
     </Breadcrumb>
     <div class="set-content">
       <!-- <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-height: 57px;">邮寄地址</span> -->
-      <h3 style="color: #666;font-size: 16px;display: block;height: 57px;line-height: 57px;">邮寄地址</h3>
+      <h3 class="h3-title">邮寄地址</h3>
       <Modal
         v-model="showModal"
         :title="modalTitle">
