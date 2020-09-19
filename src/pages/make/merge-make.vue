@@ -16,7 +16,6 @@
       <div class="invoice-nature">
         <!-- <p class="invoice">发票形式</p> -->
         <h3 class="h3-title">发票形式</h3>
-
         <div style="display: flex;height: 120px;">
           <div
             class="electronic-invoice"
@@ -32,7 +31,7 @@
               style="position: absolute;bottom:0px;right: 0px;"
             >
           </div>
-          <!-- <div
+          <div
             class="electronic-invoice"
             style="margin-left:20px;"
             :class="{SelectedStyle:property==='纸质'}"
@@ -46,8 +45,9 @@
               alt
               style="position: absolute;bottom:0px;right: 0px;"
             >
-          </div>-->
+          </div>
         </div>
+
       </div>
       <div class="invoice-nature">
         <!-- <p class="invoice">发票抬头</p> -->
@@ -728,26 +728,26 @@
     width: 140px;
     height: 76px;
     border-radius: 4px;
-    border: solid 1px #e1e6eb;
+    border: solid 1px #ddd;
     padding-top: 20px;
     cursor: pointer;
     position: relative;
   }
 
   .invoice-nature .electronic-invoice:hover {
-    border: 1px solid #18c1d6;
+    border: 1px solid #2d8cf0;
   }
 
   .invoice-nature .electronic-invoice:hover span {
-    color: #18c1d6 !important;
+    color: #2d8cf0 !important;
   }
 
   .SelectedStyle {
-    border: solid 1px #18c1d6 !important;
+    border: solid 1px #2d8cf0 !important;
   }
 
   .SelectedStyle span {
-    color: #18c1d6 !important;
+    color: #2d8cf0 !important;
   }
 
   .invoice-nature .electronic-invoice span {
