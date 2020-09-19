@@ -33,7 +33,7 @@
           :data="tableData"
         ></Table>
       </div>
-      <div v-if="true" class="show-more-btn">
+      <div v-if="showMoreBtn" class="show-more-btn">
         <Button @click="handleAddMore">加载更多</Button>
       </div>
        <div class="page-box flex-r">
@@ -114,6 +114,7 @@
           }
         ],
         tableData: [],
+        totalPages: 0,
         current: 1,
         showMoreBtn: true,
         pageSize: 10,
@@ -126,6 +127,7 @@
     },
     methods: {
       getOrderTypeList() {
+        this.current = 1;
         this.$ajax({
           method: "GET",
           url: orderTypesUrl,
@@ -144,10 +146,9 @@
       },
       getOutOrderList(name) {
         this.clicked = name;
-        this.current = 1;
+        this.showMoreBtn = true;
         this.amountOfInvoice = 0;
         this.price = 0;
-        this.showMoreBtn = true;
         this.$ajax({
           method: "GET",
           url: outOrderListUrl,
@@ -161,10 +162,13 @@
           }
         })
           .then(res => {
+              console.log(res,this.current,33334)
+
             if (res.data.code !== 0) {
+              this.totalPages = res.data.totalPages;
               this.tableData = res.data.content;
               this.total = Number(res.data.totalElements);
-              if (this.tableData.length == this.total) {
+              if (this.current +1 > this.totalPages) {
                 this.showMoreBtn = false;
               }
               this.$ajax({
@@ -258,7 +262,10 @@
                 this.tableData.push(v);
               }
             }
-            if (this.tableData.length == this.total) {
+            // if (this.tableData.length == this.total) {
+            //   this.showMoreBtn = false;
+            // }
+            if (this.current +1 > this.totalPages) {
               this.showMoreBtn = false;
             }
           }
