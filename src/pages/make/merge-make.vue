@@ -1,14 +1,22 @@
 <template>
   <div class="demand">
-    <h2 class="set-title">
+    <!-- <h2 class="set-title">
       <span @click="()=>{this.$router.go(-1)}">
         <Icon type="ios-arrow-back"/>返回
       </span>
       <img src="../../assets/images/logo.png" alt style="margin-right: 10px;">发票索取
-    </h2>
+    </h2> -->
+    <Breadcrumb separator="<b style='color:#333; padding-right:6px'>/</b>">
+      <img src="../../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
+      <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333" to="/make/out-order">索取发票</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">开具发票</BreadcrumbItem>
+    </Breadcrumb>
     <div class="set-content">
       <div class="invoice-nature">
-        <p class="invoice">发票形式</p>
+        <!-- <p class="invoice">发票形式</p> -->
+        <h3 class="h3-title">发票形式</h3>
+
         <div style="display: flex;height: 120px;">
           <div
             class="electronic-invoice"
@@ -42,7 +50,8 @@
         </div>
       </div>
       <div class="invoice-nature">
-        <p class="invoice">发票抬头</p>
+        <!-- <p class="invoice">发票抬头</p> -->
+        <h3 class="h3-title">发票抬头</h3>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
           <FormItem label="抬头类型" prop="type">
             <RadioGroup v-model="formValidate.type">
@@ -90,7 +99,8 @@
         </Form>
       </div>
       <div class="invoice-nature">
-        <p class="invoice">发票信息</p>
+        <!-- <p class="invoice">发票信息</p> -->
+        <h3 class="h3-title">发票信息</h3>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
           <!-- <FormItem label="发票类型" prop="category">
             <RadioGroup v-model="formValidate.category">
@@ -198,6 +208,10 @@
     companiesUrl,
     outOrderListUrl
   } from "../../api/api";
+
+  import {
+    getCompanyList,
+  } from '../../api/company'
 
   export default {
     name: "",
@@ -428,13 +442,41 @@
         this.formInline.phone = this.makeUp[index].phone;
         this.makeUp = [];
       },
+      // getCompanyList() {
+      //   console.log(999999)
+      //   this.$ajax.get(companiesUrl, {
+      //     params: {
+      //       accessToken: localStorage.getItem("accessToken"),
+      //       username: this.username
+      //     }
+      //   }).then(res => {
+      //   console.log(999999)
+
+      //     if (res.status == 200) {
+      //       this.companyList = res.data.content;
+      //       this.showInfo = true;
+      //       for (let k of this.companyList) {
+      //         if (k.ifDefault == true) {
+      //           this.companyId = k.companyId;
+      //         }
+      //       }
+      //     } else {
+      //       this.showInfo = false;
+      //       this.companyList = null;
+      //     }
+      //   }).catch(error => {
+      //   console.log(999993)
+
+      //     console.log(error.response);
+      //   });
+      // },
       getCompanyList() {
-        this.$ajax.get(companiesUrl, {
-          params: {
-            accessToken: localStorage.getItem("accessToken"),
-            username: this.username
-          }
-        }).then(res => {
+        let params = {
+          username: this.username,
+          accessToken: localStorage.getItem("accessToken"),
+        }
+        getCompanyList(params).then(res => {
+          console.log(33333333)
           if (res.status == 200) {
             this.companyList = res.data.content;
             this.showInfo = true;
@@ -448,7 +490,9 @@
             this.companyList = null;
           }
         }).catch(error => {
-          console.log(error.response);
+          console.log(33333333)
+
+          console.log(error)
         });
       },
       getIfManageCompany() {
@@ -658,8 +702,9 @@
   }
 
   .demand {
+    background-color: #fff;
+    padding: 20px 40px;
     height: auto;
-    background-color: #ffffff;
     border: solid 1px #dddddd;
   }
 
@@ -776,4 +821,13 @@
     border: 1px solid #18c1d6 !important;
     color: #18c1d6;
   }
+
+  .ivu-breadcrumb {
+    padding: 10px 0px 14px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-weight: bold;
+  }
+
 </style>
