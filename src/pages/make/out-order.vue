@@ -162,8 +162,6 @@
           }
         })
           .then(res => {
-              console.log(res,this.current,33334)
-
             if (res.data.code !== 0) {
               this.totalPages = res.data.totalPages;
               this.tableData = res.data.content;
@@ -225,7 +223,7 @@
           return this.$Message.warning("请选择开票订单");
         } else {
           this.$router.push({
-            path: "/make",
+            path: "/make/merge-make",
             query: {id: this.ids, price: this.price, username: this.username}
           });
         }
