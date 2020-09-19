@@ -61,7 +61,7 @@
         <div class="search-data flex-r">
           <div>
             <span class="area">起止时间</span>
-            <DatePicker type="datetimerange" placeholder="选择日期" @on-change="timeRangeChange" style="width: 340px; margin-right: 4px"></DatePicker>
+            <DatePicker type="daterange" placeholder="选择日期" @on-change="timeRangeChange" style="width: 210px; margin-right: 4px"></DatePicker>
             <!-- <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
                         style="width: 180px;margin-right: 5px"></DatePicker>
             <span>-</span>
@@ -270,8 +270,8 @@
         this.$router.push({path: url, query: {username: this.username}})
       },
       timeRangeChange(t) {
-        this.startTime = t[0];
-        this.endTime = t[1];
+        this.startTime = t[0] && `${t[0]} 00:00:00`;
+        this.endTime = t[1] && `${t[1]} 23:59:59`;
       },
       // startTimeChange(t) {
       //   this.startTime = t;
