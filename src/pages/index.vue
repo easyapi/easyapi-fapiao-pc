@@ -306,7 +306,7 @@
           property: this.select
         };
         getInvoiceList(params).then(res => {
-          if (res.status === 200) {
+          if (res.data.code === 1) {
             this.tableData = res.data.content;
             this.total = Number(res.data.totalElements);
           } else {
