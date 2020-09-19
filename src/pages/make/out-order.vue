@@ -3,7 +3,7 @@
     <Breadcrumb separator="<b style='color:#333; padding-right:6px'>/</b>">
       <img src="../../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
       <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem style="color: #333">发票抬头管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">索取发票</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <div class="typeButton flex-r">
