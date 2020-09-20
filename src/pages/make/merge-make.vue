@@ -6,9 +6,9 @@
       </span>
       <img src="../../assets/images/logo.png" alt style="margin-right: 10px;">发票索取
     </h2> -->
-    <Breadcrumb separator="<b style='color:#333; padding-right:6px'>/</b>">
-      <img src="../../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
-      <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
+    <Breadcrumb separator="<b style='color:#333; margin-left:-8px'>/</b>">
+      <img src="../../assets/images/logo.png" alt="" style="margin-right: 8px; width:25px; height: 25px;">
+      <BreadcrumbItem to="/" style="color: #333;">发票管理</BreadcrumbItem>
       <BreadcrumbItem style="color: #333" to="/make/out-order">索取发票</BreadcrumbItem>
       <BreadcrumbItem style="color: #333">开具发票</BreadcrumbItem>
     </Breadcrumb>
@@ -78,11 +78,11 @@
               >
               <ul v-if="showInfo">
                 <li class="flex-r">
-                  <span>发票抬头信息：&nbsp;&nbsp;&nbsp;</span>
+                  <span>发票抬头信息：</span>
                   <p>{{item.name}}</p>
                 </li>
                 <li class="flex-r">
-                  <span>纳税人识别号：&nbsp;&nbsp;&nbsp;</span>
+                  <span>纳税人识别号：</span>
                   <p>{{item.taxNumber}}</p>
                 </li>
               </ul>
@@ -144,7 +144,7 @@
           <p
             class="address-informations"
             v-if="defaultAddress!==null"
-          >{{defaultAddress.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{defaultAddress.city}}</p>
+          >{{defaultAddress.province }} {{defaultAddress.city}}</p>
           <p
             class="address-informations"
             v-if="defaultAddress!==null"
@@ -650,9 +650,9 @@
     padding-left: 10px;
 
     span {
-      color: #18c1d6;
+      color: #2d8cf0;
       font-size: 18px;
-      border-right: 2px solid #18c1d6;
+      border-right: 2px solid #2d8cf0;
       padding: 10px 10px 10px 0;
       cursor: pointer;
     }
@@ -756,7 +756,7 @@
   }
 
   .invoice-content {
-    width: 390px
+    width: 360px
     height: 146px;
     border-radius: 4px;
     border: solid 1px #dddddd;
@@ -805,21 +805,21 @@
   .btn {
     width: 88px;
     height: 34px;
-    background-color: #18c1d6;
+    background-color: #2d8cf0;
     color: #ffffff;
     font-size: 14px;
     margin-top: 20px;
   }
 
   .btn:hover {
-    background-color: #18c1d6 !important;
-    border-color: #18c1d6 !important;
+    background-color: #2d8cf0 !important;
+    border-color: #2d8cf0 !important;
     color: #fff;
   }
 
   .selecting {
-    border: 1px solid #18c1d6 !important;
-    color: #18c1d6;
+    border: 1px solid #2d8cf0 !important;
+    color: #2d8cf0;
   }
 
   .ivu-breadcrumb {

@@ -1,8 +1,8 @@
 <template>
   <div class="Invoice-details">
     <Breadcrumb>
-      <img src="../assets/images/logo.png" alt="" style="margin-right: 10px; width:32px; height: 32px;">
-      <BreadcrumbItem style="color: #333">发票管理</BreadcrumbItem>
+      <img src="../assets/images/logo.png" alt="" style="margin-right: 8px; width:25px; height: 25px;">
+      <BreadcrumbItem style="color: #333;">发票管理</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <div class="invoice-base-info flex-r">
