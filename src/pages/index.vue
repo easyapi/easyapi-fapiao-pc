@@ -73,7 +73,7 @@
           <Input clearable v-model="purchaserName" placeholder="请输入发票抬头..." style="width: 190px" class="left-10"/>
         </div>
         <div>
-          <Button @click="getInvoiceList" type="primary">查询</Button>
+          <Button @click="getInvoiceListReset" type="primary">查询</Button>
         </div>
       </div>
       <!-- <div class="option">
@@ -319,6 +319,10 @@
           console.log(error)
           this.$Message.warning(error.response.data.message)
         });
+      },
+      getInvoiceListReset() {
+        this.current = 1;
+        this.getInvoiceList()
       },
       //分页
       changePage(current) {
