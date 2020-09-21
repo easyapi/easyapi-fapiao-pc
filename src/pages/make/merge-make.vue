@@ -76,7 +76,7 @@
                 alt
                 style="position: absolute;bottom:0px;right: 0px;"
               >
-              <ul v-if="showInfo">
+              <ul v-if="showInfo" class="invoice-list" style="margin-bottom:15px">
                 <li class="flex-r">
                   <span>发票抬头信息：</span>
                   <p>{{item.name}}</p>
@@ -829,6 +829,12 @@
     border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
+  }
+
+  .invoice-list p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
 </style>
