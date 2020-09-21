@@ -44,7 +44,7 @@ export const updateAddress = (id, data) => axios.put(`${baseUrl}/address/${id}`,
 /**
  * 获取我的默认地址信息
  */
-export const getDefaultCompany = username => axios.get(`${baseUrl}/address/${username}/default`, {
+export const getDefaultAddress = () => axios.get(`${baseUrl}/address/default`, {
   data: {
     accessToken: localStorage.getItem("accessToken")
   }

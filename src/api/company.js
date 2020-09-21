@@ -61,7 +61,7 @@ export const deleteCompany = id => {
  *
  * @see https://www.easyai.com
  */
-export const getDefaultCompany = username => axios.get(`${baseUrl}/company/${username}/default`, {
+export const getDefaultCompany = () => axios.get(`${baseUrl}/company/default`, {
   params: {
     accessToken: localStorage.getItem("accessToken")
   }

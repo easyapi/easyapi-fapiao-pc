@@ -61,13 +61,15 @@
         <div class="search-data flex-r">
           <div>
             <span class="area">起止时间</span>
-            <DatePicker type="daterange" placeholder="选择日期" @on-change="timeRangeChange" style="width: 210px; margin-right: 4px"></DatePicker>
+            <DatePicker type="daterange" placeholder="选择日期" @on-change="timeRangeChange"
+                        style="width: 210px; margin-right: 4px"></DatePicker>
             <!-- <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
                         style="width: 180px;margin-right: 5px"></DatePicker>
             <span>-</span>
             <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px;margin-left: 5px"></DatePicker> -->
           </div>
-          <Select clearable v-model="state" style="width:190px; margin-right:4px" class="left-10" placeholder="请选择发票状态...">
+          <Select clearable v-model="state" style="width:190px; margin-right:4px" class="left-10"
+                  placeholder="请选择发票状态...">
             <Option v-for="item in stateList" :value="item" :key="item">{{ item}}</Option>
           </Select>
           <Input clearable v-model="purchaserName" placeholder="请输入发票抬头..." style="width: 190px" class="left-10"/>
@@ -104,6 +106,9 @@
   import {
     getDefaultCompany
   } from '../api/company'
+  import {
+    getDefaultAddress
+  } from '../api/address'
 
   export default {
     name: '',
@@ -238,7 +243,7 @@
       },
       //2.获取我的默认抬头信息
       getDefaultCompany() {
-        getDefaultCompany(this.username).then(res => {
+        getDefaultCompany().then(res => {
           if (res.data.code === 1) {
             this.defaultCompany = res.data.content;
             this.showInfo = true
@@ -251,11 +256,7 @@
       },
       //3.获取默认邮寄地址
       getAddress() {
-        this.$ajax.get(invoiceAddressUrl + this.username + '/default', {
-          params: {
-            accessToken: localStorage.getItem('accessToken')
-          }
-        }).then(res => {
+        getDefaultAddress().then(res => {
           if (res.data.code === 1) {
             this.defaultAddress = res.data.content;
             this.showAddressInfo = true
@@ -426,7 +427,7 @@
   }
 
   .SelectedStyle {
-    color: #2d8cf0!important;
+    color: #2d8cf0 !important;
     background-color: #ffffff !important;
     border-bottom: none !important;
   }
@@ -445,7 +446,7 @@
     font-size: 12px;
   }
 
-  .area{
+  .area {
     margin-right: 12px;
   }
 
