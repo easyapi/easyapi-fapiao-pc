@@ -59,7 +59,7 @@
               <Radio label="个人">个人</Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="姓名" prop="purchaserName" v-show="formValidate.type === '个人'">
+          <FormItem label="发票抬头" prop="purchaserName" v-show="formValidate.type === '个人'">
             <Input v-model="formValidate.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"/>
           </FormItem>
           <div class="invioce-title" v-show="formValidate.type === '企业'">
@@ -115,13 +115,13 @@
           <!--<FormItem label="发票内容">-->
           <!--<span></span>-->
           <!--</FormItem>-->
-          <FormItem label="开票备注">
+          <FormItem label="开票备注" style="margin-top:25px;">
             <Input v-model="formValidate.remark" placeholder="可输入开票备注" style="width: 200px"/>
           </FormItem>
-          <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'">
+          <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'" style="margin-top:25px;">
             <Input v-model="formValidate.mobile" placeholder="请输入手机号码" style="width: 200px;"/>
           </FormItem>
-          <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'">
+          <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'" style="margin-top:25px;">
             <Input v-model="formValidate.email" placeholder="请输入邮箱" style="width: 200px;"/>
           </FormItem>
         </Form>
@@ -158,8 +158,8 @@
       <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p>
     </div>
     <Modal v-model="showModal" :title="modalTitle">
-      <Form ref="formInline" :model="formInline" :rules="rules" :label-width="100">
-        <FormItem label="发票抬头" prop="name">
+      <Form ref="formInline" :model="formInline" :rules="rules" :label-width="120">
+        <FormItem label="公司名称" prop="name">
           <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"
                  :disabled="!ifManageCompany"/>
           <div class="query-results" v-if="this.makeUp!==''">
