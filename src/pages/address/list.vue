@@ -46,8 +46,8 @@
             <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
             <p class="address-informations">{{addressData.district + addressData.addr}}</p>
             <div class="btn">
-              <Button @click.stop="openDialog(0,addressData.addressId)">修改</Button>
-              <Button @click.stop="deleteAddress(addressData.addressId)">删除</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="openDialog(0,addressData.addressId)">修改</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除</Button>
             </div>
           </div>
           <div class="get-address" style="border: solid 1px #2d8cf0;position: relative"
@@ -64,8 +64,8 @@
             <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
             <p class="address-informations">{{addressData.district + addressData.addr}}</p>
             <div class="btn">
-              <Button @click.stop="openDialog(0,addressData.addressId)">修改</Button>
-              <Button @click.stop="deleteAddress(addressData.addressId)">删除</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="openDialog(0,addressData.addressId)">修改</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除</Button>
             </div>
             <img src="../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
           </div>

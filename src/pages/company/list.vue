@@ -63,8 +63,8 @@
             <p class="company-informations">{{companyData.address}}</p>
             <p class="company-informations">{{companyData.phone}}</p>
             <div class="btn">
-              <Button @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
-              <Button @click.stop="deleteCompany(companyData.companyId)">删除</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="deleteCompany(companyData.companyId)">删除</Button>
             </div>
           </div>
           <div class="get-company" style="border: solid 1px #2d8cf0;position: relative"
@@ -83,8 +83,8 @@
             <p class="company-informations">{{companyData.address}}</p>
             <p class="company-informations">{{companyData.phone}}</p>
             <div class="btn">
-              <Button @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
-              <Button @click.stop="deleteCompany(companyData.companyId)">删除</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="deleteCompany(companyData.companyId)">删除</Button>
             </div>
             <img src="../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
           </div>
