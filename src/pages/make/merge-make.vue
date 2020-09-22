@@ -211,7 +211,7 @@
   } from "../../api/api";
 
   import {
-    getCompanyList, getCompany, updateCompany
+    getCompanyList, getCompany, updateCompany, createCompany, deleteCompany
   } from '../../api/company'
 
   export default {
@@ -317,11 +317,7 @@
           title: "提示",
           content: "<p>您确定要删除该条记录吗？</p>",
           onOk: () => {
-            this.$ajax.delete(companyUrl + "/" + id, {
-              params: {
-                accessToken: localStorage.getItem("accessToken")
-              }
-            }).then(res => {
+            deleteCompany(id).then(res => {
               this.$Message.info("删除成功");
               this.getCompanyList();
             }).catch(error => {
@@ -396,7 +392,6 @@
               });
             } else if (this.modalType === 1) {
               let obj = {};
-              obj.accessToken = localStorage.getItem("accessToken");
               obj.name = this.formInline.name;
               obj.taxNumber = this.formInline.taxNumber;
               obj.bank = this.formInline.bank;
@@ -404,9 +399,7 @@
               obj.address = this.formInline.address;
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
-              this.$ajax.post(companyUrl, {
-                data: obj
-              }).then(res => {
+              createCompany(obj).then(res => {
                 if (res.status === 200) {
                   this.$Message.success("添加成功!");
                   this.handleReset('formInline');
