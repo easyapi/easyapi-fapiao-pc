@@ -211,7 +211,7 @@
   } from "../../api/api";
 
   import {
-    getCompanyList,
+    getCompanyList,getCompany
   } from '../../api/company'
 
   export default {
@@ -331,11 +331,7 @@
         });
       },
       getCompany(id) {
-        this.$ajax.get(companyUrl + "/" + id, {
-          params: {
-            accessToken: localStorage.getItem("accessToken")
-          }
-        }).then(res => {
+        getCompany(id).then(res => {
           let data = res.data.content;
           this.formInline.name = data.name;
           this.formInline.taxNumber = data.taxNumber;
