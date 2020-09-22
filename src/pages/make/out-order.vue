@@ -31,6 +31,7 @@
           :stripe="true"
           :columns="tableTitle"
           :data="tableData"
+          :no-data-text="loadingData"
         ></Table>
       </div>
       <div v-if="showMoreBtn" class="show-more-btn">
@@ -70,6 +71,7 @@
         clicked: "",
         onInvoicAcount: "",
         username: "",
+        loadingData: '加载中',
         tableTitle: [
           {
             type: "selection",
@@ -145,6 +147,7 @@
           });
       },
       getOutOrderList(name) {
+        this.loadingData = '加载中',
         this.clicked = name;
         this.showMoreBtn = true;
         this.amountOfInvoice = 0;
@@ -194,12 +197,14 @@
                   console.log(error.response);
                 });
             } else {
+              this.loadingData = '暂无数据',
               this.tableData = [];
               this.total = 0;
               this.showMoreBtn = false;
             }
           })
           .catch(error => {
+            this.loadingData = '暂无数据',
             console.log(error.response);
           });
       },
