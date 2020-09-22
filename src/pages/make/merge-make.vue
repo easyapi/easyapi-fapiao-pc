@@ -211,7 +211,7 @@
   } from "../../api/api";
 
   import {
-    getCompanyList, getCompany, updateCompany, createCompany, deleteCompany
+    getCompanyList, getCompany, updateCompany, createCompany, deleteCompany, updateDefaultCompany
   } from '../../api/company'
 
   export default {
@@ -352,13 +352,7 @@
       },
       // 设为默认
       setDefault(id) {
-        this.$ajax.put(companyUrl + "/" + id, {
-          data: {
-            accessToken: localStorage.getItem("accessToken"),
-            username: this.username,
-            ifDefault: true
-          }
-        }).then(res => {
+        updateDefaultCompany(id).then(res => {
           if (res.data.code === 1) {
             this.$Message.success("操作成功!");
             this.getCompanyList();
