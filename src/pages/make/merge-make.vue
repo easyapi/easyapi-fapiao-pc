@@ -211,7 +211,7 @@
   } from "../../api/api";
 
   import {
-    getCompanyList,getCompany
+    getCompanyList, getCompany, updateCompany
   } from '../../api/company'
 
   export default {
@@ -377,7 +377,6 @@
           if (valid) {
             if (this.modalType === 0) {
               let obj = {};
-              obj.accessToken = localStorage.getItem("accessToken");
               obj.name = this.formInline.name;
               obj.taxNumber = this.formInline.taxNumber;
               obj.bank = this.formInline.bank;
@@ -386,9 +385,7 @@
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
               obj.username = this.username;
-              this.$ajax.put(companyUrl + "/" + this.companyId, {
-                data: obj
-              }).then(res => {
+              updateCompany (this.companyId, obj).then(res => {
                 if (res.status === 200) {
                   this.$Message.success("编辑成功!");
                   this.handleReset('formInline');
@@ -473,7 +470,6 @@
           accessToken: localStorage.getItem("accessToken"),
         }
         getCompanyList(params).then(res => {
-          console.log(33333333)
           if (res.status == 200) {
             this.companyList = res.data.content;
             this.showInfo = true;
@@ -487,8 +483,6 @@
             this.companyList = null;
           }
         }).catch(error => {
-          console.log(33333333)
-
           console.log(error)
         });
       },
