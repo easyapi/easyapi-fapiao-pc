@@ -57,11 +57,11 @@
               <span style="color: #515a6e;">{{companyData.name}}</span>
               <span v-if="companyData.ifDefault===false" style="color: #2d8cf0;">设为默认</span>
             </p>
-            <p class="company-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
-            <p class="company-informations">{{companyData.bank }}</p>
-            <p class="company-informations">{{companyData.bankAccount}}</p>
-            <p class="company-informations">{{companyData.address}}</p>
-            <p class="company-informations">{{companyData.phone}}</p>
+            <p class="company-informations" style="margin-top:10px;">{{companyData.taxNumber || '——'}}</p>
+            <p class="company-informations">{{companyData.bank || '——'}}</p>
+            <p class="company-informations">{{companyData.bankAccount || '——'}}</p>
+            <p class="company-informations">{{companyData.address || '——'}}</p>
+            <p class="company-informations">{{companyData.phone || '——'}}</p>
             <div class="btn">
               <Button size="small" style="font-size: 14px" @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
               <Button size="small" style="font-size: 14px" @click.stop="deleteCompany(companyData.companyId)">删除</Button>
@@ -77,11 +77,11 @@
                 <Button size="small" type="primary">默认</Button>
               </span>
             </p>
-            <p class="company-informations" style="margin-top:10px;">{{companyData.taxNumber}}</p>
-            <p class="company-informations">{{companyData.bank }}</p>
-            <p class="company-informations">{{companyData.bankAccount}}</p>
-            <p class="company-informations">{{companyData.address}}</p>
-            <p class="company-informations">{{companyData.phone}}</p>
+            <p class="company-informations" style="margin-top:10px;">{{companyData.taxNumber || '——'}}</p>
+            <p class="company-informations">{{companyData.bank || '——'}}</p>
+            <p class="company-informations">{{companyData.bankAccount || '——'}}</p>
+            <p class="company-informations">{{companyData.address || '——'}}</p>
+            <p class="company-informations">{{companyData.phone || '——'}}</p>
             <div class="btn">
               <Button size="small" style="font-size: 14px" @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
               <Button size="small" style="font-size: 14px" @click.stop="deleteCompany(companyData.companyId)">删除</Button>
