@@ -89,13 +89,13 @@
             <img src="../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
           </div>
         </div>
-        <div class="add-the-address" @click="addInvoiceTitleFn(1)">
+        <div class="add-the-address" @click="addInvoiceTitleFn(1)" v-if="this.tableData.length < 6">
           <img src="../../assets/images/plus.png" alt="" style="display: block;margin:70px auto;">
         </div>
       </div>
 
 
-      <p class="tpPading-10 btPading-10">注意：发票抬头最多可以添加5个</p>
+      <p class="tpPading-10 btPading-10">注意：发票抬头最多可以添加6个</p>
       <!-- <div class="page-box flex-r">
         <Page :total='page.total' :page-size="page.size" :current="page.current" @on-change="changePage"
               show-elevator></Page>
@@ -161,7 +161,7 @@
         tableData: [],
         page: {
           current: 1,
-          size: 5,
+          size: 6,
           total: 0,
         }
       }
@@ -289,11 +289,11 @@
           this.showModal = true;
           this.getCompany();
         } else if (t === 1) {
-          if (this.tableData.length < 5) {
+          if (this.tableData.length < 6) {
             this.modalTitle = "添加发票";
             this.showModal = true;
-          } else if (this.tableData.length === 5) {
-            this.$Message.warning("发票最多只能添加5个")
+          } else if (this.tableData.length === 6) {
+            this.$Message.warning("发票最多只能添加6个")
           }
         }
       },
@@ -450,7 +450,9 @@
     width: 100%;
     height: auto;
     margin-bottom: 20px;
+    overflow:hidden;
   }
+
   .get-company {
     width: 305px;
     height: 200px;
