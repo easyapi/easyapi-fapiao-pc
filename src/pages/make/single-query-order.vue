@@ -45,7 +45,7 @@
             </RadioGroup>
           </FormItem>
           <FormItem label="姓名" prop="purchaserName" v-show="formValidate.type === '个人'">
-            <Input v-model="formValidate.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"></Input>
+            <Input v-model="formValidate.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"/>
           </FormItem>
           <div class="invioce-title" v-show="formValidate.type === '企业'">
             <div
@@ -77,7 +77,7 @@
                 style="padding:10px;"
               >设为默认</a>
               <a @click="addInvoiceTitleFn(0,item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">编辑</a>
-              <a @click="handleDel(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a>
+              <a @click="deleteCompany(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a>
             </div>
             <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany!=0"></div>
           </div>
@@ -100,13 +100,13 @@
           <!--<span></span>-->
           <!--</FormItem>-->
           <FormItem label="开票备注">
-            <Input v-model="formValidate.remark" placeholder="可输入开票备注" style="width: 200px"></Input>
+            <Input v-model="formValidate.remark" placeholder="可输入开票备注" style="width: 200px"/>
           </FormItem>
           <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'">
-            <Input v-model="formValidate.mobile" placeholder="请输入手机号码" style="width: 200px;"></Input>
+            <Input v-model="formValidate.mobile" placeholder="请输入手机号码" style="width: 200px;"/>
           </FormItem>
           <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'">
-            <Input v-model="formValidate.email" placeholder="请输入邮箱" style="width: 200px;"></Input>
+            <Input v-model="formValidate.email" placeholder="请输入邮箱" style="width: 200px;"/>
           </FormItem>
         </Form>
       </div>
@@ -144,7 +144,7 @@
     <Modal v-model="showModal" :title="modalTitle">
       <Form ref="formInline" :model="formInline" :rules="rules" :label-width="100">
         <FormItem label="发票抬头" prop="name">
-          <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"></Input>
+          <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
           <div class="query-results" v-if="this.makeUp!==''">
             <ul>
               <li
@@ -157,19 +157,19 @@
           </div>
         </FormItem>
         <FormItem label="纳税人识别号" prop="taxNumber">
-          <Input v-model="formInline.taxNumber" placeholder="请输入纳税人识别号"></Input>
+          <Input v-model="formInline.taxNumber" placeholder="请输入纳税人识别号"/>
         </FormItem>
         <FormItem label="开户行" prop="bank">
-          <Input v-model="formInline.bank" placeholder="请输入开户行及账号"></Input>
+          <Input v-model="formInline.bank" placeholder="请输入开户行及账号"/>
         </FormItem>
         <FormItem label="开户行账号" prop="bankAccount">
-          <Input v-model="formInline.bankAccount" placeholder="请输入开户行账号"></Input>
+          <Input v-model="formInline.bankAccount" placeholder="请输入开户行账号"/>
         </FormItem>
         <FormItem label="地址" prop="address">
-          <Input v-model="formInline.address" placeholder="请输入地址"></Input>
+          <Input v-model="formInline.address" placeholder="请输入地址"/>
         </FormItem>
         <FormItem label="电话" prop="phone">
-          <Input v-model="formInline.phone" placeholder="请输入电话"></Input>
+          <Input v-model="formInline.phone" placeholder="请输入电话"/>
         </FormItem>
         <FormItem>
           <Checkbox v-model="ifDefault">设为默认</Checkbox>
@@ -187,10 +187,13 @@
     invoiceMoneyUrl,
     invoiceAddressUrl,
     queryServiceURl,
-    companyUrl, orderPriceUrl,
-    companiesUrl,
-    outOrderListUrl
+    orderPriceUrl
   } from "../../api/api";
+  import {
+    getCompanyList,
+    getCompany, createCompany, updateCompany, updateDefaultCompany,
+    deleteCompany
+  } from "../../api/company";
 
   export default {
     name: "",
@@ -292,49 +295,33 @@
         }
       },
       // 删除
-      handleDel(id) {
+      deleteCompany(companyId) {
         this.$Modal.confirm({
           title: "提示",
           content: "<p>您确定要删除该条记录吗？</p>",
           onOk: () => {
-            this.$ajax({
-              method: "DELETE",
-              url: companyUrl + "/" + id,
-              params: {
-                accessToken: this.accessToken
-              }
-            })
-              .then(res => {
-                this.$Message.info("删除成功");
-                this.getCompanyList();
-              })
-              .catch(error => {
-                console.log(error.response);
-              });
+            deleteCompany(companyId).then(res => {
+              this.$Message.info("删除成功");
+              this.getCompanyList();
+            }).catch(error => {
+              console.log(error.response);
+            });
           }
         });
       },
-      getCompany(id) {
-        this.$ajax({
-          method: "GET",
-          url: companyUrl + "/" + id,
-          params: {
-            accessToken: this.accessToken
-          }
-        })
-          .then(res => {
-            let data = res.data.content;
-            this.formInline.name = data.name;
-            this.formInline.taxNumber = data.taxNumber;
-            this.formInline.bank = data.bank;
-            this.formInline.bankAccount = data.bankAccount;
-            this.formInline.address = data.address;
-            this.formInline.phone = data.phone;
-            this.ifDefault = data.ifDefault;
-          })
-          .catch(error => {
-            console.log(error.response);
-          });
+      getCompany(companyId) {
+        getCompany(companyId).then(res => {
+          let data = res.data.content;
+          this.formInline.name = data.name;
+          this.formInline.taxNumber = data.taxNumber;
+          this.formInline.bank = data.bank;
+          this.formInline.bankAccount = data.bankAccount;
+          this.formInline.address = data.address;
+          this.formInline.phone = data.phone;
+          this.ifDefault = data.ifDefault;
+        }).catch(error => {
+          console.log(error.response);
+        });
       },
       // 抬头填写重置
       titleReset(name) {
@@ -347,25 +334,15 @@
         this.companyId = id;
       },
       // 设为默认
-      setDefault(id) {
-        this.$ajax({
-          method: "PUT",
-          url: companyUrl + "/" + id,
-          data: {
-            accessToken: this.accessToken,
-            username: this.username,
-            ifDefault: true
+      setDefault(companyId) {
+        updateDefaultCompany(companyId).then(res => {
+          if (res.data.code === 1) {
+            this.$Message.success("操作成功!");
+            this.getCompanyList();
           }
-        })
-          .then(res => {
-            if (res.data.code === 1) {
-              this.$Message.success("操作成功!");
-              this.getCompanyList();
-            }
-          })
-          .catch(error => {
-            console.log(error.response);
-          });
+        }).catch(error => {
+          console.log(error.response);
+        });
       },
       // 获取订单价格
       getOrderPrice() {
@@ -374,19 +351,16 @@
             method: "GET",
             url: orderPriceUrl + this.$route.query.no,
             params: {}
-          })
-            .then(res => {
-              this.price = res.data.content.price;
-              this.outOrderId = res.data.content.outOrderId;
-            })
-            .catch(error => {
-              console.log(error.response);
-            });
+          }).then(res => {
+            this.price = res.data.content.price;
+            this.outOrderId = res.data.content.outOrderId;
+          }).catch(error => {
+            console.log(error.response);
+          });
         } else {
           setTimeout(() => {
             this.$Message.warning("未能获取到订单号；请检查是否正确传入！");
           }, 2000);
-
         }
       },
       //提交地址
@@ -404,21 +378,15 @@
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
               obj.username = this.username;
-              this.$ajax({
-                method: "PUT",
-                url: companyUrl + "/" + this.companyId,
-                data: obj
-              })
-                .then(res => {
-                  if (res.status === 200) {
-                    this.$Message.success("编辑成功!");
-                    this.handleReset('formInline');
-                    this.getCompanyList();
-                  }
-                })
-                .catch(error => {
-                  console.log(error.response);
-                });
+              updateCompany(this.companyId, obj).then(res => {
+                if (res.status === 200) {
+                  this.$Message.success("编辑成功!");
+                  this.handleReset('formInline');
+                  this.getCompanyList();
+                }
+              }).catch(error => {
+                console.log(error.response);
+              });
             } else if (this.modalType === 1) {
               let obj = {};
               obj.accessToken = this.accessToken;
@@ -429,21 +397,15 @@
               obj.address = this.formInline.address;
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
-              this.$ajax({
-                method: 'POST',
-                url: companyUrl,
-                data: obj
-              })
-                .then(res => {
-                  if (res.status === 200) {
-                    this.$Message.success("添加成功!");
-                    this.handleReset('formInline');
-                    this.getCompanyList();
-                  }
-                })
-                .catch(error => {
-                  console.log(error.response);
-                });
+              createCompany(obj).then(res => {
+                if (res.status === 200) {
+                  this.$Message.success("添加成功!");
+                  this.handleReset('formInline');
+                  this.getCompanyList();
+                }
+              }).catch(error => {
+                console.log(error.response);
+              });
             }
           } else {
             this.$Message.error("请将信息填写完整!");
@@ -466,31 +428,24 @@
         this.makeUp = [];
       },
       getCompanyList() {
-        this.$ajax({
-          method: "GET",
-          url: companiesUrl,
-          params: {
-            accessToken: this.accessToken,
-            username: this.username
-          }
-        })
-          .then(res => {
-            if (res.status == 200) {
-              this.companyList = res.data.content;
-              this.showInfo = true;
-              for (let k of this.companyList) {
-                if (k.ifDefault == true) {
-                  this.companyId = k.companyId;
-                }
+        let params = {}
+        params.username = this.username;
+        getCompanyList().then(res => {
+          if (res.status == 200) {
+            this.companyList = res.data.content;
+            this.showInfo = true;
+            for (let k of this.companyList) {
+              if (k.ifDefault == true) {
+                this.companyId = k.companyId;
               }
-            } else {
-              this.showInfo = false;
-              this.companyList = null;
             }
-          })
-          .catch(error => {
-            console.log(error.response);
-          });
+          } else {
+            this.showInfo = false;
+            this.companyList = null;
+          }
+        }).catch(error => {
+          console.log(error.response);
+        });
       },
       getIfManageCompany() {
         this.$ajax({
@@ -520,16 +475,15 @@
             accessToken: this.accessToken,
             username: this.username
           }
+        }).then(res => {
+          if (res.data.code === 1) {
+            this.defaultAddress = res.data.content;
+            this.showAddressInfo = true;
+          } else if (res.data.code === 0) {
+            this.showAddressInfo = false;
+            this.defaultAddress = null;
+          }
         })
-          .then(res => {
-            if (res.data.code === 1) {
-              this.defaultAddress = res.data.content;
-              this.showAddressInfo = true;
-            } else if (res.data.code === 0) {
-              this.showAddressInfo = false;
-              this.defaultAddress = null;
-            }
-          })
           .catch(error => {
             console.log(error.response);
           });
@@ -546,18 +500,16 @@
             accessToken: this.accessToken,
             name: this.formInline.name
           }
-        })
-          .then(res => {
-            this.code = res.data.code;
-            if (res.data.code !== 0) {
-              (this.message = ""), (this.makeUp = res.data.content);
-            } else {
-              this.message = res.data.message;
-            }
-          })
-          .catch(error => {
-            console.log(error.response.data.message);
-          });
+        }).then(res => {
+          this.code = res.data.code;
+          if (res.data.code !== 0) {
+            (this.message = ""), (this.makeUp = res.data.content);
+          } else {
+            this.message = res.data.message;
+          }
+        }).catch(error => {
+          console.log(error.response.data.message);
+        });
       },
       //1.获取我的开票账户信息
       getUser() {

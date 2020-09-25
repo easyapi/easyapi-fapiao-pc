@@ -86,14 +86,18 @@
                   <p>{{item.taxNumber}}</p>
                 </li>
               </ul>
-              <Button size="small" style="margin-left:22px; font-size: 14px"><a @click="addInvoiceTitleFn(0,item.companyId)" >编辑</a></Button>
-              <Button size="small" style="margin-left:10px; font-size: 14px"><a @click="handleDel(item.companyId)" v-if="ifManageCompany">删除</a></Button>
+              <Button size="small" style="margin-left:22px; font-size: 14px"><a
+                @click="addInvoiceTitleFn(0,item.companyId)">编辑</a></Button>
+              <Button size="small" style="margin-left:10px; font-size: 14px"><a @click="handleDel(item.companyId)"
+                                                                                v-if="ifManageCompany">删除</a></Button>
               <a
                 v-if="item.ifDefault != true"
                 @click="setDefault(item.companyId)"
                 style="padding:10px; margin-left:120px"
               >设为默认</a>
-              <Button v-if="item.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px" type="primary">默认</Button>
+              <Button v-if="item.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px"
+                      type="primary">默认
+              </Button>
             </div>
             <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany"></div>
           </div>
@@ -204,10 +208,7 @@
   import {
     invoiceMoneyUrl,
     invoiceAddressUrl,
-    queryServiceURl,
-    companyUrl,
-    companiesUrl,
-    outOrderListUrl
+    queryServiceURl
   } from "../../api/api";
 
   import {
@@ -375,7 +376,7 @@
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
               obj.username = this.username;
-              updateCompany (this.companyId, obj).then(res => {
+              updateCompany(this.companyId, obj).then(res => {
                 if (res.status === 200) {
                   this.$Message.success("编辑成功!");
                   this.handleReset('formInline');

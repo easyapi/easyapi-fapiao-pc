@@ -20,7 +20,6 @@
               <p>{{invoice.addTime}}</p>
             </div>
           </Col>
-
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>发票类型</span>
@@ -31,10 +30,10 @@
             <div class="item-td flex-r">
               <span>发票状态</span>
               <p>{{invoice.statements}}
-                <a :href="invoice.electronicInvoiceImg" target="_blank">{{invoice.electronicInvoiceImg
-                  ? '预览发票' : '暂无预览'}}</a>
-                <a :href="invoice.electronicInvoiceUrl" target="_blank">{{invoice.electronicInvoiceUrl
-                  ? '下载发票' : '暂无下载'}}</a>
+                <a :href="invoice.electronicInvoiceImg" target="_blank">{{invoice.electronicInvoiceImg ? '预览发票' :
+                  '暂无预览'}}</a>
+                <a :href="invoice.electronicInvoiceUrl" target="_blank">{{invoice.electronicInvoiceUrl ? '下载发票' :
+                  '暂无下载'}}</a>
               </p>
             </div>
           </Col>
@@ -240,12 +239,5 @@
 
   .item-td p {
     padding-left: 10px;
-  }
-  .ivu-breadcrumb{
-    padding:20px 0px 14px;
-    font-size:20px;
-    border-bottom:1px solid #ddd;
-    color: #666;
-    font-weight: bold;
   }
 </style>

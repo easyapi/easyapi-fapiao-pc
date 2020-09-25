@@ -451,10 +451,11 @@
     border: solid 1px #18c1d6;
     background-color: #18c1d6;
   }
-  .ivu-breadcrumb{
-    padding:20px 0px 14px;
-    font-size:20px;
-    border-bottom:1px solid #ddd;
+
+  .ivu-breadcrumb {
+    padding: 20px 0px 14px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
   }

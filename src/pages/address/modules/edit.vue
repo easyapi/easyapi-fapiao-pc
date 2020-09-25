@@ -71,7 +71,6 @@
   </div>
 </template>
 <script>
-  import {addressesUrl, addrUrl} from '../api/api';
   import {getUpdateAddress, deleteAddress,getAddressList,postAddress} from '../api/address'
   import VDistpicker from 'v-distpicker'
 

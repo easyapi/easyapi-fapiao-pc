@@ -37,7 +37,7 @@
       <div v-if="showMoreBtn" class="show-more-btn">
         <Button @click="handleAddMore">加载更多</Button>
       </div>
-       <div class="page-box flex-r">
+      <div class="page-box flex-r">
         <Page
           :total="total"
           :page-size="pageSize"
@@ -148,7 +148,7 @@
       },
       getOutOrderList(name) {
         this.loadingData = '加载中',
-        this.clicked = name;
+          this.clicked = name;
         this.showMoreBtn = true;
         this.amountOfInvoice = 0;
         this.price = 0;
@@ -169,7 +169,7 @@
               this.totalPages = res.data.totalPages;
               this.tableData = res.data.content;
               this.total = Number(res.data.totalElements);
-              if (this.current +1 > this.totalPages) {
+              if (this.current + 1 > this.totalPages) {
                 this.showMoreBtn = false;
               }
               this.$ajax({
@@ -198,14 +198,14 @@
                 });
             } else {
               this.loadingData = '暂无数据',
-              this.tableData = [];
+                this.tableData = [];
               this.total = 0;
               this.showMoreBtn = false;
             }
           })
           .catch(error => {
             this.loadingData = '暂无数据',
-            console.log(error.response);
+              console.log(error.response);
           });
       },
       //计算金额和ids
@@ -268,7 +268,7 @@
             // if (this.tableData.length == this.total) {
             //   this.showMoreBtn = false;
             // }
-            if (this.current +1 > this.totalPages) {
+            if (this.current + 1 > this.totalPages) {
               this.showMoreBtn = false;
             }
           }

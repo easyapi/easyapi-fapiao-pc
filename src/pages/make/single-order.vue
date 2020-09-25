@@ -47,7 +47,7 @@
             </RadioGroup>
           </FormItem>
           <FormItem label="姓名" prop="purchaserName" v-show="formValidate.type === '个人'">
-            <Input v-model="formValidate.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"></Input>
+            <Input v-model="formValidate.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"/>
           </FormItem>
           <div class="invioce-title" v-show="formValidate.type === '企业'">
             <div
@@ -102,13 +102,13 @@
           <!--<span></span>-->
           <!--</FormItem>-->
           <FormItem label="开票备注">
-            <Input v-model="formValidate.remark" placeholder="可输入开票备注" style="width: 200px"></Input>
+            <Input v-model="formValidate.remark" placeholder="可输入开票备注" style="width: 200px"/>
           </FormItem>
           <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'">
-            <Input v-model="formValidate.mobile" placeholder="请输入手机号码" style="width: 200px;"></Input>
+            <Input v-model="formValidate.mobile" placeholder="请输入手机号码" style="width: 200px;"/>
           </FormItem>
           <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'">
-            <Input v-model="formValidate.email" placeholder="请输入邮箱" style="width: 200px;"></Input>
+            <Input v-model="formValidate.email" placeholder="请输入邮箱" style="width: 200px;"/>
           </FormItem>
         </Form>
       </div>
@@ -146,7 +146,7 @@
     <Modal v-model="showModal" :title="modalTitle">
       <Form ref="formInline" :model="formInline" :rules="rules" :label-width="100">
         <FormItem label="发票抬头" prop="name">
-          <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"></Input>
+          <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
           <div class="query-results" v-if="this.makeUp!==''">
             <ul>
               <li
@@ -159,19 +159,19 @@
           </div>
         </FormItem>
         <FormItem label="纳税人识别号" prop="taxNumber">
-          <Input v-model="formInline.taxNumber" placeholder="请输入纳税人识别号"></Input>
+          <Input v-model="formInline.taxNumber" placeholder="请输入纳税人识别号"/>
         </FormItem>
         <FormItem label="开户行" prop="bank">
-          <Input v-model="formInline.bank" placeholder="请输入开户行及账号"></Input>
+          <Input v-model="formInline.bank" placeholder="请输入开户行及账号"/>
         </FormItem>
         <FormItem label="开户行账号" prop="bankAccount">
-          <Input v-model="formInline.bankAccount" placeholder="请输入开户行账号"></Input>
+          <Input v-model="formInline.bankAccount" placeholder="请输入开户行账号"/>
         </FormItem>
         <FormItem label="地址" prop="address">
-          <Input v-model="formInline.address" placeholder="请输入地址"></Input>
+          <Input v-model="formInline.address" placeholder="请输入地址"/>
         </FormItem>
         <FormItem label="电话" prop="phone">
-          <Input v-model="formInline.phone" placeholder="请输入电话"></Input>
+          <Input v-model="formInline.phone" placeholder="请输入电话"/>
         </FormItem>
         <FormItem>
           <Checkbox v-model="ifDefault">设为默认</Checkbox>
@@ -188,10 +188,8 @@
   import {
     invoiceMoneyUrl,
     invoiceAddressUrl,
-    queryServiceURl,
-    companyUrl, orderPriceUrl,
-    companiesUrl,
-    outOrderListUrl
+    queryServiceURl
+    , orderPriceUrl
   } from "../../api/api";
 
   export default {

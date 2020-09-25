@@ -47,7 +47,8 @@
             <p class="address-informations">{{addressData.district + addressData.addr}}</p>
             <div class="btn">
               <Button size="small" style="font-size: 14px" @click.stop="openDialog(0,addressData.addressId)">修改</Button>
-              <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除
+              </Button>
             </div>
           </div>
           <div class="get-address" style="border: solid 1px #2d8cf0;position: relative"
@@ -65,7 +66,8 @@
             <p class="address-informations">{{addressData.district + addressData.addr}}</p>
             <div class="btn">
               <Button size="small" style="font-size: 14px" @click.stop="openDialog(0,addressData.addressId)">修改</Button>
-              <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除
+              </Button>
             </div>
             <img src="../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
           </div>
@@ -78,7 +80,7 @@
   </div>
 </template>
 <script>
-  import {getUpdateAddress, getAddress, deleteAddress,getAddressList,postAddress} from '../../api/address'
+  import {getUpdateAddress, getAddress, deleteAddress, getAddressList, postAddress} from '../../api/address'
   import VDistpicker from 'v-distpicker'
 
   export default {
@@ -140,7 +142,7 @@
           username: this.username,
           ifDefault: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }
+        };
         getUpdateAddress(addressId, data).then(res => {
             if (res.data.code === 1) {
               this.getAddressList()
@@ -164,15 +166,13 @@
             });
           }
         });
-      }
-      ,
+      },
       //选择省市区
       onSelected(data) {
         this.formValidate.province = data.province.value;
         this.formValidate.city = data.city.value;
         this.formValidate.area = data.area.value;
-      }
-      ,
+      },
       getAddressList() {
         let params = {}
         getAddressList(params).then(res => {
@@ -182,8 +182,7 @@
           this.$Message.warning(error.response.data.message)
         });
 
-      }
-      ,
+      },
       //获取省份
       getProvince() {
         this.$ajax({
@@ -197,8 +196,7 @@
         }).catch(error => {
           console.log(error.response)
         });
-      }
-      ,
+      },
       //获取市
       getCity() {
         this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.province + '/cities.json', {
@@ -210,8 +208,7 @@
         }).catch(error => {
           console.log(error.response)
         });
-      }
-      ,
+      },
       //获取区域
       getArea() {
         this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.city + '/districts.json', {
@@ -224,11 +221,10 @@
         }).catch(error => {
           console.log(error.response)
         });
-      }
-      ,
+      },
       //获取地址详情
       getAddress() {
-        getAddress(this.addressId).then(res=>{
+        getAddress(this.addressId).then(res => {
           let data = res.data.content;
           this.formValidate.name = data.name;
           this.formValidate.phone = data.mobile;
@@ -240,8 +236,7 @@
         }).catch(error => {
           console.log(error.response)
         });
-      }
-      ,
+      },
       openDialog(t, id) {
         this.modalType = t;
         if (t === 0) {
@@ -256,8 +251,7 @@
           this.modalTitle = "添加地址";
           this.showModal = true;
         }
-      }
-      ,
+      },
       //提交地址
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
@@ -266,7 +260,7 @@
               return this.$Message.warning('请将省市区填写完整');
             }
             if (this.modalType === 0) {
-              let data={
+              let data = {
                 accessToken: localStorage.getItem('accessToken'),
                 username: this.username,
                 name: this.formValidate.name,
@@ -278,7 +272,7 @@
                 ifDefault: this.formValidate.interest,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
               }
-              getUpdateAddress(this.addressId,data).then(res=>{
+              getUpdateAddress(this.addressId, data).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('修改成功!');
                   this.handleReset('formValidate')
@@ -288,7 +282,7 @@
                 console.log(error.response)
               });
             } else if (this.modalType === 1) {
-              let params={
+              let params = {
                 username: this.username,
                 name: this.formValidate.name,
                 mobile: this.formValidate.phone,
@@ -299,7 +293,7 @@
                 ifDefault: this.formValidate.interest,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
               }
-              postAddress(params).then(res=>{
+              postAddress(params).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
                   this.handleReset('formValidate')
@@ -313,8 +307,7 @@
             this.$Message.error('请将信息填写完整!');
           }
         })
-      }
-      ,
+      },
       handleReset(name) {
         this.showModal = false;
         this.formValidate.name = '';
@@ -323,20 +316,15 @@
         this.formValidate.interest = true;
         this.$refs[name].resetFields();
       }
-      ,
     },
     //计算属性
-    computed: {}
-    ,
+    computed: {},
     created() {
       this.username = this.$route.query.username;
-    }
-    ,
+    },
     mounted() {
       this.getAddressList();
     }
-    ,
-    watch: {}
   }
 
 </script>
