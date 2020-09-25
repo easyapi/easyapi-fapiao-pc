@@ -99,7 +99,7 @@
                       type="primary">默认
               </Button>
             </div>
-            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany"></div>
+            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany && companyList.length < 6"></div>
           </div>
         </Form>
       </div>
@@ -303,12 +303,12 @@
           this.showModal = true;
           this.getCompany(id);
         } else if (t === 1) {
-          if (this.companyList.length < 5) {
+          if (this.companyList.length < 6) {
             this.modalTitle = "添加发票抬头";
             this.showModal = true;
             this.getCompanyList();
-          } else if (this.companyList.length === 5) {
-            this.$Message.warning("发票最多只能添加5个");
+          } else if (this.companyList.length === 6) {
+            this.$Message.warning("发票最多只能添加6个");
           }
         }
       },
