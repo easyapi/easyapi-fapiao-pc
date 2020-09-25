@@ -1,12 +1,13 @@
 <template>
   <div class="demand">
-    <Breadcrumb>
-      <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+    <Breadcrumb separator="<b style='color:#333; margin-left:-8px'>/</b>">
+      <img src="../../assets/images/logo.png" alt="" style="margin-right: 8px; width:25px; height: 25px;">
+      <BreadcrumbItem to="/" style="color: #333;">发票管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">订单开票</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <div class="invoice-nature">
-        <p class="invoice">发票形式</p>
+        <h3 class="h3-title">发票形式</h3>
         <div style="display: flex;height: 120px;">
           <div
             class="electronic-invoice"
@@ -18,7 +19,7 @@
             <img v-if=" this.property==='电子'" src="../../assets/images/default.png" alt
                  style="position: absolute;bottom:0px;right: 0px;">
           </div>
-          <!-- <div
+          <div
             class="electronic-invoice"
             style="margin-left:20px;"
             :class="{SelectedStyle:property==='纸质'}"
@@ -32,11 +33,11 @@
               alt
               style="position: absolute;bottom:0px;right: 0px;"
             >
-          </div>-->
+          </div>
         </div>
       </div>
       <div class="invoice-nature">
-        <p class="invoice">发票抬头</p>
+        <h3 class="h3-title">发票抬头</h3>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
           <FormItem label="抬头类型" prop="type">
             <RadioGroup v-model="formValidate.type">
@@ -84,7 +85,7 @@
         </Form>
       </div>
       <div class="invoice-nature">
-        <p class="invoice">发票信息</p>
+        <h3 class="h3-title">发票信息</h3>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
           <!-- <FormItem label="发票类型" prop="category">
             <RadioGroup v-model="formValidate.category">
@@ -99,13 +100,13 @@
           <!--<FormItem label="发票内容">-->
           <!--<span></span>-->
           <!--</FormItem>-->
-          <FormItem label="开票备注">
+          <FormItem label="开票备注" style="margin-top:25px;">
             <Input v-model="formValidate.remark" placeholder="可输入开票备注" style="width: 200px"/>
           </FormItem>
-          <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'">
+          <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'" style="margin-top:25px;">
             <Input v-model="formValidate.mobile" placeholder="请输入手机号码" style="width: 200px;"/>
           </FormItem>
-          <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'">
+          <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'" style="margin-top:25px;">
             <Input v-model="formValidate.email" placeholder="请输入邮箱" style="width: 200px;"/>
           </FormItem>
         </Form>
@@ -627,9 +628,9 @@
     padding-left: 10px;
 
     span {
-      color: #18c1d6;
+      color: #2d8cf0;
       font-size: 18px;
-      border-right: 2px solid #18c1d6;
+      border-right: 2px solid #2d8cf02d8cf02d8cf0;
       padding: 10px 10px 10px 0;
       cursor: pointer;
     }
@@ -679,13 +680,14 @@
   }
 
   .demand {
+    background-color: #fff;
+    padding: 20px 40px;
     height: auto;
-    background-color: #ffffff;
     border: solid 1px #dddddd;
   }
 
   .set-content {
-    margin: 0px 20px;
+    // margin: 0px 20px;
   }
 
   .invoice-nature {
@@ -711,19 +713,19 @@
   }
 
   .invoice-nature .electronic-invoice:hover {
-    border: 1px solid #18c1d6;
+    border: 1px solid #2d8cf0;
   }
 
   .invoice-nature .electronic-invoice:hover span {
-    color: #18c1d6 !important;
+    color: #2d8cf0 !important;
   }
 
   .SelectedStyle {
-    border: solid 1px #18c1d6 !important;
+    border: solid 1px #2d8cf0 !important;
   }
 
   .SelectedStyle span {
-    color: #18c1d6 !important;
+    color: #2d8cf0 !important;
   }
 
   .invoice-nature .electronic-invoice span {
@@ -732,7 +734,7 @@
   }
 
   .invoice-content {
-    width: 390px
+    width: 360px
     height: 146px;
     border-radius: 4px;
     border: solid 1px #dddddd;
@@ -781,21 +783,21 @@
   .btn {
     width: 88px;
     height: 34px;
-    background-color: #18c1d6;
+    background-color: #2d8cf0;
     color: #ffffff;
     font-size: 14px;
     margin-top: 20px;
   }
 
   .btn:hover {
-    background-color: #18c1d6 !important;
-    border-color: #18c1d6 !important;
+    background-color: #2d8cf0 !important;
+    border-color: #2d8cf0 !important;
     color: #fff;
   }
 
   .selecting {
-    border: 1px solid #18c1d6 !important;
-    color: #18c1d6;
+    border: 1px solid #2d8cf0 !important;
+    color: #2d8cf0;
   }
 
   .ivu-breadcrumb {
