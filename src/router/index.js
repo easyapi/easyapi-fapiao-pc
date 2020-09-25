@@ -39,6 +39,11 @@ const routes = [
     name: 'MakeSingleOrder',
     component: resolve => require(['../pages/make/single-order.vue'], resolve)
   },
+  {
+    path: '/make/single-query-order',
+    name: 'MakeSingleQueryOrder',
+    component: resolve => require(['../pages/make/single-query-order.vue'], resolve)
+  },
 ]
 
 const router = new VueRouter({
