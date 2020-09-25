@@ -143,7 +143,7 @@
       <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p>
     </div>
     <Modal v-model="showModal" :title="modalTitle">
-      <Form ref="formInline" :model="formInline" :rules="rules" :label-width="100">
+      <Form ref="formInline" :model="formInline" :rules="rules" :label-width="120">
         <FormItem label="发票抬头" prop="name">
           <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
           <div class="query-results" v-if="this.makeUp!==''">
