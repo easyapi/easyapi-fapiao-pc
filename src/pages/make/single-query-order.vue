@@ -2,7 +2,6 @@
   <div class="demand">
     <Breadcrumb separator="<b style='color:#333; margin-left:-8px'>/</b>">
       <img src="../../assets/images/logo.png" alt="" style="margin-right: 8px; width:25px; height: 25px;">
-      <BreadcrumbItem to="/" style="color: #333;">发票管理</BreadcrumbItem>
       <BreadcrumbItem style="color: #333">订单开票</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
@@ -19,36 +18,36 @@
             <img v-if=" this.property==='电子'" src="../../assets/images/default.png" alt
                  style="position: absolute;bottom:0px;right: 0px;">
           </div>
-          <div
-            class="electronic-invoice"
-            style="margin-left:20px;"
-            :class="{SelectedStyle:property==='纸质'}"
-            @click="selectedProperty('纸质')"
-          >
-            <span style="color: #333333;font-size: 14px;">纸质发票</span>
-            <span style="font-size: 12px;color: #999999;">预计2天送达</span>
-            <img
-              v-if=" this.property==='纸质'"
-              src="../../assets/images/default.png"
-              alt
-              style="position: absolute;bottom:0px;right: 0px;"
-            >
-          </div>
+          <!--<div-->
+          <!--class="electronic-invoice"-->
+          <!--style="margin-left:20px;"-->
+          <!--:class="{SelectedStyle:property==='纸质'}"-->
+          <!--@click="selectedProperty('纸质')"-->
+          <!--&gt;-->
+          <!--<span style="color: #333333;font-size: 14px;">纸质发票</span>-->
+          <!--<span style="font-size: 12px;color: #999999;">预计2天送达</span>-->
+          <!--<img-->
+          <!--v-if=" this.property==='纸质'"-->
+          <!--src="../../assets/images/default.png"-->
+          <!--alt-->
+          <!--style="position: absolute;bottom:0px;right: 0px;"-->
+          <!--&gt;-->
+          <!--</div>-->
         </div>
       </div>
       <div class="invoice-nature">
         <h3 class="h3-title">发票抬头</h3>
-        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+        <Form ref="invoiceForm" :model="invoiceForm" :rules="ruleValidate" :label-width="80">
           <FormItem label="抬头类型" prop="type">
-            <RadioGroup v-model="formValidate.type">
+            <RadioGroup v-model="invoiceForm.type" @on-change="selectType">
               <Radio label="企业">企业</Radio>
               <Radio label="个人">个人</Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="发票抬头" prop="purchaserName" v-show="formValidate.type === '个人'">
-            <Input v-model="formValidate.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"/>
+          <FormItem label="发票抬头" prop="purchaserName" v-show="invoiceForm.type === '个人'">
+            <Input v-model="invoiceForm.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"/>
           </FormItem>
-          <div class="invioce-title" v-show="formValidate.type === '企业'">
+          <div class="invioce-title" v-show="invoiceForm.type === '企业'">
             <div
               class="invoice-content"
               v-for="(item,index) in companyList"
@@ -74,7 +73,8 @@
               </ul>
               <Button size="small" style="margin-left:22px; font-size: 14px"><a
                 @click="addInvoiceTitleFn(0,item.companyId)" v-if="ifManageCompany!=0">编辑</a></Button>
-              <Button size="small" style="margin-left:10px; font-size: 14px" v-if="ifManageCompany!=0"><a @click="deleteCompany(item.companyId)" v-if="ifManageCompany">删除</a></Button>
+              <Button size="small" style="margin-left:10px; font-size: 14px" v-if="ifManageCompany!=0"><a
+                @click="deleteCompany(item.companyId)" v-if="ifManageCompany">删除</a></Button>
               <a
                 v-if="item.ifDefault != true"
                 @click="setDefault(item.companyId)"
@@ -91,16 +91,17 @@
               <!-- <a @click="addInvoiceTitleFn(0,item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">编辑</a> -->
               <!-- <a @click="deleteCompany(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a> -->
             </div>
-            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany!=0 && companyList.length < 6"></div>
+            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)"
+                 v-if="ifManageCompany!=0 && companyList.length < 6"></div>
             <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
           </div>
         </Form>
       </div>
       <div class="invoice-nature">
         <h3 class="h3-title">发票信息</h3>
-        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+        <Form ref="invoiceForm" :model="invoiceForm" :rules="ruleValidate" :label-width="80">
           <!-- <FormItem label="发票类型" prop="category">
-            <RadioGroup v-model="formValidate.category">
+            <RadioGroup v-model="invoiceForm.category">
               <Radio label="增值税普通发票">增值税普通发票</Radio>
               <Radio label="增值税专用发票" v-if=" this.property!=='电子'">增值税专用发票</Radio>
             </RadioGroup>
@@ -113,13 +114,13 @@
           <!--<span></span>-->
           <!--</FormItem>-->
           <FormItem label="开票备注" style="margin-top:25px;">
-            <Input v-model="formValidate.remark" placeholder="可输入开票备注" style="width: 200px"/>
+            <Input v-model="invoiceForm.remark" placeholder="可输入开票备注" style="width: 200px"/>
           </FormItem>
           <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'" style="margin-top:25px;">
-            <Input v-model="formValidate.mobile" placeholder="请输入手机号码" style="width: 200px;"/>
+            <Input v-model="invoiceForm.mobile" placeholder="请输入手机号码" style="width: 200px;"/>
           </FormItem>
           <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'" style="margin-top:25px;">
-            <Input v-model="formValidate.email" placeholder="请输入邮箱" style="width: 200px;"/>
+            <Input v-model="invoiceForm.email" placeholder="请输入邮箱" style="width: 200px;"/>
           </FormItem>
         </Form>
       </div>
@@ -153,7 +154,7 @@
         </div>
       </div>
 
-      <Button class="btn" @click="handleSubmit('formValidate')">提交</Button>
+      <Button class="btn" @click="handleSubmit('invoiceForm')">提交</Button>
       <!-- <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p> -->
       <p class="tpPading-10 btPading-10">请仔细核对开票信息</p>
     </div>
@@ -199,21 +200,18 @@
   </div>
 </template>
 <script>
-  import {
-    queryServiceURl,
-    orderPriceUrl
-  } from "../../api/api";
+  import {queryServiceURl} from "../../api/api";
+  import {queryShopOrder, getState} from "../../api/query";
   import {
     getCompanyList,
-    getCompany, createCompany, updateCompany, updateDefaultCompany,
+    getCompany,
+    createCompany,
+    updateCompany,
+    updateDefaultCompany,
     deleteCompany
   } from "../../api/company";
-  import {
-    getDefaultAddress
-  } from "../../api/address";
-  import {
-    getCustomer
-  } from "../../api/customer";
+  import {getDefaultAddress} from "../../api/address";
+  import {getCustomer} from "../../api/customer";
 
   export default {
     name: "",
@@ -230,12 +228,12 @@
         showAddressInfo: false,
         modalTitle: "添加发票抬头",
         accessToken: "",
+        taxNumber: "",
         makeUp: "",
         property: "电子",
-        ids: "",
-        outOrderId: "",
+        outOrder: "",
         price: "",
-        formValidate: {
+        invoiceForm: {
           type: "企业",
           category: "增值税电子普通发票",
           email: "",
@@ -351,6 +349,18 @@
       // 选择抬头
       selectCompany(id) {
         this.companyId = id;
+        for (let k of this.companyList) {
+          if (k.companyId == id) {
+            this.companyId = k.companyId;
+            this.invoiceForm.purchaserName = k.name;
+            this.invoiceForm.purchaserTaxpayerNumber = k.taxNumber;
+            this.invoiceForm.purchaserAddress = k.address;
+            this.invoiceForm.purchaserPhone = k.phone;
+            this.invoiceForm.purchaserBank = k.bank;
+            this.invoiceForm.purchaserBankAccount = k.bankAccount;
+            this.invoiceForm.companyId = k.companyId;
+          }
+        }
       },
       // 设为默认
       setDefault(companyId) {
@@ -363,23 +373,30 @@
           console.log(error.response);
         });
       },
-      // 获取订单价格
-      getOrderPrice() {
-        if (this.$route.query.no) {
-          this.$ajax({
-            method: "GET",
-            url: orderPriceUrl + this.$route.query.no,
-            params: {}
-          }).then(res => {
+      getShopOrder() {
+        getState(this.outOrderNo).then(res => {
+          if (res.data.code === 1 && res.data.content) {
+            this.$router.replace({path: "/invoice/detail", query: {id: res.data.content[0].invoiceId}});
+          }
+        })
+        queryShopOrder(this.outOrderNo).then(res => {
+          if (res.data.code == 1) {
+            this.outOrder = res.data.content;
             this.price = res.data.content.price;
-            this.outOrderId = res.data.content.outOrderId;
-          }).catch(error => {
-            console.log(error.response);
-          });
-        } else {
-          setTimeout(() => {
-            this.$Message.warning("未能获取到订单号；请检查是否正确传入！");
-          }, 2000);
+          }
+        });
+      },
+      selectType() {
+        if (this.invoiceForm.type === "企业") {
+          this.getCompanyList();
+        } else if (this.invoiceForm.type === "个人") {
+          this.invoiceForm.purchaserName = "个人";
+          this.invoiceForm.purchaserTaxpayerNumber = "";
+          this.invoiceForm.address = "";
+          this.invoiceForm.phone = "";
+          this.invoiceForm.purchaserBank = "";
+          this.invoiceForm.purchaserBankAccount = "";
+          this.invoiceForm.companyId = "";
         }
       },
       //提交地址
@@ -453,6 +470,13 @@
             for (let k of this.companyList) {
               if (k.ifDefault == true) {
                 this.companyId = k.companyId;
+                this.invoiceForm.purchaserName = k.name;
+                this.invoiceForm.purchaserTaxpayerNumber = k.taxNumber;
+                this.invoiceForm.purchaserAddress = k.address;
+                this.invoiceForm.purchaserPhone = k.phone;
+                this.invoiceForm.purchaserBank = k.bank;
+                this.invoiceForm.purchaserBankAccount = k.bankAccount;
+                this.invoiceForm.companyId = k.companyId;
               }
             }
           } else {
@@ -521,15 +545,14 @@
       },
       //1.获取我的开票账户信息
       getCustomer() {
-        getCustomer({}).then(res => {
+        getCustomer({taxNumber: this.taxNumber}).then(res => {
           if (res.data.code === 1) {
-            this.formValidate.email = res.data.content.email;
-            this.formValidate.mobile = res.data.content.mobile;
+            this.invoiceForm.email = res.data.content.email;
+            this.invoiceForm.mobile = res.data.content.mobile;
           }
-        })
-          .catch(error => {
-            console.log(error);
-          });
+        }).catch(error => {
+          console.log(error);
+        });
       },
       handleSubmit(name) {
         this.$Modal.confirm({
@@ -538,7 +561,7 @@
           onOk: () => {
             this.$refs[name].validate(valid => {
               if (valid) {
-                let obj = this.formValidate;
+                let obj = this.invoiceForm;
                 obj.accessToken = this.accessToken;
                 if (this.property === '纸质') {
                   if (this.defaultAddress == null) {
@@ -550,43 +573,31 @@
                   return this.$Message.warning("请选择开票抬头");
                 }
                 obj.companyId = this.companyId;
-                obj.outOrderIds = this.outOrderId;
+                obj.outOrderNo = this.outOrder.outOrderNo;
+                obj.items = this.outOrder.items;
                 obj.property = this.property;
-                obj.email = this.formValidate.email;
-                obj.addrMobile = this.formValidate.mobile;
-
-                if (this.type === '个人') {
-                  obj.purchaserName = this.formValidate.purchaserName;
-                  obj.companyId = '';
-                } else if (this.type === '企业') {
-                  obj.purchaserName = '';
+                if (obj.property === '电子') {
+                  obj.category = "增值税电子普通发票";
                 }
+                obj.email = this.invoiceForm.email;
+                obj.addrMobile = this.invoiceForm.mobile;
                 this.$ajax({
                   method: "POST",
-                  url: 'https://fapiao-api.easyapi.com/merge-make',
+                  url: "https://fapiao-api.easyapi.com/invoice/make",
                   data: obj,
                 }).then(res => {
                   if (res.data.code === 1) {
                     this.$Message.success("提交成功");
-                    this.$router.push({
-                      path: "/",
-                      query: {
-                        taxNumber: localStorage.getItem("taxNumber"),
-                        accessToken: this.accessToken
-                      }
-                    });
+                    this.$router.go(0)
                   }
                 }).catch(error => {
                   console.log(error);
                   this.$Message.warning(error.response.data.message);
                 });
-              } else {
-
               }
             });
           },
           onCancel: () => {
-            this.$Message.info('Clicked cancel');
           }
         });
       },
@@ -594,22 +605,30 @@
         this.$router.push({path: url});
       }
     },
-    //计算属性
-    computed: {},
     created() {
-      // localStorage.setItem('accessToken', this.$route.query.accessToken);
-      // this.accessToken = this.$route.query.accessToken;
-      this.ids = this.$route.query.id;
-      this.formValidate.remark = this.$route.query.remark;
+      if (this.$route.query.accessToken) {
+        localStorage.setItem("accessToken", this.$route.query.accessToken);
+        this.accessToken = localStorage.getItem("accessToken");
+      } else if (this.accessToken === "") {
+        this.$Message.error('accessToken不能为空');
+      }
+      if (this.$route.query.outOrderNo) {
+        localStorage.setItem("outOrderNo", this.$route.query.outOrderNo);
+        this.outOrderNo = localStorage.getItem("outOrderNo");
+      } else if (this.outOrderNo === "") {
+        this.$Message.error("outOrderNo不能为空！");
+      }
+      this.accessToken = localStorage.getItem("accessToken");
+      this.taxNumber = localStorage.getItem("taxNumber");
+      this.outOrderNo = localStorage.getItem("outOrderNo");
     },
     mounted() {
       this.getCompanyList();
       this.getIfManageCompany();
-      this.getOrderPrice();
+      this.getShopOrder();
       this.getAddressList();
       this.getCustomer();
-    },
-    watch: {}
+    }
   };
 </script>
 <style>

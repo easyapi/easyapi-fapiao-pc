@@ -15,9 +15,9 @@ const routes = [
     component: resolve => require(['../pages/make/out-order.vue'], resolve)
   },
   {
-    path: '/invoice/e/detail',
+    path: '/invoice/detail',
     name: 'InvoiceDetail',
-    component: resolve => require(['../pages/invoice/e/detail.vue'], resolve)
+    component: resolve => require(['../pages/invoice/detail.vue'], resolve)
   },
   {
     path: '/address/',

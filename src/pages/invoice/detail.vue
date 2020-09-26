@@ -1,18 +1,20 @@
 <template>
   <div class="details">
-    <Breadcrumb>
+    <Breadcrumb separator="<b style='color:#333; margin-left:-8px'>/</b>">
+      <img src="../../assets/images/logo.png" alt="" style="margin-right: 8px; width: 25px; height: 25px;">
       <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem>发票抬头管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">发票详情</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
+      <h3 class="h3-title">您的发票开票金额 ¥ {{ invoice.price }} 元</h3>
       <div class="table-container">
-        <Row class-name="table-title">
+        <!-- <Row class-name="table-title">
           <Col span="24" class-name="">
             <p class="title">
               您的发票开票金额¥{{invoice.price}}元
             </p>
           </Col>
-        </Row>
+        </Row> -->
         <Row class-name="table-body">
           <Col span="12" class-name="">
             <div class="item-td flex-r">
@@ -20,6 +22,7 @@
               <p>{{invoice.addTime}}</p>
             </div>
           </Col>
+
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>发票类型</span>
@@ -30,10 +33,10 @@
             <div class="item-td flex-r">
               <span>发票状态</span>
               <p>{{invoice.statements}}
-                <a :href="invoice.electronicInvoiceImg" target="_blank">{{invoice.electronicInvoiceImg ? '预览发票' :
-                  '暂无预览'}}</a>
-                <a :href="invoice.electronicInvoiceUrl" target="_blank">{{invoice.electronicInvoiceUrl ? '下载发票' :
-                  '暂无下载'}}</a>
+                <a :href="invoice.electronicInvoiceImg" target="_blank">{{invoice.electronicInvoiceImg
+                  ? '预览发票' : '暂无预览'}}</a>
+                <a :href="invoice.electronicInvoiceUrl" target="_blank">{{invoice.electronicInvoiceUrl
+                  ? '下载发票' : '暂无下载'}}</a>
               </p>
             </div>
           </Col>
@@ -72,14 +75,14 @@
             </div>
           </Col>
           <Col span="12" class-name="">
-            <div class="item-td flex-r">
-              <span>开户行及账号</span>
+            <div class="item-td flex-r item-long">
+              <span style="min-width:120px">开户行及账号</span>
               <p>{{invoice.purchaserBank}} {{invoice.purchaserBankAccount}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
-            <div class="item-td flex-r">
-              <span>地址及电话</span>
+            <div class="item-td flex-r item-long">
+              <span style="min-width:120px">地址及电话</span>
               <p>{{invoice.purchaserAddress}} {{invoice.purchaserPhone}}</p>
             </div>
           </Col>
@@ -99,14 +102,14 @@
             </div>
           </Col>
           <Col span="12" class-name="">
-            <div class="item-td flex-r">
-              <span>开户行及账号</span>
+            <div class="item-td flex-r item-long">
+              <span style="min-width:120px">开户行及账号</span>
               <p>{{invoice.sellerBank}} {{invoice.sellerBankAccount}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
-            <div class="item-td flex-r">
-              <span>地址及电话</span>
+            <div class="item-td flex-r item-long">
+              <span style="min-width:120px">地址及电话</span>
               <p>{{invoice.sellerAddress}} {{invoice.sellerPhone}}</p>
             </div>
           </Col>
@@ -119,7 +122,7 @@
   </div>
 </template>
 <script>
-  import {getInvoice} from '../../../api/invoice'
+  import {getInvoice} from '../../api/invoice'
 
   export default {
     name: '',
@@ -207,7 +210,7 @@
   }
 </script>
 <style scoped lang="stylus">
-  @import '../../../assets/styles/invoice.styl'
+  @import '../../assets/styles/invoice.styl'
   .set-title {
     padding-left: 10px;
     span {
@@ -224,8 +227,10 @@
 </style>
 <style scoped>
   .details {
-    background-color: #fff;
     padding: 20px 40px;
+    height: auto;
+    background-color: #ffffff;
+    border: solid 1px #dddddd;
   }
 
   .item-td span {
@@ -239,5 +244,21 @@
 
   .item-td p {
     padding-left: 10px;
+  }
+
+  .item-long p {
+    padding-left: 10px;
+    width: 400px;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+  }
+  .ivu-breadcrumb{
+    padding: 0 0 20px;
+    font-size:20px;
+    border-bottom:1px solid #ddd;
+    color: #666;
+    font-weight: bold;
   }
 </style>

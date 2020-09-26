@@ -45,7 +45,8 @@
             <div class="flex-r" style="height: auto">
               <span class="invoice-base-title">邮寄地址：</span>
               <p style="line-height:15px;font-size: 14px;color: #333333;">
-                {{defaultAddress.province}} {{defaultAddress.city}} {{defaultAddress.district}} {{defaultAddress.addr}}</p>
+                {{defaultAddress.province}} {{defaultAddress.city}} {{defaultAddress.district}}
+                {{defaultAddress.addr}}</p>
             </div>
             <a class="modify-style" @click="jumpPage('/address')">更改邮寄地址
               <Icon size="15" type="md-create" style="margin-left:1px;"/>
@@ -211,7 +212,7 @@
                   },
                   on: {
                     click: () => {
-                      this.$router.push({path: '/invoice/e/detail', query: {id: params.row.invoiceId}})
+                      this.$router.push({path: '/invoice/detail', query: {id: params.row.invoiceId}})
                     }
                   }
                 }, '详情')
@@ -327,8 +328,8 @@
     computed: {},
     created() {
       this.accessToken = this.$route.query.accessToken;
-      console.log(9999,this.accessToken)
-      if(typeof(this.accessToken) != "undefined") {
+      console.log(9999, this.accessToken)
+      if (typeof(this.accessToken) != "undefined") {
         localStorage.setItem("accessToken", this.accessToken);
       }
       this.taxNumber = this.$route.query.taxNumber;
