@@ -72,17 +72,29 @@
                   <p>{{item.taxNumber}}</p>
                 </li>
               </ul>
+              <Button size="small" style="margin-left:22px; font-size: 14px"><a
+                @click="addInvoiceTitleFn(0,item.companyId)" v-if="ifManageCompany!=0">编辑</a></Button>
+              <Button size="small" style="margin-left:10px; font-size: 14px" v-if="ifManageCompany!=0"><a @click="deleteCompany(item.companyId)" v-if="ifManageCompany">删除</a></Button>
               <a
                 v-if="item.ifDefault != true"
                 @click="setDefault(item.companyId)"
-                style="padding:10px;"
+                style="padding:10px; margin-left:120px"
               >设为默认</a>
-              <a @click="addInvoiceTitleFn(0,item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">编辑</a>
-              <a @click="deleteCompany(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a>
+              <Button v-if="item.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px"
+                      type="primary">默认
+              </Button>
+              <!-- <a
+                v-if="item.ifDefault != true"
+                @click="setDefault(item.companyId)"
+                style="padding:10px;"
+              >设为默认</a> -->
+              <!-- <a @click="addInvoiceTitleFn(0,item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">编辑</a> -->
+              <!-- <a @click="deleteCompany(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a> -->
             </div>
-            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany!=0"></div>
+            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany!=0 && companyList.length < 6"></div>
           </div>
         </Form>
+        <p class="tpPading-10 btPading-10">注意：发票抬头最多可以添加6个</p>
       </div>
       <div class="invoice-nature">
         <h3 class="h3-title">发票信息</h3>
@@ -140,7 +152,8 @@
       </div>
 
       <Button class="btn" @click="handleSubmit('formValidate')">提交</Button>
-      <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p>
+      <!-- <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p> -->
+      <p class="tpPading-10 btPading-10">请仔细核对开票信息</p>
     </div>
     <Modal v-model="showModal" :title="modalTitle">
       <Form ref="formInline" :model="formInline" :rules="rules" :label-width="120">
@@ -289,12 +302,12 @@
           this.showModal = true;
           this.getCompany(id);
         } else if (t === 1) {
-          if (this.companyList.length < 5) {
+          if (this.companyList.length < 6) {
             this.modalTitle = "添加发票抬头";
             this.showModal = true;
             this.getCompanyList();
-          } else if (this.companyList.length === 5) {
-            this.$Message.warning("发票最多只能添加5个");
+          } else if (this.companyList.length === 6) {
+            this.$Message.warning("发票最多只能添加6个");
           }
         }
       },
