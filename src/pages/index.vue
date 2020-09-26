@@ -327,7 +327,10 @@
     computed: {},
     created() {
       this.accessToken = this.$route.query.accessToken;
-      localStorage.setItem("accessToken", this.accessToken);
+      console.log(9999,this.accessToken)
+      if(typeof(this.accessToken) != "undefined") {
+        localStorage.setItem("accessToken", this.accessToken);
+      }
       this.taxNumber = this.$route.query.taxNumber;
       localStorage.setItem("taxNumber", this.taxNumber);
     },
