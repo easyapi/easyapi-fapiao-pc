@@ -103,6 +103,7 @@
                  v-if="ifManageCompany && companyList.length < 6"></div>
           </div>
         </Form>
+        <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
       </div>
       <div class="invoice-nature">
         <!-- <p class="invoice">发票信息</p> -->
@@ -137,7 +138,8 @@
         style="border-bottom:1px solid #ddd;height: 250px;"
         v-if=" this.property!=='电子'"
       >
-        <p class="invoice">邮寄信息</p>
+        <!-- <p class="invoice">邮寄信息</p> -->
+        <h3 class="h3-title">邮寄信息</h3>
         <div class="invoice-content" style="height: 182px">
           <p class="userName" v-if="defaultAddress!==null">
             <span>{{defaultAddress.name}}</span>
@@ -161,7 +163,8 @@
       </div>
 
       <Button class="btn" @click="handleSubmit('formValidate')">提交</Button>
-      <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p>
+      <!-- <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p> -->
+      <p class="tpPading-10 btPading-10">请仔细核对开票信息</p>
     </div>
     <Modal v-model="showModal" :title="modalTitle">
       <Form ref="formInline" :model="formInline" :rules="rules" :label-width="120">

@@ -62,7 +62,7 @@
                 alt
                 style="position: absolute;bottom:0px;right: 0px;"
               >
-              <ul v-if="showInfo">
+              <ul v-if="showInfo" style="margin-bottom:15px">
                 <li class="flex-r">
                   <span>发票抬头信息：&nbsp;&nbsp;&nbsp;</span>
                   <p>{{item.name}}</p>
@@ -94,7 +94,7 @@
             <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany!=0 && companyList.length < 6"></div>
           </div>
         </Form>
-        <p class="tpPading-10 btPading-10">注意：发票抬头最多可以添加6个</p>
+        <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
       </div>
       <div class="invoice-nature">
         <h3 class="h3-title">发票信息</h3>
@@ -128,7 +128,8 @@
         style="border-bottom:1px solid #ddd;height: 250px;"
         v-if=" this.property!=='电子'"
       >
-        <p class="invoice">邮寄信息</p>
+        <!-- <p class="invoice">邮寄信息</p> -->
+        <h3 class="h3-title">邮寄信息</h3>
         <div class="invoice-content" style="height: 182px">
           <p class="userName" v-if="defaultAddress!==null">
             <span>{{defaultAddress.name}}</span>
@@ -800,5 +801,11 @@
     border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
+  }
+
+  .invoice-list p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 </style>
