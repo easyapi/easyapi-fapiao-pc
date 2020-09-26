@@ -133,7 +133,7 @@
           <p
             class="address-informations"
             v-if="defaultAddress!==null"
-          >{{defaultAddress.district + defaultAddress.addr}}</p>
+          >{{defaultAddress.district}}{{defaultAddress.addr}}</p>
           <a v-if="showAddressInfo" @click="jumpPage('/address')">更改邮寄地址</a>
           <a v-if="!showAddressInfo" @click="jumpPage('/address')">填写邮寄信息</a>
         </div>

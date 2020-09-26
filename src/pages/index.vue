@@ -64,7 +64,7 @@
           <div>
             <span class="area">起止时间</span>
             <DatePicker type="daterange" placeholder="选择日期" @on-change="timeRangeChange"
-                        style="width: 210px; margin-right: 4px"></DatePicker>
+                        style="width: 220px; margin-right: 4px"></DatePicker>
             <!-- <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
                         style="width: 180px;margin-right: 5px"></DatePicker>
             <span>-</span>
