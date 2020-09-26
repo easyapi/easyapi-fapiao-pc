@@ -75,13 +75,13 @@
             </div>
           </Col>
           <Col span="12" class-name="">
-            <div class="item-td flex-r">
+            <div class="item-td flex-r item-long">
               <span>开户行及账号</span>
               <p>{{invoice.purchaserBank}} {{invoice.purchaserBankAccount}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
-            <div class="item-td flex-r">
+            <div class="item-td flex-r item-long">
               <span>地址及电话</span>
               <p>{{invoice.purchaserAddress}} {{invoice.purchaserPhone}}</p>
             </div>
@@ -102,13 +102,13 @@
             </div>
           </Col>
           <Col span="12" class-name="">
-            <div class="item-td flex-r">
+            <div class="item-td flex-r item-long">
               <span>开户行及账号</span>
               <p>{{invoice.sellerBank}} {{invoice.sellerBankAccount}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
-            <div class="item-td flex-r">
+            <div class="item-td flex-r item-long">
               <span>地址及电话</span>
               <p>{{invoice.sellerAddress}} {{invoice.sellerPhone}}</p>
             </div>
@@ -244,6 +244,15 @@
 
   .item-td p {
     padding-left: 10px;
+  }
+
+  .item-long p {
+    padding-left: 10px;
+    width: 450px;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
   .ivu-breadcrumb{
     padding:10px 0px 14px;
