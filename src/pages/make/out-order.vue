@@ -34,14 +34,14 @@
           :no-data-text="loadingData"
         ></Table>
       </div>
-      <div v-if="showMoreBtn" class="show-more-btn">
+      <!-- <div v-if="showMoreBtn" class="show-more-btn">
         <Button @click="handleAddMore">加载更多</Button>
-      </div>
+      </div> -->
       <div class="page-box flex-r">
         <Page
           :total="page.total"
           :page-size="page.size"
-          :current="page.page"
+          :current="page.page+1"
           @on-change="changePage"
           show-elevator
         ></Page>
@@ -115,11 +115,11 @@
         ],
         tableData: [],
         page: {
-          page: 1,
+          page: 0,
           size: 10,
           total: 0,
         },
-        showMoreBtn: true,
+        // showMoreBtn: true,
         tableSelectData: [],
         price: 0.0,
         ids: "",
@@ -138,17 +138,18 @@
       getOutOrderList(name) {
         this.loadingData = '加载中';
         this.clicked = name;
-        this.showMoreBtn = true;
+        // this.showMoreBtn = true;
         this.amount = 0;
         this.price = 0;
+        console.log(999,this.page)
         getOutOrderList({type: this.clicked}, this.page).then(res => {
           if (res.data.code !== 0) {
-            this.page.total = res.data.totalPages;
+            // this.page.total = res.data.totalPages;
             this.tableData = res.data.content;
             this.page.total = res.data.totalElements;
-            if (this.current + 1 > this.page.total) {
-              this.showMoreBtn = false;
-            }
+            // if (this.current + 1 > this.page.total) {
+            //   this.showMoreBtn = false;
+            // }
             this.$ajax({
               method: "GET",
               url: outOrderListUrl,
@@ -156,7 +157,7 @@
                 accessToken: localStorage.getItem("accessToken"),
                 type: this.clicked,
                 state: 0,
-                page: this.current - 1,
+                page: this.page.page - 1,
                 size: res.data.totalElements
               }
             }).then(res => {
@@ -173,7 +174,7 @@
             this.loadingData = '暂无数据';
             this.tableData = [];
             this.page.total = 0;
-            this.showMoreBtn = false;
+            // this.showMoreBtn = false;
           }
         }).catch(error => {
           this.loadingData = '暂无数据';
@@ -206,8 +207,8 @@
         }
       },
       //分页
-      changePage(current) {
-        this.page.size = current;
+      changePage(page) {
+        this.page.page = page - 1;
         this.getOutOrderList(this.clicked);
       },
       // 全选按钮
@@ -215,25 +216,25 @@
         this.$refs.selection.selectAll(status);
       },
       // 加载更多
-      handleAddMore() {
-        this.price = 0;
-        getOutOrderList({type: this.clicked}, this.page).then(res => {
-          if (res.data.code == 0) {
-            return this.$Message.warning("已无更多开票订单！");
-          } else {
-            if (res.data.content) {
-              for (let v of res.data.content) {
-                this.tableData.push(v);
-              }
-            }
-            if (this.tableData.length == this.page.total) {
-              this.showMoreBtn = false;
-            }
-          }
-        }).catch(error => {
-          console.log(error.response);
-        });
-      }
+      // handleAddMore() {
+      //   this.price = 0;
+      //   getOutOrderList({type: this.clicked}, this.page.page-1).then(res => {
+      //     if (res.data.code == 0) {
+      //       return this.$Message.warning("已无更多开票订单！");
+      //     } else {
+      //       if (res.data.content) {
+      //         for (let v of res.data.content) {
+      //           this.tableData.push(v);
+      //         }
+      //       }
+      //       // if (this.tableData.length == this.page.total) {
+      //       //   this.showMoreBtn = false;
+      //       // }
+      //     }
+      //   }).catch(error => {
+      //     console.log(error.response);
+      //   });
+      // }
     },
     mounted() {
       this.getOrderTypeList();
