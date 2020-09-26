@@ -8,7 +8,7 @@
     <div class="set-content">
       <div class="typeButton flex-r">
         <div
-          v-for="(item, index) in typeList"
+          v-for="(item, index) in orderTypeList"
           :key="index"
           @click="getOutOrderList(item.name)"
           :class="{'active':clicked===item.name}"
@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="bottom-24">
-        <p class="pd-left">有{{total}}个订单可申请发票，可开票金额：¥{{amountOfInvoice}}元</p>
+        <p class="pd-left">有{{page.total}}个订单可申请发票，可开票金额：¥{{amount}}元</p>
       </div>
       <div class="ivu-form">
         <div class="select-btn">
@@ -39,9 +39,9 @@
       </div>
       <div class="page-box flex-r">
         <Page
-          :total="total"
-          :page-size="pageSize"
-          :current="current"
+          :total="page.total"
+          :page-size="page.size"
+          :current="page.page"
           @on-change="changePage"
           show-elevator
         ></Page>
@@ -59,18 +59,16 @@
   </div>
 </template>
 <script>
-  import {orderTypesUrl, outOrderListUrl} from "../../api/api";
+  import {getOrderTypeList, outOrderListUrl} from "../../api/api";
+  import {getOutOrderList} from "../../api/out-order";
 
   export default {
     name: "",
     components: {},
     data() {
       return {
-        typeList: [],
-        allListData: [],
+        orderTypeList: [],
         clicked: "",
-        onInvoicAcount: "",
-        username: "",
         loadingData: '加载中',
         tableTitle: [
           {
@@ -116,97 +114,71 @@
           }
         ],
         tableData: [],
-        totalPages: 0,
-        current: 1,
+        page: {
+          page: 0,
+          size: 10,
+          total: 0,
+        },
         showMoreBtn: true,
-        pageSize: 10,
-        total: 0,
         tableSelectData: [],
         price: 0.0,
         ids: "",
-        amountOfInvoice: 0
+        amount: 0
       };
     },
     methods: {
       getOrderTypeList() {
-        this.current = 1;
-        this.$ajax({
-          method: "GET",
-          url: orderTypesUrl,
-          params: {
-            accessToken: localStorage.getItem("accessToken"),
-            username: this.username
-          }
-        })
-          .then(res => {
-            this.typeList = res.data.content;
-            this.getOutOrderList(this.typeList[0].name);
-          })
-          .catch(error => {
-            console.log(error.response);
-          });
+        getOrderTypeList().then(res => {
+          this.orderTypeList = res.data.content;
+          this.getOutOrderList(this.orderTypeList[0].name);
+        }).catch(error => {
+          console.log(error.response);
+        });
       },
       getOutOrderList(name) {
-        this.loadingData = '加载中',
-          this.clicked = name;
+        this.loadingData = '加载中';
+        this.clicked = name;
         this.showMoreBtn = true;
-        this.amountOfInvoice = 0;
+        this.amount = 0;
         this.price = 0;
-        this.$ajax({
-          method: "GET",
-          url: outOrderListUrl,
-          params: {
-            accessToken: localStorage.getItem("accessToken"),
-            type: this.clicked,
-            state: 0,
-            username: this.username,
-            page: this.current - 1,
-            size: this.pageSize
-          }
-        })
-          .then(res => {
-            if (res.data.code !== 0) {
-              this.totalPages = res.data.totalPages;
-              this.tableData = res.data.content;
-              this.total = Number(res.data.totalElements);
-              if (this.current + 1 > this.totalPages) {
-                this.showMoreBtn = false;
-              }
-              this.$ajax({
-                method: "GET",
-                url: outOrderListUrl,
-                params: {
-                  accessToken: localStorage.getItem("accessToken"),
-                  type: this.clicked,
-                  state: 0,
-                  username: this.username,
-                  page: this.current - 1,
-                  size: res.data.totalElements
-                }
-              })
-                .then(res => {
-                  if (res.data.code == 0) {
-                    console.log(res);
-                  } else {
-                    for (let v of res.data.content) {
-                      this.amountOfInvoice += Number(v.price);
-                    }
-                  }
-                })
-                .catch(error => {
-                  console.log(error.response);
-                });
-            } else {
-              this.loadingData = '暂无数据',
-                this.tableData = [];
-              this.total = 0;
+        getOutOrderList({type: this.clicked}, this.page).then(res => {
+          if (res.data.code !== 0) {
+            this.page.total = res.data.totalPages;
+            this.tableData = res.data.content;
+            this.page.total = res.data.totalElements;
+            if (this.current + 1 > this.page.total) {
               this.showMoreBtn = false;
             }
-          })
-          .catch(error => {
-            this.loadingData = '暂无数据',
+            this.$ajax({
+              method: "GET",
+              url: outOrderListUrl,
+              params: {
+                accessToken: localStorage.getItem("accessToken"),
+                type: this.clicked,
+                state: 0,
+                page: this.current - 1,
+                size: res.data.totalElements
+              }
+            }).then(res => {
+              if (res.data.code == 0) {
+              } else {
+                for (let v of res.data.content) {
+                  this.amount += Number(v.price);
+                }
+              }
+            }).catch(error => {
               console.log(error.response);
-          });
+            });
+          } else {
+            this.loadingData = '暂无数据';
+            this.tableData = [];
+            this.page.total = 0;
+            this.showMoreBtn = false;
+          }
+        }).catch(error => {
+          this.loadingData = '暂无数据';
+          console.log(error.response);
+        });
       },
       //计算金额和ids
       calculatePrice() {
@@ -229,13 +201,13 @@
         } else {
           this.$router.push({
             path: "/make/merge-make",
-            query: {id: this.ids, price: this.price, username: this.username}
+            query: {id: this.ids, price: this.price}
           });
         }
       },
       //分页
       changePage(current) {
-        this.current = current;
+        this.page.size = current;
         this.getOutOrderList(this.clicked);
       },
       // 全选按钮
@@ -245,18 +217,7 @@
       // 加载更多
       handleAddMore() {
         this.price = 0;
-        this.$ajax({
-          method: "GET",
-          url: outOrderListUrl,
-          params: {
-            accessToken: localStorage.getItem("accessToken"),
-            type: this.clicked,
-            state: 0,
-            username: this.username,
-            page: this.current++,
-            size: this.pageSize
-          }
-        }).then(res => {
+        getOutOrderList({type: this.clicked}, this.page).then(res => {
           if (res.data.code == 0) {
             return this.$Message.warning("已无更多开票订单！");
           } else {
@@ -265,10 +226,7 @@
                 this.tableData.push(v);
               }
             }
-            // if (this.tableData.length == this.total) {
-            //   this.showMoreBtn = false;
-            // }
-            if (this.current + 1 > this.totalPages) {
+            if (this.tableData.length == this.page.total) {
               this.showMoreBtn = false;
             }
           }
@@ -277,15 +235,9 @@
         });
       }
     },
-    //计算属性
-    computed: {},
-    created() {
-      this.username = this.$route.query.username;
-    },
     mounted() {
       this.getOrderTypeList();
-    },
-    watch: {}
+    }
   };
 </script>
 <style>

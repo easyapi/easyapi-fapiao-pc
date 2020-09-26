@@ -99,7 +99,8 @@
                       type="primary">默认
               </Button>
             </div>
-            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany && companyList.length < 6"></div>
+            <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)"
+                 v-if="ifManageCompany && companyList.length < 6"></div>
           </div>
         </Form>
       </div>
@@ -206,14 +207,18 @@
 </template>
 <script>
   import {
-    invoiceMoneyUrl,
-    invoiceAddressUrl,
     queryServiceURl
   } from "../../api/api";
 
   import {
     getCompanyList, getCompany, updateCompany, createCompany, deleteCompany, updateDefaultCompany
   } from '../../api/company'
+  import {
+    getDefaultAddress
+  } from '../../api/address'
+  import {
+    getCustomer
+  } from '../../api/customer'
 
   export default {
     name: "",
@@ -229,7 +234,6 @@
         ifManageCompany: true,//是否可以管理公司抬头
         showAddressInfo: false,
         modalTitle: "添加发票抬头",
-        username: "",
         makeUp: "",
         property: "电子",
         ids: "",
@@ -375,7 +379,6 @@
               obj.address = this.formInline.address;
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
-              obj.username = this.username;
               updateCompany(this.companyId, obj).then(res => {
                 if (res.status === 200) {
                   this.$Message.success("编辑成功!");
@@ -429,7 +432,6 @@
       //   this.$ajax.get(companiesUrl, {
       //     params: {
       //       accessToken: localStorage.getItem("accessToken"),
-      //       username: this.username
       //     }
       //   }).then(res => {
       //   console.log(999999)
@@ -454,7 +456,6 @@
       // },
       getCompanyList() {
         let params = {
-          username: this.username,
           accessToken: localStorage.getItem("accessToken"),
         }
         getCompanyList(params).then(res => {
@@ -493,12 +494,7 @@
       },
       //获取默认邮寄地址
       getAddressList() {
-        this.$ajax.get(invoiceAddressUrl + this.username + "/default", {
-          params: {
-            accessToken: localStorage.getItem("accessToken"),
-            username: this.username
-          }
-        }).then(res => {
+        getDefaultAddress().then(res => {
           if (res.data.code === 1) {
             this.defaultAddress = res.data.content;
             this.showAddressInfo = true;
@@ -532,15 +528,8 @@
         });
       },
       //获取我的开票账户信息
-      getUser() {
-        this.$ajax({
-          method: "GET",
-          url: invoiceMoneyUrl + this.username + "/invoice/money",
-          params: {
-            accessToken: localStorage.getItem("accessToken"),
-            username: this.username
-          }
-        }).then(res => {
+      getCustomer() {
+        getCustomer({}).then(res => {
           if (res.data.code === 1) {
             this.formValidate.email = res.data.content.email;
             this.formValidate.mobile = res.data.content.mobile;
@@ -564,7 +553,6 @@
               return this.$Message.warning("请选择开票抬头");
             }
             obj.companyId = this.companyId;
-            obj.username = this.username;
             obj.outOrderIds = this.ids;
             obj.property = this.property;
             obj.email = this.formValidate.email;
@@ -582,7 +570,6 @@
                 this.$router.push({
                   path: "/",
                   query: {
-                    username: this.username,
                     taxNumber: localStorage.getItem("taxNumber"),
                     accessToken: localStorage.getItem("accessToken")
                   }
@@ -598,13 +585,12 @@
         });
       },
       jumpPage(url) {
-        this.$router.push({path: url, query: {username: this.username}});
+        this.$router.push({path: url});
       }
     },
     //计算属性
     computed: {},
     created() {
-      this.username = this.$route.query.username;
       this.ids = this.$route.query.id;
       this.price = this.$route.query.price;
     },
@@ -612,9 +598,8 @@
       this.getIfManageCompany();
       this.getCompanyList();
       this.getAddressList();
-      this.getUser();
-    },
-    watch: {}
+      this.getCustomer();
+    }
   };
 </script>
 <style>

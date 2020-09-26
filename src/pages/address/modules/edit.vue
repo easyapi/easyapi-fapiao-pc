@@ -71,7 +71,7 @@
   </div>
 </template>
 <script>
-  import {getUpdateAddress, deleteAddress,getAddressList,postAddress} from '../api/address'
+  import {getUpdateAddress, deleteAddress, getAddressList, postAddress} from '../api/address'
   import VDistpicker from 'v-distpicker'
 
   export default {
@@ -87,7 +87,6 @@
         callback();
       };
       return {
-        username: '',
         showModal: false,
         modalTitle: '添加地址',
         modalType: null,
@@ -130,7 +129,6 @@
       updateAddress(addressId) {
         let data = {
           accessToken: localStorage.getItem('accessToken'),
-          username: this.username,
           ifDefault: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
@@ -221,7 +219,7 @@
       ,
       //获取地址详情
       getAddress() {
-        getUpdateAddress(this.addressId,data).then(res=>{
+        getUpdateAddress(this.addressId, data).then(res => {
           let data = res.data.content;
           this.formValidate.name = data.name;
           this.formValidate.phone = data.mobile;
@@ -259,9 +257,8 @@
               return this.$Message.warning('请将省市区填写完整');
             }
             if (this.modalType === 0) {
-              let data={
+              let data = {
                 accessToken: localStorage.getItem('accessToken'),
-                username: this.username,
                 name: this.formValidate.name,
                 mobile: this.formValidate.phone,
                 province: this.formValidate.province,
@@ -271,7 +268,7 @@
                 ifDefault: this.formValidate.interest,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
               }
-              getUpdateAddress(this.addressId,data).then(res=>{
+              getUpdateAddress(this.addressId, data).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('修改成功!');
                   this.handleReset('formValidate')
@@ -281,8 +278,7 @@
                 console.log(error.response)
               });
             } else if (this.modalType === 1) {
-              let params={
-                username: this.username,
+              let params = {
                 name: this.formValidate.name,
                 mobile: this.formValidate.phone,
                 province: this.formValidate.province,
@@ -292,7 +288,7 @@
                 ifDefault: this.formValidate.interest,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
               }
-              postAddress(params).then(res=>{
+              postAddress(params).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
                   this.handleReset('formValidate')
@@ -318,18 +314,9 @@
       }
       ,
     },
-    //计算属性
-    computed: {}
-    ,
-    created() {
-      this.username = this.$route.query.username;
-    }
-    ,
     mounted() {
       this.getAddressList();
     }
-    ,
-    watch: {}
   }
 </script>
 <style lang="stylus">

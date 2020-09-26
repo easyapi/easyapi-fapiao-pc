@@ -72,7 +72,6 @@
     components: {},
     data() {
       return {
-        username: '',
         showModal: false,
         modalTitle: '添加发票',
         modalType: null,
@@ -271,7 +270,6 @@
       //获取抬头列表
       getCompanyList() {
         let params = {
-          username: this.username,
           page: this.page.current - 1,
           size: this.page.size,
         }
@@ -350,7 +348,6 @@
               data.address = this.formValidate.address;
               data.phone = this.formValidate.phone;
               data.ifDefault = this.ifDefault;
-              data.username = this.username;
               updateCompany(this.companyId, data).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('编辑成功!');
@@ -370,7 +367,6 @@
               data.address = this.formValidate.address;
               data.phone = this.formValidate.phone;
               data.ifDefault = this.ifDefault;
-              data.username = this.username;
               createCompany(data).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
@@ -397,16 +393,10 @@
         this.getCompanyList()
       },
     },
-    //计算属性
-    computed: {},
-    created() {
-      this.username = this.$route.query.username;
-    },
     mounted() {
       this.getIfManageCompany()
       this.getCompanyList()
-    },
-    watch: {}
+    }
   }
 </script>
 <style scoped lang="stylus">

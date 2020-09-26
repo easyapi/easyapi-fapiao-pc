@@ -96,7 +96,6 @@
         callback();
       };
       return {
-        username: '',
         showModal: false,
         modalTitle: '添加地址',
         modalType: null,
@@ -139,7 +138,6 @@
       updateAddress(addressId) {
         let data = {
           accessToken: localStorage.getItem('accessToken'),
-          username: this.username,
           ifDefault: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         };
@@ -262,7 +260,6 @@
             if (this.modalType === 0) {
               let data = {
                 accessToken: localStorage.getItem('accessToken'),
-                username: this.username,
                 name: this.formValidate.name,
                 mobile: this.formValidate.phone,
                 province: this.formValidate.province,
@@ -283,7 +280,6 @@
               });
             } else if (this.modalType === 1) {
               let params = {
-                username: this.username,
                 name: this.formValidate.name,
                 mobile: this.formValidate.phone,
                 province: this.formValidate.province,
@@ -316,11 +312,6 @@
         this.formValidate.interest = true;
         this.$refs[name].resetFields();
       }
-    },
-    //计算属性
-    computed: {},
-    created() {
-      this.username = this.$route.query.username;
     },
     mounted() {
       this.getAddressList();

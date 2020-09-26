@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseUrl = "https://fapiao-api.easyapi.com";
+import {baseUrl} from "./api";
 
 /**
  * 添加公司抬头信息

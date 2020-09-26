@@ -9,43 +9,43 @@
       <!-- <span style="color: #333333;font-size: 16px;display: block;height: 57px;line-sheight: 57px;">发票抬头</span> -->
       <h3 class="h3-title">发票抬头</h3>
       <Modal
-          v-model="showModal"
-          :title="modalTitle">
-          <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
-            <FormItem label="公司名称" prop="name">
-              <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete"
-                     :disabled="!ifManageCompany"/>
-              <div class="query-results" v-if="this.queryTitleList!==''">
-                <ul>
-                  <li v-for="(result, index) in queryTitleList" :key="index" @click="chooseRise(index)">
-                    {{result.name}}
-                  </li>
-                </ul>
-              </div>
-            </FormItem>
-            <FormItem label="纳税人识别号" prop="taxNumber">
-              <Input v-model="formValidate.taxNumber" placeholder="请输入纳税人识别号" :disabled="!ifManageCompany"/>
-            </FormItem>
-            <FormItem label="开户行" prop="bank">
-              <Input v-model="formValidate.bank" placeholder="请输入开户行"/>
-            </FormItem>
-            <FormItem label="开户行账号" prop="bankAccount">
-              <Input v-model="formValidate.bankAccount" placeholder="请输入开户行账号"/>
-            </FormItem>
-            <FormItem label="地址" prop="address">
-              <Input v-model="formValidate.address" placeholder="请输入地址"/>
-            </FormItem>
-            <FormItem label="电话" prop="phone">
-              <Input v-model="formValidate.phone" placeholder="请输入电话"/>
-            </FormItem>
-            <FormItem>
-              <Checkbox v-model="ifDefault">设为默认</Checkbox>
-            </FormItem>
-          </Form>
-          <div slot="footer">
-            <Button type="primary" @click="handleSubmit('formValidate')">确定</Button>
-            <Button @click="handleReset('formValidate')" style="margin-left: 8px">取消</Button>
-          </div>
+        v-model="showModal"
+        :title="modalTitle">
+        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
+          <FormItem label="公司名称" prop="name">
+            <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete"
+                   :disabled="!ifManageCompany"/>
+            <div class="query-results" v-if="this.queryTitleList!==''">
+              <ul>
+                <li v-for="(result, index) in queryTitleList" :key="index" @click="chooseRise(index)">
+                  {{result.name}}
+                </li>
+              </ul>
+            </div>
+          </FormItem>
+          <FormItem label="纳税人识别号" prop="taxNumber">
+            <Input v-model="formValidate.taxNumber" placeholder="请输入纳税人识别号" :disabled="!ifManageCompany"/>
+          </FormItem>
+          <FormItem label="开户行" prop="bank">
+            <Input v-model="formValidate.bank" placeholder="请输入开户行"/>
+          </FormItem>
+          <FormItem label="开户行账号" prop="bankAccount">
+            <Input v-model="formValidate.bankAccount" placeholder="请输入开户行账号"/>
+          </FormItem>
+          <FormItem label="地址" prop="address">
+            <Input v-model="formValidate.address" placeholder="请输入地址"/>
+          </FormItem>
+          <FormItem label="电话" prop="phone">
+            <Input v-model="formValidate.phone" placeholder="请输入电话"/>
+          </FormItem>
+          <FormItem>
+            <Checkbox v-model="ifDefault">设为默认</Checkbox>
+          </FormItem>
+        </Form>
+        <div slot="footer">
+          <Button type="primary" @click="handleSubmit('formValidate')">确定</Button>
+          <Button @click="handleReset('formValidate')" style="margin-left: 8px">取消</Button>
+        </div>
       </Modal>
 
 
@@ -63,8 +63,10 @@
             <p class="company-informations">{{companyData.address || '——'}}</p>
             <p class="company-informations">{{companyData.phone || '——'}}</p>
             <div class="btn">
-              <Button size="small" style="font-size: 14px" @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
-              <Button size="small" style="font-size: 14px" @click.stop="deleteCompany(companyData.companyId)">删除</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改
+              </Button>
+              <Button size="small" style="font-size: 14px" @click.stop="deleteCompany(companyData.companyId)">删除
+              </Button>
             </div>
           </div>
           <div class="get-company" style="border: solid 1px #2d8cf0;position: relative"
@@ -83,8 +85,10 @@
             <p class="company-informations">{{companyData.address || '——'}}</p>
             <p class="company-informations">{{companyData.phone || '——'}}</p>
             <div class="btn">
-              <Button size="small" style="font-size: 14px" @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改</Button>
-              <Button size="small" style="font-size: 14px" @click.stop="deleteCompany(companyData.companyId)">删除</Button>
+              <Button size="small" style="font-size: 14px" @click.stop="addInvoiceTitleFn(0,companyData.companyId)">修改
+              </Button>
+              <Button size="small" style="font-size: 14px" @click.stop="deleteCompany(companyData.companyId)">删除
+              </Button>
             </div>
             <img src="../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
           </div>
@@ -119,7 +123,6 @@
     components: {},
     data() {
       return {
-        username: '',
         showModal: false,
         modalTitle: '添加发票',
         modalType: null,
@@ -182,7 +185,6 @@
       updateCompany(companyId) {
         let data = {
           accessToken: localStorage.getItem('accessToken'),
-          username: this.username,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }
         updateCompany(companyId, data).then(res => {
@@ -232,7 +234,6 @@
       //获取抬头列表
       getCompanyList() {
         let params = {
-          username: this.username,
           page: this.page.current - 1,
           size: this.page.size,
         }
@@ -326,7 +327,6 @@
               data.address = this.formValidate.address;
               data.phone = this.formValidate.phone;
               data.ifDefault = this.ifDefault;
-              data.username = this.username;
               updateCompany(this.companyId, data).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('编辑成功!');
@@ -346,7 +346,6 @@
               data.address = this.formValidate.address;
               data.phone = this.formValidate.phone;
               data.ifDefault = this.ifDefault;
-              data.username = this.username;
               createCompany(data).then(res => {
                 if (res.data.code === 1) {
                   this.$Message.success('添加成功!');
@@ -373,16 +372,10 @@
         this.getCompanyList()
       },
     },
-    //计算属性
-    computed: {},
-    created() {
-      this.username = this.$route.query.username;
-    },
     mounted() {
       this.getIfManageCompany()
       this.getCompanyList()
-    },
-    watch: {}
+    }
   }
 
 </script>
@@ -439,18 +432,20 @@
   .btn button:nth-child(2) {
     margin-left: 10px;
   }
-  .ivu-breadcrumb{
-    padding:10px 0px 14px;
-    font-size:20px;
-    border-bottom:1px solid #ddd;
+
+  .ivu-breadcrumb {
+    padding: 10px 0px 14px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
   }
+
   .address {
     width: 100%;
     height: auto;
     margin-bottom: 20px;
-    overflow:hidden;
+    overflow: hidden;
   }
 
   .get-company {
@@ -477,6 +472,7 @@
     display: flex;
     justify-content: space-between;
   }
+
   .get-company .userName span:first-child {
     width: 220px;
     overflow: hidden;
@@ -487,10 +483,18 @@
   .get-company .company-informations {
     font-size: 14px;
     color: #515a6e;;
-    width: 280px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis
+  width
+  :
+  280px;
+  overflow
+  :
+  hidden;
+  white-space
+  :
+  nowrap;
+  text-overflow
+  :
+  ellipsis
   }
   .add-the-address {
     width: 305px;

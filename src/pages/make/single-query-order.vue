@@ -185,8 +185,6 @@
 </template>
 <script>
   import {
-    invoiceMoneyUrl,
-    invoiceAddressUrl,
     queryServiceURl,
     orderPriceUrl
   } from "../../api/api";
@@ -195,6 +193,12 @@
     getCompany, createCompany, updateCompany, updateDefaultCompany,
     deleteCompany
   } from "../../api/company";
+  import {
+    getDefaultAddress
+  } from "../../api/address";
+  import {
+    getCustomer
+  } from "../../api/customer";
 
   export default {
     name: "",
@@ -210,7 +214,6 @@
         ifManageCompany: 1,//是否可以管理公司抬头
         showAddressInfo: false,
         modalTitle: "添加发票抬头",
-        username: "",
         accessToken: "",
         makeUp: "",
         property: "电子",
@@ -378,7 +381,6 @@
               obj.address = this.formInline.address;
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
-              obj.username = this.username;
               updateCompany(this.companyId, obj).then(res => {
                 if (res.status === 200) {
                   this.$Message.success("编辑成功!");
@@ -429,9 +431,7 @@
         this.makeUp = [];
       },
       getCompanyList() {
-        let params = {}
-        params.username = this.username;
-        getCompanyList().then(res => {
+        getCompanyList({}).then(res => {
           if (res.status == 200) {
             this.companyList = res.data.content;
             this.showInfo = true;
@@ -469,14 +469,7 @@
       },
       //3.获取默认邮寄地址
       getAddressList() {
-        this.$ajax({
-          method: "GET",
-          url: invoiceAddressUrl + this.username + "/default",
-          params: {
-            accessToken: this.accessToken,
-            username: this.username
-          }
-        }).then(res => {
+        getDefaultAddress().then(res => {
           if (res.data.code === 1) {
             this.defaultAddress = res.data.content;
             this.showAddressInfo = true;
@@ -484,10 +477,9 @@
             this.showAddressInfo = false;
             this.defaultAddress = null;
           }
-        })
-          .catch(error => {
-            console.log(error.response);
-          });
+        }).catch(error => {
+          console.log(error.response);
+        });
       },
       //自动补齐
       autocomplete() {
@@ -513,21 +505,13 @@
         });
       },
       //1.获取我的开票账户信息
-      getUser() {
-        this.$ajax({
-          method: "GET",
-          url: invoiceMoneyUrl + this.username + "/invoice/money",
-          params: {
-            accessToken: this.accessToken,
-            username: this.username
+      getCustomer() {
+        getCustomer({}).then(res => {
+          if (res.data.code === 1) {
+            this.formValidate.email = res.data.content.email;
+            this.formValidate.mobile = res.data.content.mobile;
           }
         })
-          .then(res => {
-            if (res.data.code === 1) {
-              this.formValidate.email = res.data.content.email;
-              this.formValidate.mobile = res.data.content.mobile;
-            }
-          })
           .catch(error => {
             console.log(error);
           });
@@ -551,7 +535,6 @@
                   return this.$Message.warning("请选择开票抬头");
                 }
                 obj.companyId = this.companyId;
-                obj.username = this.username;
                 obj.outOrderIds = this.outOrderId;
                 obj.property = this.property;
                 obj.email = this.formValidate.email;
@@ -573,7 +556,6 @@
                     this.$router.push({
                       path: "/",
                       query: {
-                        username: this.username,
                         taxNumber: localStorage.getItem("taxNumber"),
                         accessToken: this.accessToken
                       }
@@ -594,13 +576,12 @@
         });
       },
       jumpPage(url) {
-        this.$router.push({path: url, query: {username: this.username}});
+        this.$router.push({path: url});
       }
     },
     //计算属性
     computed: {},
     created() {
-      this.username = this.$route.query.username;
       localStorage.setItem('accessToken', this.$route.query.accessToken);
       this.accessToken = this.$route.query.accessToken;
       this.ids = this.$route.query.id;
@@ -611,7 +592,7 @@
       this.getIfManageCompany();
       this.getOrderPrice();
       this.getAddressList();
-      this.getUser();
+      this.getCustomer();
     },
     watch: {}
   };
@@ -630,7 +611,7 @@
     span {
       color: #2d8cf0;
       font-size: 18px;
-      border-right: 2px solid #2d8cf02d8cf02d8cf0;
+      border-right: 2px solid #2d8cf0 2 d8cf02d8cf0;
       padding: 10px 10px 10px 0;
       cursor: pointer;
     }

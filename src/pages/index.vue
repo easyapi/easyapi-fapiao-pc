@@ -97,7 +97,6 @@
 <script>
   import {
     invoiceMoneyUrl,
-    invoiceAddressUrl,
     applicationRecordUrl
   } from '../api/api'
   import {
@@ -109,13 +108,15 @@
   import {
     getDefaultAddress
   } from '../api/address'
+  import {
+    getCustomer
+  } from '../api/customer'
 
   export default {
     name: '',
     components: {},
     data() {
       return {
-        username: '',
         accessToken: '',
         onInvoiceAccount: null,
         showInfo: true,
@@ -228,12 +229,8 @@
       //   this.getInvoiceList()
       // },
       //1.获取我的开票账户信息
-      getMoney() {
-        this.$ajax.get(invoiceMoneyUrl + this.username + '/invoice/money', {
-          params: {
-            accessToken: localStorage.getItem('accessToken'),
-          }
-        }).then(res => {
+      getCustomer() {
+        getCustomer({}).then(res => {
           if (res.data.code === 1) {
             this.onInvoiceAccount = res.data.content
           }
@@ -268,18 +265,12 @@
         });
       },
       jumpPage(url) {
-        this.$router.push({path: url, query: {username: this.username}})
+        this.$router.push({path: url})
       },
       timeRangeChange(t) {
         this.startTime = t[0] && `${t[0]} 00:00:00`;
         this.endTime = t[1] && `${t[1]} 23:59:59`;
       },
-      // startTimeChange(t) {
-      //   this.startTime = t;
-      // },
-      // endTimeChange(t) {
-      //   this.endTime = t;
-      // },
       //获取发票申请记录查询选项
       getApplicationItem() {
         this.$ajax.get(applicationRecordUrl, {
@@ -299,7 +290,6 @@
         let params = {
           startAddTime: this.startTime,
           endAddTime: this.endTime,
-          username: this.username,
           purchaserName: this.purchaserName,
           statements: this.state,
           page: this.current - 1,
@@ -334,14 +324,13 @@
     //计算属性
     computed: {},
     created() {
-      this.username = this.$route.query.username;
       this.accessToken = this.$route.query.accessToken;
       localStorage.setItem("accessToken", this.accessToken);
       this.taxNumber = this.$route.query.taxNumber;
       localStorage.setItem("taxNumber", this.taxNumber);
     },
     mounted() {
-      this.getMoney();
+      this.getCustomer();
       this.getDefaultCompany();
       this.getAddress();
       this.getInvoiceList()

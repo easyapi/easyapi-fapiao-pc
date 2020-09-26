@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseUrl = "https://fapiao-api.easyapi.com";
+import {baseUrl} from "./api";
 
 
 /**
@@ -29,23 +29,12 @@ export const updateAddress = (id, data) => axios.put(`${baseUrl}/address/${id}`,
   }
 });
 
-/**
- * 删除地址信息
- *
- * @see https://www.easyai.com
- */
-// export const deleteAddress = id => axios.delete(`${baseUrl}/address/${id}`, {
-//   data: {
-//     accessToken: localStorage.getItem("accessToken"),
-//     username: localStorage.getItem("username")
-//   }
-// });
 
 /**
  * 获取我的默认地址信息
  */
 export const getDefaultAddress = () => axios.get(`${baseUrl}/address/default`, {
-  data: {
+  params: {
     accessToken: localStorage.getItem("accessToken")
   }
 });
