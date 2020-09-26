@@ -101,9 +101,9 @@
             </div>
             <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)"
                  v-if="ifManageCompany && companyList.length < 6"></div>
+            <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
           </div>
         </Form>
-        <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
       </div>
       <div class="invoice-nature">
         <!-- <p class="invoice">发票信息</p> -->
@@ -135,12 +135,12 @@
       </div>
       <div
         class="invoice-nature"
-        style="border-bottom:1px solid #ddd;height: 250px;"
+        style="height: 250px;"
         v-if=" this.property!=='电子'"
       >
         <!-- <p class="invoice">邮寄信息</p> -->
         <h3 class="h3-title">邮寄信息</h3>
-        <div class="invoice-content" style="height: 182px">
+        <div class="invoice-content" style="height: 182px; border:1px solid #2d8cf0">
           <p class="userName" v-if="defaultAddress!==null">
             <span>{{defaultAddress.name}}</span>
           </p>
@@ -155,6 +155,7 @@
           >{{defaultAddress.province }} {{defaultAddress.city}}</p>
           <p
             class="address-informations"
+            style="margin-bottom:5px"
             v-if="defaultAddress!==null"
           >{{defaultAddress.district + defaultAddress.addr}}</p>
           <a v-if="showAddressInfo" @click="jumpPage('/address')">更改邮寄地址</a>

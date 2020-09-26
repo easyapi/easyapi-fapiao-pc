@@ -45,7 +45,7 @@
               <Radio label="个人">个人</Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="姓名" prop="purchaserName" v-show="formValidate.type === '个人'">
+          <FormItem label="发票抬头" prop="purchaserName" v-show="formValidate.type === '个人'">
             <Input v-model="formValidate.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"/>
           </FormItem>
           <div class="invioce-title" v-show="formValidate.type === '企业'">
@@ -92,9 +92,9 @@
               <!-- <a @click="deleteCompany(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a> -->
             </div>
             <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany!=0 && companyList.length < 6"></div>
+            <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
           </div>
         </Form>
-        <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
       </div>
       <div class="invoice-nature">
         <h3 class="h3-title">发票信息</h3>
@@ -125,12 +125,12 @@
       </div>
       <div
         class="invoice-nature"
-        style="border-bottom:1px solid #ddd;height: 250px;"
+        style="height: 250px;"
         v-if=" this.property!=='电子'"
       >
         <!-- <p class="invoice">邮寄信息</p> -->
         <h3 class="h3-title">邮寄信息</h3>
-        <div class="invoice-content" style="height: 182px">
+        <div class="invoice-content" style="height: 182px; border:1px solid #2d8cf0">
           <p class="userName" v-if="defaultAddress!==null">
             <span>{{defaultAddress.name}}</span>
           </p>
@@ -145,6 +145,7 @@
           >{{defaultAddress.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{defaultAddress.city}}</p>
           <p
             class="address-informations"
+            style="margin-bottom:5px"
             v-if="defaultAddress!==null"
           >{{defaultAddress.district}}{{defaultAddress.addr}}</p>
           <a v-if="showAddressInfo" @click="jumpPage('/address')">更改邮寄地址</a>
@@ -764,15 +765,18 @@
     line-height: 37px;
     border-bottom: solid 1px #dddddd;
     font-size: 14px;
-    color: #333333;
+    color: #666;
     display: flex;
     justify-content: space-between;
   }
 
   .address-informations {
     font-size: 14px;
-    color: #333333;
+    color: #515a6e;
     height: auto;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
 
   .btn {
