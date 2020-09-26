@@ -76,13 +76,13 @@
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r item-long">
-              <span>开户行及账号</span>
+              <span style="min-width:120px">开户行及账号</span>
               <p>{{invoice.purchaserBank}} {{invoice.purchaserBankAccount}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r item-long">
-              <span>地址及电话</span>
+              <span style="min-width:120px">地址及电话</span>
               <p>{{invoice.purchaserAddress}} {{invoice.purchaserPhone}}</p>
             </div>
           </Col>
@@ -103,13 +103,13 @@
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r item-long">
-              <span>开户行及账号</span>
+              <span style="min-width:120px">开户行及账号</span>
               <p>{{invoice.sellerBank}} {{invoice.sellerBankAccount}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r item-long">
-              <span>地址及电话</span>
+              <span style="min-width:120px">地址及电话</span>
               <p>{{invoice.sellerAddress}} {{invoice.sellerPhone}}</p>
             </div>
           </Col>
@@ -248,7 +248,7 @@
 
   .item-long p {
     padding-left: 10px;
-    width: 450px;
+    width: 400px;
     text-align: left;
     overflow: hidden;
     white-space: nowrap;
