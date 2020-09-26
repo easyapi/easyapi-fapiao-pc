@@ -3,7 +3,7 @@
     <Breadcrumb separator="<b style='color:#333; margin-left:-8px'>/</b>">
       <img src="../../../assets/images/logo.png" alt="" style="margin-right: 8px; width: 25px; height: 25px;">
       <BreadcrumbItem to="/">发票管理</BreadcrumbItem>
-      <BreadcrumbItem style="color: #333">发票抬头管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">发票详情</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <h3 class="h3-title">您的发票开票金额 ¥ {{ invoice.price }} 元</h3>
