@@ -483,18 +483,10 @@
   .get-company .company-informations {
     font-size: 14px;
     color: #515a6e;;
-  width
-  :
-  280px;
-  overflow
-  :
-  hidden;
-  white-space
-  :
-  nowrap;
-  text-overflow
-  :
-  ellipsis
+    width: 280px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
   .add-the-address {
     width: 305px;
