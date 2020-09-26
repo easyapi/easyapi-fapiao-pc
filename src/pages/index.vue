@@ -18,11 +18,11 @@
           <div class="onInvoice-content flex-c" v-if="showInfo">
             <div class="flex-r">
               <span class="invoice-base-title">发票抬头：</span>
-              <p style="	font-size: 14px;color: #333333;">{{defaultCompany.name}}</p>
+              <p style="font-size: 14px;color: #333333;">{{defaultCompany.name }}</p>
             </div>
             <div class="flex-r">
               <span class="invoice-base-title">发票税号：</span>
-              <p style="	font-size: 14px;color: #333333;">{{defaultCompany.taxNumber}}</p>
+              <p style="font-size: 14px;color: #333333;">{{defaultCompany.taxNumber}}</p>
             </div>
             <a class="modify-style" @click="jumpPage('/company')">更改开票信息
               <Icon size="15" type="md-create" style="margin-left:1px;"/>
@@ -39,11 +39,13 @@
           <p class="invoice-base-title">邮寄信息</p>
           <div class="onInvoice-content flex-c" v-if="showAddressInfo">
             <div class="flex-r">
-              <p style="	font-size: 14px;color: #333333;">{{defaultAddress.name+" "+defaultAddress.mobile}}</p>
+              <span class="invoice-base-title">收件人：</span>
+              <p style="	font-size: 14px;color: #333333;">{{defaultAddress.name}} {{defaultAddress.mobile}}</p>
             </div>
             <div class="flex-r" style="height: auto">
+              <span class="invoice-base-title">邮寄地址：</span>
               <p style="line-height:15px;font-size: 14px;color: #333333;">
-                {{defaultAddress.province+defaultAddress.city+defaultAddress.district+defaultAddress.addr}}</p>
+                {{defaultAddress.province}} {{defaultAddress.city}} {{defaultAddress.district}} {{defaultAddress.addr}}</p>
             </div>
             <a class="modify-style" @click="jumpPage('/address')">更改邮寄地址
               <Icon size="15" type="md-create" style="margin-left:1px;"/>
