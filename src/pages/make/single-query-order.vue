@@ -582,7 +582,7 @@
     //计算属性
     computed: {},
     created() {
-      localStorage.setItem('accessToken', this.$route.query.accessToken);
+      // localStorage.setItem('accessToken', this.$route.query.accessToken);
       this.accessToken = this.$route.query.accessToken;
       this.ids = this.$route.query.id;
       this.formValidate.remark = this.$route.query.remark;
