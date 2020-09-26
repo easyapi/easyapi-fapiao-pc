@@ -568,21 +568,28 @@
             } else if (this.type === '企业') {
               obj.purchaserName = '';
             }
-            this.$ajax.post('https://fapiao-api.easyapi.com/merge-make', obj, {}).then(res => {
-              if (res.data.code === 1) {
-                this.$Message.success("提交成功");
-                this.$router.push({
-                  path: "/",
-                  query: {
-                    taxNumber: localStorage.getItem("taxNumber"),
-                    accessToken: localStorage.getItem("accessToken")
+            this.$Modal.confirm({
+              title: "提示",
+              content: "<p>您确定要开具发票吗？</p>",
+              onOk: () => {
+                this.$ajax.post('https://fapiao-api.easyapi.com/merge-make', obj, {}).then(res => {
+                  if (res.data.code === 1) {
+                    this.$Message.success("提交成功");
+                    this.$router.push({
+                      path: "/",
+                      query: {
+                        taxNumber: localStorage.getItem("taxNumber"),
+                        accessToken: localStorage.getItem("accessToken")
+                      }
+                    });
                   }
+                }).catch(error => {
+                  console.log(error);
+                  this.$Message.warning(error.response.data.message);
                 });
               }
-            }).catch(error => {
-              console.log(error);
-              this.$Message.warning(error.response.data.message);
             });
+
           } else {
             this.$Message.error("请将信息填写完整!");
           }
