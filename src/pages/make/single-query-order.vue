@@ -72,7 +72,7 @@
                 </li>
               </ul>
               <Button size="small" style="margin-left:22px; font-size: 14px"><a
-                @click="addInvoiceTitleFn(0,item.companyId)" v-if="ifManageCompany!=0">编辑</a></Button>
+                @click="addInvoiceTitleFn(0, item.companyId)" v-if="ifManageCompany!=0">编辑</a></Button>
               <Button size="small" style="margin-left:10px; font-size: 14px" v-if="ifManageCompany!=0"><a
                 @click="deleteCompany(item.companyId)" v-if="ifManageCompany">删除</a></Button>
               <a
@@ -464,7 +464,7 @@
       },
       getCompanyList() {
         getCompanyList({}).then(res => {
-          if (res.status == 200) {
+          if (res.data.code == 1) {
             this.companyList = res.data.content;
             this.showInfo = true;
             for (let k of this.companyList) {
@@ -481,7 +481,7 @@
             }
           } else {
             this.showInfo = false;
-            this.companyList = null;
+            this.companyList = [];
           }
         }).catch(error => {
           console.log(error.response);
