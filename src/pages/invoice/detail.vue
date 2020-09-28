@@ -42,7 +42,7 @@
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
-              <span>开票信息</span>
+              <span style="min-width:120px">开票信息</span>
               <p>{{invoice.failMsg}}</p>
             </div>
           </Col>
@@ -114,6 +114,15 @@
             </div>
           </Col>
         </Row>
+        <h3 style="margin: 20px 0;">发票内容</h3>
+        <Row>
+          <div class="ivoiveContent">
+            <Table border :columns="invoiceTitle" :data="invoiceItems" disabled-hover></Table>
+            <div class="table-amount">
+              <p>税额合计：{{getTaxAmount(invoiceItems)}}元 &nbsp;&nbsp;&nbsp;&nbsp; 价额合计：{{getPriceAmount(invoiceItems)}}元</p>
+            </div>
+          </div>
+      </Row>
       </div>
       <h3 style="margin-bottom: 20px" v-if="invoice.serviceType==='订单开票'">订单内容</h3>
       <Table border :stripe='true' :columns="tableTitle" :data="outOrders"
@@ -163,8 +172,58 @@
             }
           }
         ],
-        tableData: [],
-        outOrders: []
+        invoiceItems: [],
+        outOrders: [],
+        invoiceTitle: [
+          {
+            title: "货物或应税劳务、服务名称",
+            align: "center",
+            render: (h, params) => {
+              return h("p", {}, `**${params.row.name}`);
+            }
+          },
+          {
+            title: "规格型号",
+            key: "model",
+            align: "center"
+          },
+          {
+            title: "单位",
+            key: "unit",
+            align: "center"
+          },
+          {
+            title: "数量",
+            key: "number",
+            align: "center"
+          },
+          {
+            title: "含税单价",
+            key: "price",
+            align: "center"
+          },
+          {
+            title: "含税金额",
+            key: "--",
+            align: "center",
+            render: (h, params) => {
+              return h("p", {}, `${params.row.sum * 1}`);
+            }
+          },
+          {
+            title: "税率",
+            key: "taxRate",
+            align: "center",
+            render: (h, params) => {
+              return h("p", {}, `${params.row.taxRate * 100}%`);
+            }
+          },
+          {
+            title: "税额",
+            key: "tax",
+            align: "center"
+          }
+        ],
       }
     },
     methods: {
@@ -176,7 +235,7 @@
           if (res.data.code === 1) {
             this.invoice = res.data.content;
             this.time = this.invoice.addTime;
-            this.tableData = this.invoice.invoiceItems;
+            this.invoiceItems = this.invoice.invoiceItems;
           }
         }).catch(error => {
           console.log(error.response)
@@ -196,6 +255,22 @@
           console.log(error.response)
         });
       },
+      // 获取税额合计
+      getTaxAmount(data) {
+        let tmp = 0;
+        data.map(el => {
+          tmp += el.tax;
+        });
+        return tmp;
+      },
+      // 获取价格合计
+      getPriceAmount(data) {
+        let tmp = 0;
+        data.map(el => {
+          tmp += el.sum;
+        });
+        return tmp;
+      }
     },
     //计算属性
     computed: {},
@@ -260,5 +335,21 @@
     border-bottom:1px solid #ddd;
     color: #666;
     font-weight: bold;
+  }
+  .table-amount {
+    padding-left: 18px;
+    padding-right: 18px;
+    border: 1px solid #dcdee2;
+    border-top: none;
+    text-align: right;
+    line-height: 48px;
+  }
+  .ivoiveContent >>> span {
+    color: #666;
+    font-weight: normal;
+  }
+
+  .ivoiveContent >>> th {
+    background-color: #f5f6fa;
   }
 </style>
