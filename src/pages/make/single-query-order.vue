@@ -93,8 +93,8 @@
             </div>
             <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)"
                  v-if="ifManageCompany!=0 && companyList.length < 6"></div>
-            <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
           </div>
+          <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
         </Form>
       </div>
       <div class="invoice-nature">
@@ -555,12 +555,12 @@
         });
       },
       handleSubmit(name) {
-        this.$Modal.confirm({
-          title: '是否开票',
-          content: '<p>确认抬头信息并开票吗？</p>',
-          onOk: () => {
-            this.$refs[name].validate(valid => {
-              if (valid) {
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            this.$Modal.confirm({
+              title: '是否开票',
+              content: '<p>确认抬头信息并开票吗？</p>',
+              onOk: () => {
                 let obj = this.invoiceForm;
                 obj.accessToken = this.accessToken;
                 if (this.property === '纸质') {
@@ -594,10 +594,10 @@
                   console.log(error);
                   this.$Message.warning(error.response.data.message);
                 });
+              },
+              onCancel: () => {
               }
             });
-          },
-          onCancel: () => {
           }
         });
       },

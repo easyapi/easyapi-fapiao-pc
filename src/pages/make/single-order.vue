@@ -1,14 +1,12 @@
 <template>
   <div class="demand">
-    <h2 class="set-title">
-      <!-- <span @click="()=>{this.$router.go(-1)}">
-        <Icon type="ios-arrow-back"/>返回
-      </span> -->
-      <img src="../../assets/images/logo.png" alt style="margin-right: 10px;">发票索取
-    </h2>
+    <Breadcrumb separator="<b style='color:#333; margin-left:-8px'>/</b>">
+      <img src="../../assets/images/logo.png" alt="" style="margin-right: 8px; width:25px; height: 25px;">
+      <BreadcrumbItem style="color: #333">发票索取</BreadcrumbItem>
+    </Breadcrumb>
     <div class="set-content">
       <div class="invoice-nature">
-        <p class="invoice">发票形式</p>
+        <h3 class="h3-title">发票形式</h3>
         <div style="display: flex;height: 120px;">
           <div
             class="electronic-invoice"
@@ -38,7 +36,7 @@
         </div>
       </div>
       <div class="invoice-nature">
-        <p class="invoice">发票抬头</p>
+        <h3 class="h3-title">发票抬头</h3>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
           <FormItem label="抬头类型" prop="type">
             <RadioGroup v-model="formValidate.type">
@@ -63,7 +61,7 @@
                 alt
                 style="position: absolute;bottom:0px;right: 0px;"
               >
-              <ul v-if="showInfo">
+              <ul v-if="showInfo" style="margin-bottom:15px">
                 <li class="flex-r">
                   <span>发票抬头信息：&nbsp;&nbsp;&nbsp;</span>
                   <p>{{item.name}}</p>
@@ -73,20 +71,33 @@
                   <p>{{item.taxNumber}}</p>
                 </li>
               </ul>
-              <a
+              <!-- <a
                 v-if="item.ifDefault != true"
                 @click="setDefault(item.companyId)"
                 style="padding:10px;"
               >设为默认</a>
               <a @click="addInvoiceTitleFn(0,item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">编辑</a>
-              <a @click="handleDel(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a>
+              <a @click="handleDel(item.companyId)" style="padding:10px;" v-if="ifManageCompany!=0">删除</a> -->
+              <Button size="small" style="margin-left:22px; font-size: 14px"><a
+                @click="addInvoiceTitleFn(0, item.companyId)" v-if="ifManageCompany!=0">编辑</a></Button>
+              <Button size="small" style="margin-left:10px; font-size: 14px" v-if="ifManageCompany!=0"><a
+                @click="handleDel(item.companyId)" v-if="ifManageCompany">删除</a></Button>
+              <a
+                v-if="item.ifDefault != true"
+                @click="setDefault(item.companyId)"
+                style="padding:10px; margin-left:120px"
+              >设为默认</a>
+              <Button v-if="item.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px"
+                      type="primary">默认
+              </Button>
             </div>
             <div class="invoice-content add-title" @click="addInvoiceTitleFn(1)" v-if="ifManageCompany!=0"></div>
           </div>
+          <p class="tpPading-10 btPading-10" style="margin-top:-20px">注意：发票抬头最多可以添加6个</p>
         </Form>
       </div>
       <div class="invoice-nature">
-        <p class="invoice">发票信息</p>
+        <h3 class="h3-title">发票信息</h3>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
           <!-- <FormItem label="发票类型" prop="category">
             <RadioGroup v-model="formValidate.category">
@@ -101,13 +112,13 @@
           <!--<FormItem label="发票内容">-->
           <!--<span></span>-->
           <!--</FormItem>-->
-          <FormItem label="开票备注">
+          <FormItem label="开票备注" style="margin-top:25px;">
             <Input v-model="formValidate.remark" placeholder="可输入开票备注" style="width: 200px"/>
           </FormItem>
-          <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'">
+          <FormItem label="接收手机" prop="mobile" v-if=" this.property==='电子'" style="margin-top:25px;">
             <Input v-model="formValidate.mobile" placeholder="请输入手机号码" style="width: 200px;"/>
           </FormItem>
-          <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'">
+          <FormItem label="接收邮箱" prop="email" v-if=" this.property==='电子'" style="margin-top:25px;">
             <Input v-model="formValidate.email" placeholder="请输入邮箱" style="width: 200px;"/>
           </FormItem>
         </Form>
@@ -141,10 +152,10 @@
       </div>
 
       <Button class="btn" @click="handleSubmit('formValidate')">提交</Button>
-      <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p>
+      <p class="tpPading-10 btPading-10">请仔细核对开票信息</p>
     </div>
     <Modal v-model="showModal" :title="modalTitle">
-      <Form ref="formInline" :model="formInline" :rules="rules" :label-width="100">
+      <Form ref="formInline" :model="formInline" :rules="rules" :label-width="120">
         <FormItem label="发票抬头" prop="name">
           <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
           <div class="query-results" v-if="this.makeUp!==''">
@@ -190,7 +201,12 @@
     , orderPriceUrl
   } from "../../api/api";
   import {
-    updateDefaultCompany
+    getCompanyList,
+    getCompany,
+    createCompany,
+    updateCompany,
+    updateDefaultCompany,
+    deleteCompany
   } from "../../api/company";
   import {
     getDefaultAddress
@@ -288,59 +304,87 @@
           this.showModal = true;
           this.getCompany(id);
         } else if (t === 1) {
-          if (this.companyList.length < 5) {
+          if (this.companyList.length < 6) {
             this.modalTitle = "添加发票抬头";
             this.showModal = true;
             this.getCompanyList();
-          } else if (this.companyList.length === 5) {
-            this.$Message.warning("发票最多只能添加5个");
+          } else if (this.companyList.length === 6) {
+            this.$Message.warning("发票最多只能添加6个");
           }
         }
       },
       // 删除
-      handleDel(id) {
+      // handleDel(id) {
+      //   this.$Modal.confirm({
+      //     title: "提示",
+      //     content: "<p>您确定要删除该条记录吗？</p>",
+      //     onOk: () => {
+      //       this.$ajax({
+      //         method: "DELETE",
+      //         url: companyUrl + "/" + id,
+      //         params: {
+      //           accessToken: this.accessToken
+      //         }
+      //       })
+      //         .then(res => {
+      //           this.$Message.info("删除成功");
+      //           this.getCompanyList();
+      //         })
+      //         .catch(error => {
+      //           console.log(error.response);
+      //         });
+      //     }
+      //   });
+      // },
+      handleDel(companyId) {
         this.$Modal.confirm({
           title: "提示",
           content: "<p>您确定要删除该条记录吗？</p>",
           onOk: () => {
-            this.$ajax({
-              method: "DELETE",
-              url: companyUrl + "/" + id,
-              params: {
-                accessToken: this.accessToken
-              }
-            })
-              .then(res => {
-                this.$Message.info("删除成功");
-                this.getCompanyList();
-              })
-              .catch(error => {
-                console.log(error.response);
-              });
+            deleteCompany(companyId).then(res => {
+              this.$Message.info("删除成功");
+              this.getCompanyList();
+            }).catch(error => {
+              console.log(error.response);
+            });
           }
         });
       },
-      getCompany(id) {
-        this.$ajax({
-          method: "GET",
-          url: companyUrl + "/" + id,
-          params: {
-            accessToken: this.accessToken
-          }
-        })
-          .then(res => {
-            let data = res.data.content;
-            this.formInline.name = data.name;
-            this.formInline.taxNumber = data.taxNumber;
-            this.formInline.bank = data.bank;
-            this.formInline.bankAccount = data.bankAccount;
-            this.formInline.address = data.address;
-            this.formInline.phone = data.phone;
-            this.ifDefault = data.ifDefault;
-          })
-          .catch(error => {
-            console.log(error.response);
-          });
+      // getCompany(id) {
+      //   this.$ajax({
+      //     method: "GET",
+      //     url: companyUrl + "/" + id,
+      //     params: {
+      //       accessToken: this.accessToken
+      //     }
+      //   })
+      //     .then(res => {
+      //       let data = res.data.content;
+      //       this.formInline.name = data.name;
+      //       this.formInline.taxNumber = data.taxNumber;
+      //       this.formInline.bank = data.bank;
+      //       this.formInline.bankAccount = data.bankAccount;
+      //       this.formInline.address = data.address;
+      //       this.formInline.phone = data.phone;
+      //       this.ifDefault = data.ifDefault;
+      //     })
+      //     .catch(error => {
+      //       console.log(error.response);
+      //     });
+      // },
+      getCompany(companyId) {
+        getCompany(companyId).then(res => {
+          let data = res.data.content;
+          this.formInline.name = data.name;
+          this.formInline.taxNumber = data.taxNumber;
+          this.formInline.bank = data.bank;
+          this.formInline.bankAccount = data.bankAccount;
+          this.formInline.address = data.address;
+          this.formInline.phone = data.phone;
+          this.ifDefault = data.ifDefault;
+        }).catch(error => {
+          console.log(error.response);
+        });
       },
       // 抬头填写重置
       titleReset(name) {
@@ -453,25 +497,50 @@
         this.formInline.phone = this.makeUp[index].phone;
         this.makeUp = [];
       },
+      // getCompanyList() {
+      //   this.$ajax({
+      //     method: "GET",
+      //     url: companiesUrl,
+      //     params: {
+      //       accessToken: this.accessToken,
+      //     }
+      //   }).then(res => {
+      //     if (res.status == 200) {
+      //       this.companyList = res.data.content;
+      //       this.showInfo = true;
+      //       for (let k of this.companyList) {
+      //         if (k.ifDefault == true) {
+      //           this.companyId = k.companyId;
+      //         }
+      //       }
+      //     } else {
+      //       this.showInfo = false;
+      //       this.companyList = null;
+      //     }
+      //   }).catch(error => {
+      //     console.log(error.response);
+      //   });
+      // },
       getCompanyList() {
-        this.$ajax({
-          method: "GET",
-          url: companiesUrl,
-          params: {
-            accessToken: this.accessToken,
-          }
-        }).then(res => {
-          if (res.status == 200) {
+        getCompanyList({}).then(res => {
+          if (res.data.code == 1) {
             this.companyList = res.data.content;
             this.showInfo = true;
             for (let k of this.companyList) {
               if (k.ifDefault == true) {
                 this.companyId = k.companyId;
+                this.invoiceForm.purchaserName = k.name;
+                this.invoiceForm.purchaserTaxpayerNumber = k.taxNumber;
+                this.invoiceForm.purchaserAddress = k.address;
+                this.invoiceForm.purchaserPhone = k.phone;
+                this.invoiceForm.purchaserBank = k.bank;
+                this.invoiceForm.purchaserBankAccount = k.bankAccount;
+                this.invoiceForm.companyId = k.companyId;
               }
             }
           } else {
             this.showInfo = false;
-            this.companyList = null;
+            this.companyList = [];
           }
         }).catch(error => {
           console.log(error.response);
@@ -547,49 +616,47 @@
       handleSubmit(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
-            let obj = this.formValidate;
-            obj.accessToken = this.accessToken;
-            if (this.property === '纸质') {
-              if (this.defaultAddress == null) {
-                return this.$Message.warning("请填写邮寄地址");
-              }
-              obj.addressId = this.defaultAddress.addressId;
-            }
-            if (this.companyId === null) {
-              return this.$Message.warning("请选择开票抬头");
-            }
-            obj.companyId = this.companyId;
-            obj.outOrderIds = this.outOrderId;
-            obj.property = this.property;
-            obj.email = this.formValidate.email;
-            obj.addrMobile = this.formValidate.mobile;
-            if (this.type === '个人') {
-              obj.purchaserName = this.formValidate.purchaserName;
-              obj.companyId = '';
-            } else if (this.type === '企业') {
-              obj.purchaserName = '';
-            }
-            this.$ajax({
-              method: "POST",
-              url: 'https://fapiao-api.easyapi.com/merge-make',
-              data: obj,
-            }).then(res => {
-              if (res.data.code === 1) {
-                this.$Message.success("提交成功");
-                this.$router.push({
-                  path: "/",
-                  query: {
-                    taxNumber: localStorage.getItem("taxNumber"),
-                    accessToken: this.accessToken
+            this.$Modal.confirm({
+              title: '是否开票',
+              content: '<p>确认抬头信息并开票吗？</p>',
+              onOk: () => {
+                let obj = this.invoiceForm;
+                obj.accessToken = this.accessToken;
+                if (this.property === '纸质') {
+                  if (this.defaultAddress == null) {
+                    return this.$Message.warning("请填写邮寄地址");
                   }
+                  obj.addressId = this.defaultAddress.addressId;
+                }
+                if (this.companyId === null) {
+                  return this.$Message.warning("请选择开票抬头");
+                }
+                obj.companyId = this.companyId;
+                obj.outOrderNo = this.outOrder.outOrderNo;
+                obj.items = this.outOrder.items;
+                obj.property = this.property;
+                if (obj.property === '电子') {
+                  obj.category = "增值税电子普通发票";
+                }
+                obj.email = this.invoiceForm.email;
+                obj.addrMobile = this.invoiceForm.mobile;
+                this.$ajax({
+                  method: "POST",
+                  url: "https://fapiao-api.easyapi.com/invoice/make",
+                  data: obj,
+                }).then(res => {
+                  if (res.data.code === 1) {
+                    this.$Message.success("提交成功");
+                    this.$router.go(0)
+                  }
+                }).catch(error => {
+                  console.log(error);
+                  this.$Message.warning(error.response.data.message);
                 });
+              },
+              onCancel: () => {
               }
-            }).catch(error => {
-              console.log(error);
-              this.$Message.warning(error.response.data.message);
             });
-          } else {
-            this.$Message.error("请将信息填写完整!");
           }
         });
       },
@@ -624,9 +691,9 @@
     padding-left: 10px;
 
     span {
-      color: #18c1d6;
+      color: #2d8cf0;
       font-size: 18px;
-      border-right: 2px solid #18c1d6;
+      border-right: 2px solid #2d8cf0;
       padding: 10px 10px 10px 0;
       cursor: pointer;
     }
@@ -676,13 +743,14 @@
   }
 
   .demand {
+    background-color: #fff;
+    padding: 20px 40px;
     height: auto;
-    background-color: #ffffff;
     border: solid 1px #dddddd;
   }
 
   .set-content {
-    margin: 0px 20px;
+    // margin: 0px 20px;
   }
 
   .invoice-nature {
@@ -708,19 +776,19 @@
   }
 
   .invoice-nature .electronic-invoice:hover {
-    border: 1px solid #18c1d6;
+    border: 1px solid #2d8cf0;
   }
 
   .invoice-nature .electronic-invoice:hover span {
-    color: #18c1d6 !important;
+    color: #2d8cf0 !important;
   }
 
   .SelectedStyle {
-    border: solid 1px #18c1d6 !important;
+    border: solid 1px #2d8cf0 !important;
   }
 
   .SelectedStyle span {
-    color: #18c1d6 !important;
+    color: #2d8cf0 !important;
   }
 
   .invoice-nature .electronic-invoice span {
@@ -729,7 +797,7 @@
   }
 
   .invoice-content {
-    width: 390px
+    width: 360px
     height: 146px;
     border-radius: 4px;
     border: solid 1px #dddddd;
@@ -778,20 +846,28 @@
   .btn {
     width: 88px;
     height: 34px;
-    background-color: #18c1d6;
+    background-color: #2d8cf0;
     color: #ffffff;
     font-size: 14px;
     margin-top: 20px;
   }
 
   .btn:hover {
-    background-color: #18c1d6 !important;
-    border-color: #18c1d6 !important;
+    background-color: #2d8cf0 !important;
+    border-color: #2d8cf0 !important;
     color: #fff;
   }
 
   .selecting {
-    border: 1px solid #18c1d6 !important;
-    color: #18c1d6;
+    border: 1px solid #2d8cf0 !important;
+    color: #2d8cf0;
+  }
+
+  .ivu-breadcrumb {
+    padding: 0 0 20px;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-weight: bold;
   }
 </style>
