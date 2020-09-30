@@ -2,7 +2,8 @@
   <div class="demand">
     <Breadcrumb separator="<b style='color:#333; margin-left:-8px'>/</b>">
       <img src="../../assets/images/logo.png" alt="" style="margin-right: 8px; width:25px; height: 25px;">
-      <BreadcrumbItem style="color: #333">发票索取</BreadcrumbItem>
+      <BreadcrumbItem to="/" style="color: #333;">发票管理</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333">订单开票</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
       <div class="invoice-nature">
