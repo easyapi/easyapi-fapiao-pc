@@ -15,7 +15,7 @@
           <FormItem label="公司名称" prop="name">
             <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete"
                    :disabled="!ifManageCompany"/>
-            <div class="query-results" v-if="this.queryTitleList!==''">
+            <div class="query-results" v-if="this.queryTitleList!==''" style="position: absolute; z-index: 999; background: white; width: 368px">
               <ul>
                 <li v-for="(result, index) in queryTitleList" :key="index" @click="chooseRise(index)">
                   {{result.name}}

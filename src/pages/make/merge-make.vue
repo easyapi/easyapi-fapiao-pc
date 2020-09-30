@@ -172,7 +172,7 @@
         <FormItem label="公司名称" prop="name">
           <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"
                  :disabled="!ifManageCompany"/>
-          <div class="query-results" v-if="this.makeUp!==''">
+          <div class="query-results" v-if="this.makeUp!==''" style="position: absolute; z-index: 999; background: white; width: 368px">
             <ul>
               <li
                 v-for="(result, index) in makeUp"
@@ -809,6 +809,21 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .query-results {
+    width: 100%;
+    height: auto;
+  }
+
+  .query-results ul {
+    border: 1px solid #e8eaec;
+    border-top: none;
+    padding-left: 10px;
+  }
+
+  .query-results ul li {
+    cursor: pointer;
   }
 
 </style>
