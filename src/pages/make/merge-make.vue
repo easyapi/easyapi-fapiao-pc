@@ -172,7 +172,7 @@
         <FormItem label="公司名称" prop="name">
           <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"
                  :disabled="!ifManageCompany"/>
-          <div class="query-results" v-if="this.makeUp!==''" style="position: absolute; z-index: 999; background: white; width: 368px">
+          <div class="query-results" v-if="makeUp!==''" style="position: absolute; z-index: 999; background: white; width: 368px">
             <ul>
               <li
                 v-for="(result, index) in makeUp"
@@ -306,12 +306,15 @@
       addInvoiceTitleFn(t, id) {
         this.modalType = t;
         if (t === 0) {
+          this.makeUp = [];
           this.companyId = id;
           this.modalTitle = "编辑发票抬头";
           this.showModal = true;
           this.getCompany(id);
         } else if (t === 1) {
           if (this.companyList.length < 6) {
+            this.makeUp = [];
+            this.titleReset('formInline');
             this.modalTitle = "添加发票抬头";
             this.showModal = true;
             this.getCompanyList();

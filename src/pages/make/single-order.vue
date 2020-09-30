@@ -158,7 +158,7 @@
       <Form ref="formInline" :model="formInline" :rules="rules" :label-width="120">
         <FormItem label="发票抬头" prop="name">
           <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
-          <div class="query-results" v-if="this.makeUp!==''" style="position: absolute; z-index: 999; background: white; width: 368px">
+          <div class="query-results" v-if="makeUp!==''" style="position: absolute; z-index: 999; background: white; width: 368px">
             <ul>
               <li
                 v-for="(result, index) in makeUp"
@@ -299,12 +299,15 @@
       addInvoiceTitleFn(t, id) {
         this.modalType = t;
         if (t === 0) {
+          this.makeUp = [];
           this.companyId = id;
           this.modalTitle = "编辑发票抬头";
           this.showModal = true;
           this.getCompany(id);
         } else if (t === 1) {
           if (this.companyList.length < 6) {
+            this.makeUp = [];
+            this.titleReset('formInline');
             this.modalTitle = "添加发票抬头";
             this.showModal = true;
             this.getCompanyList();
@@ -440,11 +443,7 @@
               obj.address = this.formInline.address;
               obj.phone = this.formInline.phone;
               obj.ifDefault = this.ifDefault;
-              this.$ajax({
-                method: "PUT",
-                url: companyUrl + "/" + this.companyId,
-                data: obj
-              }).then(res => {
+              updateCompany(this.companyId, obj).then(res => {
                 if (res.status === 200) {
                   this.$Message.success("编辑成功!");
                   this.handleReset('formInline');

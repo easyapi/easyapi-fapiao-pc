@@ -285,18 +285,26 @@
       addInvoiceTitleFn(t, id) {
         this.modalType = t;
         if (t === 0) {
+          this.queryTitleList = [];
           this.companyId = id;
           this.modalTitle = "编辑发票";
           this.showModal = true;
           this.getCompany();
         } else if (t === 1) {
           if (this.tableData.length < 6) {
+            this.queryTitleList = [];
+            this.titleReset('formValidate');
             this.modalTitle = "添加发票";
             this.showModal = true;
           } else if (this.tableData.length === 6) {
             this.$Message.warning("发票最多只能添加6个")
           }
         }
+      },
+      titleReset(name) {
+        this.showModal = false;
+        this.ifDefault = true;
+        this.$refs[name].resetFields();
       },
       //删除地址
       deleteCompany(companyId) {
