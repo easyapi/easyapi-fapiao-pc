@@ -81,10 +81,6 @@
           <Button @click="getInvoiceListReset" type="primary">查询</Button>
         </div>
       </div>
-      <!-- <div class="option">
-        <span class="Nature-of-invoice" :class="{SelectedStyle:select==='电子'}" @click="SelectedType('电子')">电子发票</span>
-        <span class="Nature-of-invoice" :class="{SelectedStyle:select==='纸质'}" @click="SelectedType('纸质')">纸质发票</span>
-      </div> -->
       <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingData" :data="tableData"></Table>
       <div class="page-box flex-r" v-if="obtainCode!==0">
         <Page :total='total' :page-size="pageSize" :current="current" @on-change="changePage" show-elevator></Page>
@@ -227,10 +223,6 @@
       }
     },
     methods: {
-      // SelectedType(type) {
-      //   this.select = type
-      //   this.getInvoiceList()
-      // },
       //1.获取我的开票账户信息
       getCustomer() {
         getCustomer({}).then(res => {
@@ -282,7 +274,6 @@
           }
         }).then(res => {
           this.stateList = res.data.content
-          console.log(this.stateList)
         }).catch(error => {
           console.log(error)
         });
@@ -330,11 +321,11 @@
       this.accessToken = this.$route.query.accessToken;
       if (this.$route.query.accessToken) {
         localStorage.setItem("accessToken", this.$route.query.accessToken);
-      } else {
-        this.$Message.warning("请重新进入")
       }
       this.taxNumber = this.$route.query.taxNumber;
-      localStorage.setItem("taxNumber", this.taxNumber);
+      if (this.$route.query.taxNumber) {
+        localStorage.setItem("taxNumber", this.$route.query.taxNumber);
+      }
     },
     mounted() {
       this.getCustomer();
