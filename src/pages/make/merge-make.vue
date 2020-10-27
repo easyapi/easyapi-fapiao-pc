@@ -164,6 +164,7 @@
       </div>
 
       <Button class="btn" @click="handleSubmit('formValidate')">提交</Button>
+      <Button class="btn" to="/make/out-order">返回</Button>
       <!-- <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p> -->
       <p class="tpPading-10 btPading-10">请仔细核对开票信息</p>
     </div>
@@ -787,6 +788,7 @@
     color: #ffffff;
     font-size: 14px;
     margin-top: 20px;
+    margin-right 5px
   }
 
   .btn:hover {

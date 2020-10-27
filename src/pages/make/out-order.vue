@@ -136,7 +136,7 @@
             }
           }
         ],
-        minusTableTitle:[
+        minusTableTitle: [
           {
             type: "selection",
             width: 60,
@@ -168,7 +168,7 @@
             title: "可开票金额",
             align: "center",
             render: (h, params) => {
-              return h("span", "-"+params.row.price + "元");
+              return h("span", "-" + params.row.price + "元");
             }
           }
         ],
@@ -267,7 +267,6 @@
         }).catch(error => {
           this.loadingData = '暂无数据';
           this.minusLoadingData = '暂无数据';
-          console.log(error.response);
         });
       },
       //计算金额和ids
@@ -282,6 +281,7 @@
         this.ids = ids.substring(0, ids.length - 1);
       },
       tableSelection(s) {
+        console.log(s)
         this.tableSelectData = s;
         this.calculatePrice();
       },
