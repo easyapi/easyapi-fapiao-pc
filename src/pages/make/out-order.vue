@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="bottom-24">
-        <p class="pd-left">有{{minusPage.total}}笔欠费金额，欠费金额小计：¥{{amount}}元</p>
+        <p class="pd-left">有{{minusPage.total}}笔欠费金额，欠费金额小计：¥{{minusAmount}}元</p>
       </div>
       <div class="ivu-form arrearage">
         <Table
@@ -92,7 +92,7 @@
         orderTypeList: [],
         clicked: "",
         loadingData: '加载中',
-        minusLoadingData:'加载中',
+        minusLoadingData: '加载中',
         tableTitle: [
           {
             type: "selection",
@@ -152,7 +152,8 @@
         tableSelectData: [],
         price: 0.0,
         ids: "",
-        amount: 0
+        amount: 0,
+        minusAmount: 0,
       };
     },
     methods: {
@@ -175,6 +176,9 @@
           if (res.data.code !== 0) {
             // this.page.total = res.data.totalPages;
             this.tableData = res.data.content;
+            for (let v of res.data.content) {
+              this.amount += Number(v.price);
+            }
             this.page.total = res.data.totalElements;
             // if (this.current + 1 > this.page.total) {
             //   this.showMoreBtn = false;
@@ -196,6 +200,9 @@
                 for (let i = 0; i < this.minusTable.length; i++) {
                   this.minusTable[i]['_disabled'] = true
                   this.minusTable[i]['_checked'] = true
+                }
+                for (let v of res.data.content) {
+                  this.minusAmount += Number(v.price);
                 }
               } else {
                 this.minusLoadingData = '暂无数据';
@@ -231,7 +238,7 @@
           price += v.price;
           ids += v.outOrderId + ",";
         }
-        this.price = price.toFixed(2);
+        this.price = price.toFixed(2) - this.minusAmount
         this.ids = ids.substring(0, ids.length - 1);
       },
       tableSelection(s) {
