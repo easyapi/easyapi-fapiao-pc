@@ -59,6 +59,12 @@
               <Radio label="个人">个人</Radio>
             </RadioGroup>
           </FormItem>
+          <FormItem v-show="formValidate.type==='企业'&&this.property==='纸质'" label="发票类型" prop="type">
+            <RadioGroup v-model="category">
+              <Radio label="增值税普通发票">增值税普通发票</Radio>
+              <Radio label="增值税专用发票">增值税专用发票</Radio>
+            </RadioGroup>
+          </FormItem>
           <FormItem label="发票抬头" prop="purchaserName" v-show="formValidate.type === '个人'">
             <Input v-model="formValidate.purchaserName" placeholder="可输入个人姓名或事业单位名称" style="width: 200px"/>
           </FormItem>
@@ -173,7 +179,8 @@
         <FormItem label="公司名称" prop="name">
           <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"
                  :disabled="!ifManageCompany"/>
-          <div class="query-results" v-if="makeUp!==''" style="position: absolute; z-index: 999; background: white; width: 368px">
+          <div class="query-results" v-if="makeUp!==''"
+               style="position: absolute; z-index: 999; background: white; width: 368px">
             <ul>
               <li
                 v-for="(result, index) in makeUp"
@@ -245,12 +252,12 @@
         price: "",
         formValidate: {
           type: "企业",
-          category: "增值税电子普通发票",
           email: "",
           mobile: "",
           remark: "",
           purchaserName: "个人"
         },
+        category: "增值税普通发票",
         formInline: {
           name: "",
           taxNumber: "",
@@ -556,10 +563,12 @@
                 return this.$Message.warning("请填写邮寄地址");
               }
               obj.addressId = this.defaultAddress.addressId;
+              obj.category = this.category
             }
             if (this.companyId === null) {
               return this.$Message.warning("请选择开票抬头");
             }
+            obj.category = "增值税电子普通发票"
             obj.companyId = this.companyId;
             obj.outOrderIds = this.ids;
             obj.property = this.property;
