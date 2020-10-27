@@ -23,7 +23,7 @@
           border
           ref="selection"
           :stripe="true"
-          :columns="tableTitle"
+          :columns="minusTableTitle"
           :data="minusTable"
           :no-data-text="minusLoadingData"
         ></Table>
@@ -136,6 +136,42 @@
             }
           }
         ],
+        minusTableTitle:[
+          {
+            type: "selection",
+            width: 60,
+            align: "center",
+          },
+          {
+            title: "订单编号",
+            key: "no",
+            align: "center"
+          },
+          {
+            title: "订单内容",
+            align: "center",
+            render: (h, params) => {
+              return h("span", Object.values(JSON.parse(params.row.fields))[0]);
+            }
+          },
+          {
+            title: "类型",
+            key: "type",
+            align: "center"
+          },
+          {
+            title: "下单时间",
+            key: "orderTime",
+            align: "center"
+          },
+          {
+            title: "可开票金额",
+            align: "center",
+            render: (h, params) => {
+              return h("span", "-"+params.row.price + "元");
+            }
+          }
+        ],
         tableData: [],
         minusTable: [],
         minusPage: {
@@ -160,13 +196,14 @@
       getOrderTypeList() {
         getOrderTypeList().then(res => {
           this.orderTypeList = res.data.content;
-          this.getOutOrderList(this.orderTypeList[2].name);
+          this.getOutOrderList(this.orderTypeList[0].name);
         }).catch(error => {
           console.log(error.response);
         });
       },
       getOutOrderList(name) {
         this.loadingData = '加载中';
+        this.minusLoadingData = '加载中';
         this.clicked = name;
         // this.showMoreBtn = true;
         this.amount = 0;
@@ -217,16 +254,19 @@
               //   }
               // }
             }).catch(error => {
+              this.minusLoadingData = '暂无数据';
               console.log(error.response);
             });
           } else {
             this.loadingData = '暂无数据';
+            this.minusLoadingData = '暂无数据';
             this.tableData = [];
             this.page.total = 0;
             // this.showMoreBtn = false;
           }
         }).catch(error => {
           this.loadingData = '暂无数据';
+          this.minusLoadingData = '暂无数据';
           console.log(error.response);
         });
       },
@@ -238,7 +278,7 @@
           price += v.price;
           ids += v.outOrderId + ",";
         }
-        this.price = price.toFixed(2) - this.minusAmount
+        this.price = (price - this.minusAmount).toFixed(2)
         this.ids = ids.substring(0, ids.length - 1);
       },
       tableSelection(s) {
