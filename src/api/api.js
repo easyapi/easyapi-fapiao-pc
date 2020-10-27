@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-export const baseUrl = 'https://fapiao-api.easyapi.com';//发票API接口根地址
+// export const baseUrl = 'https://fapiao-api.easyapi.com';//发票API接口根地址
+export const baseUrl = 'http://euwse2.natappfree.cc';//发票API接口根地址
 
 //获取我的开票账户信息
 export const invoiceMoneyUrl = `${baseUrl}/api/user/`;

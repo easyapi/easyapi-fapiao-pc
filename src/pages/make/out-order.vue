@@ -16,6 +16,28 @@
         </div>
       </div>
       <div class="bottom-24">
+        <p class="pd-left">有{{minusPage.total}}笔欠费金额，欠费金额小计：¥{{amount}}元</p>
+      </div>
+      <div class="ivu-form arrearage">
+        <Table
+          border
+          ref="selection"
+          :stripe="true"
+          :columns="tableTitle"
+          :data="minusTable"
+          :no-data-text="minusLoadingData"
+        ></Table>
+      </div>
+      <div class="page-box flex-r">
+        <Page
+          :total="minusPage.total"
+          :page-size="minusPage.size"
+          :current="minusPage.page+1"
+          @on-change="changeMinusPage"
+          show-elevator
+        ></Page>
+      </div>
+      <div class="bottom-24">
         <p class="pd-left">有{{page.total}}个订单可申请发票，可开票金额：¥{{amount}}元</p>
       </div>
       <div class="ivu-form">
@@ -70,11 +92,12 @@
         orderTypeList: [],
         clicked: "",
         loadingData: '加载中',
+        minusLoadingData:'加载中',
         tableTitle: [
           {
             type: "selection",
             width: 60,
-            align: "center"
+            align: "center",
           },
           {
             title: "订单编号",
@@ -114,6 +137,12 @@
           }
         ],
         tableData: [],
+        minusTable: [],
+        minusPage: {
+          page: 0,
+          size: 10,
+          total: 0,
+        },
         page: {
           page: 0,
           size: 10,
@@ -130,7 +159,7 @@
       getOrderTypeList() {
         getOrderTypeList().then(res => {
           this.orderTypeList = res.data.content;
-          this.getOutOrderList(this.orderTypeList[0].name);
+          this.getOutOrderList(this.orderTypeList[2].name);
         }).catch(error => {
           console.log(error.response);
         });
@@ -141,8 +170,8 @@
         // this.showMoreBtn = true;
         this.amount = 0;
         this.price = 0;
-        console.log(999,this.page)
         getOutOrderList({type: this.clicked}, this.page).then(res => {
+          console.log(res)
           if (res.data.code !== 0) {
             // this.page.total = res.data.totalPages;
             this.tableData = res.data.content;
@@ -154,19 +183,32 @@
               method: "GET",
               url: outOrderListUrl,
               params: {
+                maxPrice: -0.01,
                 accessToken: localStorage.getItem("accessToken"),
                 type: this.clicked,
                 state: 0,
-                page: this.page.page - 1,
+                page: this.minusPage.page - 1,
                 size: res.data.totalElements
               }
             }).then(res => {
-              if (res.data.code == 0) {
-              } else {
-                for (let v of res.data.content) {
-                  this.amount += Number(v.price);
+              if (res.data.code == 1) {
+                this.minusTable = res.data.content
+                for (let i = 0; i < this.minusTable.length; i++) {
+                  this.minusTable[i]['_disabled'] = true
+                  this.minusTable[i]['_checked'] = true
                 }
+              } else {
+                this.minusLoadingData = '暂无数据';
+                this.minusTable = [];
+                this.minusPage.total = 0;
               }
+              // if (res.data.code == 0) {
+              //
+              // } else {
+              //   for (let v of res.data.content) {
+              //     this.amount += Number(v.price);
+              //   }
+              // }
             }).catch(error => {
               console.log(error.response);
             });
@@ -209,6 +251,10 @@
       //分页
       changePage(page) {
         this.page.page = page - 1;
+        this.getOutOrderList(this.clicked);
+      },
+      changeMinusPage(page) {
+        this.minusPage.page = page - 1;
         this.getOutOrderList(this.clicked);
       },
       // 全选按钮
@@ -263,4 +309,7 @@
     font-weight: bold;
   }
 
+  .arrearage {
+    margin-bottom 15px
+  }
 </style>
