@@ -30,11 +30,15 @@
       </div>
       <div class="page-box flex-r">
         <Page
+          :transfer="true"
+          :page-size-opts="[10, 50, 100, 200]"
           :total="minusPage.total"
           :page-size="minusPage.size"
           :current="minusPage.page+1"
           @on-change="changeMinusPage"
+          @on-page-size-change="pageSizeChangeMinus"
           show-elevator
+          show-sizer
         ></Page>
       </div>
       <div class="bottom-24">
@@ -61,11 +65,15 @@
       </div> -->
       <div class="page-box flex-r">
         <Page
+          :transfer="true"
+          :page-size-opts="[10, 50, 100, 200]"
           :total="page.total"
           :page-size="page.size"
           :current="page.page+1"
           @on-change="changePage"
+          @on-page-size-change="pageSizeChange"
           show-elevator
+          show-sizer
         ></Page>
       </div>
       <div class="askBtn">
@@ -300,8 +308,16 @@
         this.page.page = page - 1;
         this.getOutOrderList(this.clicked);
       },
+      pageSizeChange(pageSize){
+        this.page.size = pageSize;
+        this.getOutOrderList(this.clicked);
+      },
       changeMinusPage(page) {
         this.minusPage.page = page - 1;
+        this.getOutOrderList(this.clicked);
+      },
+      pageSizeChangeMinus(pageSize){
+        this.minusPage.size = pageSize;
         this.getOutOrderList(this.clicked);
       },
       // 全选按钮
