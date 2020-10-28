@@ -114,15 +114,20 @@
             </div>
           </Col>
         </Row>
-        <h3 style="margin: 20px 0;">发票内容</h3>
+        <h3 @click="num=0" :class="{active:num==0}" class="tag">发票内容</h3>
+        <h3 @click="num=1" :class="{active:num==1}" class="tag">发票明细</h3>
         <Row>
-          <div class="ivoiveContent">
+          <div v-show="num==0" class="ivoiveContent">
             <Table border :columns="invoiceTitle" :data="invoiceItems" disabled-hover></Table>
             <div class="table-amount">
-              <p>税额合计：{{getTaxAmount(invoiceItems)}}元 &nbsp;&nbsp;&nbsp;&nbsp; 价额合计：{{getPriceAmount(invoiceItems)}}元</p>
+              <p>税额合计：{{getTaxAmount(invoiceItems)}}元 &nbsp;&nbsp;&nbsp;&nbsp;
+                价额合计：{{getPriceAmount(invoiceItems)}}元</p>
             </div>
           </div>
-      </Row>
+          <div v-show="num==1" class="ivoiveContent">
+            <Table :columns="invoiceDetailTitle" :data="invoiceDetailItems"></Table>
+          </div>
+        </Row>
       </div>
       <h3 style="margin-bottom: 20px" v-if="invoice.serviceType==='订单开票'">订单内容</h3>
       <Table border :stripe='true' :columns="tableTitle" :data="outOrders"
@@ -132,6 +137,7 @@
 </template>
 <script>
   import {getInvoice} from '../../api/invoice'
+  import {getOutOrderList} from '../../api/out-order'
 
   export default {
     name: '',
@@ -139,6 +145,7 @@
     data() {
       return {
         invoiceId: '',
+        num: 0,
         invoice: '',
         time: '',
         tableTitle: [
@@ -172,7 +179,54 @@
             }
           }
         ],
+        invoiceDetailTitle:[
+          {
+            title: "日期",
+            key: "addTime",
+            align: "center"
+          },
+          {
+            title: "订单号",
+            key: "no",
+            align: "center"
+          },
+          {
+            title: "订单类型",
+            key: "type",
+            align: "center"
+          },
+          {
+            title: "价格",
+            key: "price",
+            align: "center"
+          },
+          {
+            title: "描述",
+            key: "fields",
+            align: "center"
+          },
+          {
+            title: "明细",
+            key: "tax",
+            align: "center",
+            render:(h,params)=>{
+              console.log(params);
+              let value = params.row.tax
+              return h('a',{
+                  on: {
+                    click: () => {
+                      this.showDrawer = true
+                      this.chooseActivityId = params.row.id
+                    }
+                  }
+                },
+                value
+              )
+            }
+          }
+        ],
         invoiceItems: [],
+        invoiceDetailItems:[],
         outOrders: [],
         invoiceTitle: [
           {
@@ -227,6 +281,18 @@
       }
     },
     methods: {
+      //获取订单内容
+      getOutOrderList() {
+        let params = {
+          invoiceId: this.$route.query.id
+        }
+        getOutOrderList(params).then(res => {
+          console.log(res)
+          if (res.data.code == 1) {
+            this.invoiceDetailItems = res.data.content
+          }
+        })
+      },
       /**
        * 获取发票详情
        */
@@ -288,6 +354,7 @@
   @import '../../assets/styles/invoice.styl'
   .set-title {
     padding-left: 10px;
+
     span {
       color: #18c1d6;
       font-size: 18px;
@@ -295,6 +362,7 @@
       padding: 10px 10px 10px 0;
       cursor: pointer;
     }
+
     img {
       margin-left: 10px;
     }
@@ -329,13 +397,15 @@
     white-space: nowrap;
     text-overflow: ellipsis
   }
-  .ivu-breadcrumb{
+
+  .ivu-breadcrumb {
     padding: 0 0 20px;
-    font-size:20px;
-    border-bottom:1px solid #ddd;
+    font-size: 20px;
+    border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
   }
+
   .table-amount {
     padding-left: 18px;
     padding-right: 18px;
@@ -344,6 +414,7 @@
     text-align: right;
     line-height: 48px;
   }
+
   .ivoiveContent >>> span {
     color: #666;
     font-weight: normal;
@@ -351,5 +422,27 @@
 
   .ivoiveContent >>> th {
     background-color: #f5f6fa;
+  }
+
+  .tag {
+    margin: 20px 0 10px;
+    display: inline-block;
+    padding: 14px 25px;
+    cursor: pointer;
+  }
+
+  .tag:hover {
+    opacity: 0.75;
+  }
+
+  .active {
+    color: #18C1D6;
+    background: #FFF;
+    border-top: 2px solid #18C1D6;
+    border-bottom: 2px solid #FFF;
+    border-left: 1px solid #E1E6EB;
+    border-right: 1px solid #E1E6EB;
+    margin-top: -1px;
+    margin-bottom: -2px;
   }
 </style>
