@@ -312,6 +312,7 @@
       },
       //添加或编辑发票抬头
       addInvoiceTitleFn(t, id) {
+        console.log(this.companyList.length)
         this.modalType = t;
         if (t === 0) {
           this.makeUp = [];
@@ -474,7 +475,7 @@
           accessToken: localStorage.getItem("accessToken"),
         }
         getCompanyList(params).then(res => {
-          if (res.status == 200) {
+          if (res.data.code == 1) {
             this.companyList = res.data.content;
             this.showInfo = true;
             for (let k of this.companyList) {
@@ -484,7 +485,7 @@
             }
           } else {
             this.showInfo = false;
-            this.companyList = null;
+            this.companyList = "";
           }
         }).catch(error => {
           console.log(error)
@@ -523,9 +524,7 @@
       },
       //自动补齐
       autocomplete() {
-        if (this.formInline.name.length < 4) {
-          return;
-        }
+
         this.$ajax.get(queryServiceURl, {
           params: {
             accessToken: localStorage.getItem("accessToken"),
