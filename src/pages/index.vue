@@ -86,9 +86,9 @@
         <Page :total='total' :page-size="pageSize" :current="current" @on-change="changePage" show-elevator></Page>
       </div>
       <div class="Hint">
-        <p>每次消费后都可以开具相应的发票。</p>
-        <p>请仔细填写申请发票信息，如果填写错误造成作废在开具，需要承担相关服务费20元。</p>
-        <p>目前自助暂仅支持普通电子发票开票，如需开专用发票请联系对应销售</p>
+        <dl v-html="this.content">
+          {{this.content}}
+        </dl>
       </div>
     </div>
   </div>
@@ -110,6 +110,9 @@
   import {
     getCustomer
   } from '../api/customer'
+  import {
+    getSettings
+  } from '../api/setting'
 
   export default {
     name: '',
@@ -219,6 +222,7 @@
         tableData: [],
         current: 1,
         pageSize: 5,
+        content: "",
         total: 0,
       }
     },
@@ -258,6 +262,15 @@
         }).catch(error => {
           console.log(error.response)
         });
+      },
+      getSettings() {
+        let params = {
+          fieldKey: "pc_index_remark"
+        }
+        getSettings(params).then(res => {
+          this.content = res.data.content
+          console.log(this.content)
+        })
       },
       jumpPage(url) {
         this.$router.push({path: url})
@@ -331,8 +344,9 @@
       this.getCustomer();
       this.getDefaultCompany();
       this.getAddress();
-      this.getInvoiceList()
-      this.getApplicationItem()
+      this.getInvoiceList();
+      this.getApplicationItem();
+      this.getSettings();
     },
     watch: {}
   }
