@@ -78,6 +78,7 @@
       </div>
       <div class="askBtn">
         <div style="float: right; line-height:45px; margin-right:10px">
+          <sapn class="out-order_select">已选订单数:{{num}}个</sapn>
           <span style="color: #999999;font-size: 12px;">
             待开票金额：
           </span>
@@ -198,6 +199,7 @@
         ids: "",
         amount: 0,
         minusAmount: 0,
+        num: 0
       };
     },
     methods: {
@@ -290,6 +292,7 @@
       },
       tableSelection(s) {
         console.log(s)
+        this.num = s.length
         this.tableSelectData = s;
         this.calculatePrice();
       },
@@ -308,7 +311,7 @@
         this.page.page = page - 1;
         this.getOutOrderList(this.clicked);
       },
-      pageSizeChange(pageSize){
+      pageSizeChange(pageSize) {
         this.page.size = pageSize;
         this.getOutOrderList(this.clicked);
       },
@@ -316,7 +319,7 @@
         this.minusPage.page = page - 1;
         this.getOutOrderList(this.clicked);
       },
-      pageSizeChangeMinus(pageSize){
+      pageSizeChangeMinus(pageSize) {
         this.minusPage.size = pageSize;
         this.getOutOrderList(this.clicked);
       },
@@ -374,5 +377,11 @@
 
   .arrearage {
     margin-bottom 15px
+  }
+
+  .out-order_select {
+    color: #999999;
+    font-size: 12px;
+    margin-right: 50px;
   }
 </style>
