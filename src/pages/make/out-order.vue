@@ -46,14 +46,18 @@
       </div>
       <div class="ivu-form">
         <div class="select-btn">
-          <Button @click="handleSelectAll(true)" style="margin:10px 10px 10px 0">设置全选</Button>
-          <Button @click="handleSelectAll(false)">取消全选</Button>
+          <Button @click="handleSelectAllPage(true)" style="margin:10px 10px 10px 0">设置全选</Button>
+          <Button @click="handleSelectAllPage(false)">取消全选</Button>
         </div>
 
         <Table
           border
           ref="selection"
           @on-selection-change="tableSelection"
+          @on-select="handleSelect"
+          @on-select-cancel="handleCancel"
+          @on-select-all="handleSelectAll"
+          @on-select-all-cancel="handleSelectAll"
           :stripe="true"
           :columns="tableTitle"
           :data="tableData"
@@ -78,7 +82,7 @@
       </div>
       <div class="askBtn">
         <div style="float: right; line-height:45px; margin-right:10px">
-          <sapn class="out-order_select">已选订单数:{{num}}个</sapn>
+          <sapn class="out-order_select">已选订单数:{{selectedIds.size}}个</sapn>
           <span style="color: #999999;font-size: 12px;">
             待开票金额：
           </span>
@@ -199,7 +203,11 @@
         ids: "",
         amount: 0,
         minusAmount: 0,
-        num: 0
+        num: "",
+        selectedIds: new Set(),//选中的合并项的id
+        selectedSum: 0, //选中的总数量
+        total: 0,
+        importAll: "",
       };
     },
     methods: {
@@ -284,6 +292,7 @@
         let price = 0;
         let ids = "";
         for (let v of this.tableSelectData) {
+          console.log(this.tableSelectData)
           price += v.price;
           ids += v.outOrderId + ",";
         }
@@ -291,8 +300,6 @@
         this.ids = ids.substring(0, ids.length - 1);
       },
       tableSelection(s) {
-        console.log(s)
-        this.num = s.length
         this.tableSelectData = s;
         this.calculatePrice();
       },
@@ -310,6 +317,26 @@
       changePage(page) {
         this.page.page = page - 1;
         this.getOutOrderList(this.clicked);
+        if(!this.$refs.selection || !this.$refs.selection.data ){
+          return null;
+        }
+        // let objData = this.$refs.selection.data;
+        let objData = this.tableData;//当前页数据
+        console.log(objData)
+        if(this.importAll){//选中所有页面
+          // this.$refs.selection.selectAll(true);
+          for (let index in objData) {
+            objData[index]._checked = true
+            console.log(objData[index])
+          }
+        }else{//没有全部选中所有页面
+          for (let index in objData) {
+            if (this.selectedIds.has(objData[index].id)) {
+              objData[index]._checked = true
+              console.log(objData[index])
+            }
+          }
+        }
       },
       pageSizeChange(pageSize) {
         this.page.size = pageSize;
@@ -324,8 +351,39 @@
         this.getOutOrderList(this.clicked);
       },
       // 全选按钮
-      handleSelectAll(status) {
+      handleSelectAllPage(status) {
+        this.importAll = status;
         this.$refs.selection.selectAll(status);
+      },
+      handleSelectAll(selection) {
+        if (selection && selection.length === 0) {
+          let data = this.$refs.selection.data;
+          data.forEach((item) => {
+            if (this.selectedIds.has(item.outOrderId)) {
+              this.selectedIds.delete(item.outOrderId);
+            }
+          })
+        } else {
+          selection.forEach((item) => {
+            this.selectedIds.add(item.outOrderId);
+          })
+        }
+        if (this.importAll) {//所有页选中
+          console.log(this.importAll)
+          //同步
+          this.selectedSum = this.selectedIds.size;
+        } else {
+          //同步
+          this.selectedSum = this.selectedIds.size
+        }
+      },
+      handleSelect(selection, row) {
+        this.selectedIds.add(row.outOrderId);
+        this.selectedSum ++;
+      },
+      handleCancel(selection, row) {
+        this.selectedIds.delete(row.outOrderId);
+        this.selectedSum --;
       },
       // 加载更多
       // handleAddMore() {
