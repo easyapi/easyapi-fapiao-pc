@@ -25,7 +25,12 @@
               <p>{{invoice.addTime}}</p>
             </div>
           </Col>
-
+          <Col span="12" class-name="">
+            <div class="item-td flex-r">
+              <span>开票时间</span>
+              <p>{{invoice.printTime}}</p>
+            </div>
+          </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>发票类型</span>
@@ -40,15 +45,20 @@
           </Col>
           <Col span="12" class-name="">
             <div class="item-td flex-r">
-              <span style="min-width:120px">开票信息</span>
-              <p>{{invoice.failMsg}}</p>
-            </div>
-          </Col>
-
-          <Col span="12" class-name="">
-            <div class="item-td flex-r">
               <span>电子邮箱</span>
               <p>{{invoice.email}}</p>
+            </div>
+          </Col>
+          <Col span="12" class-name="">
+            <div class="item-td flex-r">
+              <span>手机号码</span>
+              <p>{{invoice.addrMobile}}</p>
+            </div>
+          </Col>
+          <Col span="12" class-name="">
+            <div class="item-td flex-r">
+              <span style="min-width:120px">开票信息</span>
+              <p>{{invoice.failMsg}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
