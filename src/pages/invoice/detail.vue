@@ -391,11 +391,8 @@
 
   .item-long p {
     padding-left: 10px;
-    width: 400px;
     text-align: left;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis
+    line-height: 21px;
   }
 
   .ivu-breadcrumb {
