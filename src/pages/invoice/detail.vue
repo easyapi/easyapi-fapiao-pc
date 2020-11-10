@@ -6,7 +6,10 @@
       <BreadcrumbItem style="color: #333">发票详情</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
-      <h3 class="h3-title">您的发票开票金额 ¥ {{ invoice.price }} 元</h3>
+      <div class="detail_button">
+        <Button v-if="this.invoice.statements=='已开票(无须邮寄)'" @click="showInvoice">预览发票</Button>
+        <Button v-if="this.invoice.statements=='已开票(无须邮寄)'"><a :href="invoice.electronicInvoiceUrl" target="_blank">下载发票</a></Button>
+      </div>
       <div class="table-container">
         <!-- <Row class-name="table-title">
           <Col span="24" class-name="">
@@ -32,12 +35,7 @@
           <Col span="12" class-name="">
             <div class="item-td flex-r">
               <span>发票状态</span>
-              <p>{{invoice.statements}}
-                <a :href="invoice.electronicInvoiceImg" target="_blank">{{invoice.electronicInvoiceImg
-                  ? '预览发票' : '暂无预览'}}</a>
-                <a :href="invoice.electronicInvoiceUrl" target="_blank">{{invoice.electronicInvoiceUrl
-                  ? '下载发票' : '暂无下载'}}</a>
-              </p>
+              <p>{{invoice.statements}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
@@ -133,6 +131,14 @@
       <Table border :stripe='true' :columns="tableTitle" :data="outOrders"
              v-if="invoice.serviceType==='订单开票'"></Table>
     </div>
+    <Modal
+      width="1000px"
+      v-model="isShowInvoice"
+      title="预览发票"
+      @on-ok="isShowInvoice==false"
+      @on-cancel="isShowInvoice==false">
+      <div class="imgBox" :style="{backgroundImage:'url('+invoice.electronicInvoiceImg+')'}"></div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -145,6 +151,7 @@
     data() {
       return {
         invoiceId: '',
+        isShowInvoice: false,
         num: 0,
         invoice: '',
         time: '',
@@ -179,7 +186,7 @@
             }
           }
         ],
-        invoiceDetailTitle:[
+        invoiceDetailTitle: [
           {
             title: "日期",
             key: "addTime",
@@ -209,10 +216,10 @@
             title: "明细",
             key: "tax",
             align: "center",
-            render:(h,params)=>{
+            render: (h, params) => {
               console.log(params);
               let value = params.row.tax
-              return h('a',{
+              return h('a', {
                   on: {
                     click: () => {
                       this.showDrawer = true
@@ -226,7 +233,7 @@
           }
         ],
         invoiceItems: [],
-        invoiceDetailItems:[],
+        invoiceDetailItems: [],
         outOrders: [],
         invoiceTitle: [
           {
@@ -281,6 +288,10 @@
       }
     },
     methods: {
+      //预览发票
+      showInvoice() {
+        this.isShowInvoice = true
+      },
       //获取订单内容
       getOutOrderList() {
         let params = {
@@ -441,5 +452,22 @@
     border-right: 1px solid #E1E6EB;
     margin-top: -1px;
     margin-bottom: -2px;
+  }
+
+  .detail_button {
+    margin: 10px 0;
+    height: 32px;
+    width: 250px;
+    justify-content: space-between;
+  }
+
+  .detail_button > Button {
+    margin-right: 10px;
+  }
+
+  .imgBox{
+    width: 100%;
+    height: 640px;
+    background-size: cover;
   }
 </style>
