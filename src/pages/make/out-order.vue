@@ -316,20 +316,20 @@
       //分页
       changePage(page) {
         this.page.page = page - 1;
-        this.getOutOrderList(this.clicked);
-        if(!this.$refs.selection || !this.$refs.selection.data ){
+        this.getOutOrderList(this.clicked)
+        console.log(this.tableData)
+        if (!this.$refs.selection || !this.$refs.selection.data) {
           return null;
         }
         // let objData = this.$refs.selection.data;
         let objData = this.tableData;//当前页数据
         console.log(objData)
-        if(this.importAll){//选中所有页面
+        if (this.importAll) {//选中所有页面
           // this.$refs.selection.selectAll(true);
           for (let index in objData) {
             objData[index]._checked = true
-            console.log(objData[index])
           }
-        }else{//没有全部选中所有页面
+        } else {//没有全部选中所有页面
           for (let index in objData) {
             if (this.selectedIds.has(objData[index].id)) {
               objData[index]._checked = true
@@ -378,12 +378,13 @@
         }
       },
       handleSelect(selection, row) {
+        console.log(this.selectedIds)
         this.selectedIds.add(row.outOrderId);
-        this.selectedSum ++;
+        this.selectedSum++;
       },
       handleCancel(selection, row) {
         this.selectedIds.delete(row.outOrderId);
-        this.selectedSum --;
+        this.selectedSum--;
       },
       // 加载更多
       // handleAddMore() {

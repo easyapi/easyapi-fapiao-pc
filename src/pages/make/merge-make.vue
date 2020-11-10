@@ -342,6 +342,7 @@
               this.$Message.info("删除成功");
               this.getCompanyList();
             }).catch(error => {
+              this.$Message.error(error.response.data.message)
               console.log(error.response);
             });
           }
@@ -358,6 +359,7 @@
           this.formInline.phone = data.phone;
           this.ifDefault = data.ifDefault;
         }).catch(error => {
+          this.$Message.error(error.response.data.message)
           console.log(error.response);
         });
       },
@@ -379,6 +381,7 @@
             this.getCompanyList();
           }
         }).catch(error => {
+          this.$Message.error(error.response.data.message)
           console.log(error.response);
         });
       },
@@ -402,7 +405,7 @@
                   this.getCompanyList();
                 }
               }).catch(error => {
-                console.log(error.response);
+                this.$Message.error(error.response.data.message)
               });
             } else if (this.modalType === 1) {
               let obj = {};
@@ -420,7 +423,7 @@
                   this.getCompanyList();
                 }
               }).catch(error => {
-                console.log(error.response);
+                this.$Message.error(error.response.data.message)
               });
             }
           } else {
@@ -488,7 +491,7 @@
             this.companyList = "";
           }
         }).catch(error => {
-          console.log(error)
+          this.$Message.error(error.response.data.message)
         });
       },
       getIfManageCompany() {
@@ -505,7 +508,7 @@
             }
           }
         }).catch(error => {
-          console.log(error.response)
+          this.$Message.error(error.response.data.message)
         });
       },
       //获取默认邮寄地址
@@ -519,7 +522,7 @@
             this.defaultAddress = null;
           }
         }).catch(error => {
-          console.log(error.response);
+          this.$Message.error(error.response.data.message)
         });
       },
       //自动补齐
@@ -538,7 +541,7 @@
             this.message = res.data.message;
           }
         }).catch(error => {
-          console.log(error.response.data.message);
+          this.$Message.error(error.response.data.message)
         });
       },
       //获取我的开票账户信息
@@ -549,7 +552,7 @@
             this.formValidate.mobile = res.data.content.mobile;
           }
         }).catch(error => {
-          console.log(error);
+          this.$Message.error(error.response.data.message)
         });
       },
       handleSubmit(name) {
