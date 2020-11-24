@@ -15,10 +15,10 @@
         >{{item.name}}
         </div>
       </div>
-      <div class="bottom-24">
+      <div class="bottom-24" v-if="this.minusLoadingData != '暂无数据'">
         <p class="pd-left">有{{minusPage.total}}笔欠费金额，欠费金额小计：¥{{minusAmount}}元</p>
       </div>
-      <div class="ivu-form arrearage">
+      <div class="ivu-form arrearage" v-if="this.minusLoadingData != '暂无数据'">
         <Table
           border
           ref="selection"
@@ -27,19 +27,6 @@
           :data="minusTable"
           :no-data-text="minusLoadingData"
         ></Table>
-      </div>
-      <div class="page-box flex-r">
-        <Page
-          :transfer="true"
-          :page-size-opts="[10, 50, 100, 200]"
-          :total="minusPage.total"
-          :page-size="minusPage.size"
-          :current="minusPage.page+1"
-          @on-change="changeMinusPage"
-          @on-page-size-change="pageSizeChangeMinus"
-          show-elevator
-          show-sizer
-        ></Page>
       </div>
       <div class="bottom-24">
         <p class="pd-left">有{{page.total}}个订单可申请发票，可开票金额：¥{{amount}}元</p>
@@ -227,7 +214,6 @@
         this.amount = 0;
         this.price = 0;
         getOutOrderList({type: this.clicked}, this.page).then(res => {
-          console.log(res)
           if (res.data.code !== 0) {
             // this.page.total = res.data.totalPages;
             this.tableData = res.data.content;
@@ -252,6 +238,7 @@
             }).then(res => {
               if (res.data.code == 1) {
                 this.minusTable = res.data.content
+                console.log(this.minusTable)
                 for (let i = 0; i < this.minusTable.length; i++) {
                   this.minusTable[i]['_disabled'] = true
                   this.minusTable[i]['_checked'] = true
@@ -340,14 +327,6 @@
       },
       pageSizeChange(pageSize) {
         this.page.size = pageSize;
-        this.getOutOrderList(this.clicked);
-      },
-      changeMinusPage(page) {
-        this.minusPage.page = page - 1;
-        this.getOutOrderList(this.clicked);
-      },
-      pageSizeChangeMinus(pageSize) {
-        this.minusPage.size = pageSize;
         this.getOutOrderList(this.clicked);
       },
       // 全选按钮
