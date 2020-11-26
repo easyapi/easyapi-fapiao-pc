@@ -282,7 +282,7 @@
             this.page.total = Number(res.data.totalElements);
           }
         }).catch(error => {
-          console.log(error)
+          console.log(error);
           this.$Message.warning(error.response.data.message)
         });
       },

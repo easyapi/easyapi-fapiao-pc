@@ -8,12 +8,12 @@ import {baseUrl} from "./api";
  * @see https://www.easyai.com
  */
 export const getOutOrderList = (params, page) => {
-  params.size = page.size
-  params.page = page.page
-  params.state = 0
-  params.sort = "orderTime,desc"
-  params.accessToken = localStorage.getItem("accessToken")
+  params.size = page.size;
+  params.page = page.page;
+  params.state = 0;
+  params.sort = "orderTime,desc";
+  params.accessToken = localStorage.getItem("accessToken");
   return axios.get(`${baseUrl}/out-orders`, {
     params: params
   });
-}
+};

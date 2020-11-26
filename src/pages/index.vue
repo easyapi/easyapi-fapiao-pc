@@ -17,11 +17,11 @@
           <p class="invoice-base-title">开票信息</p>
           <div class="onInvoice-content flex-c" v-if="showInfo">
             <div class="flex-r">
-              <span class="invoice-base-title">发票抬头：</span>
+              <span class="invoice-base-title">抬头：</span>
               <p style="font-size: 14px;color: #333333;">{{defaultCompany.name }}</p>
             </div>
             <div class="flex-r">
-              <span class="invoice-base-title">发票税号：</span>
+              <span class="invoice-base-title">税号：</span>
               <p style="font-size: 14px;color: #333333;">{{defaultCompany.taxNumber}}</p>
             </div>
             <a class="modify-style" @click="jumpPage('/company')">更改开票信息
@@ -43,7 +43,7 @@
               <p style="	font-size: 14px;color: #333333;">{{defaultAddress.name}} {{defaultAddress.mobile}}</p>
             </div>
             <div class="flex-r" style="height: auto">
-              <span class="invoice-base-title">邮寄地址：</span>
+              <span class="invoice-base-title">地址：</span>
               <p style="line-height:15px;font-size: 14px;color: #333333;">
                 {{defaultAddress.province}} {{defaultAddress.city}} {{defaultAddress.district}}
                 {{defaultAddress.addr}}</p>
