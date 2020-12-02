@@ -314,42 +314,38 @@
       },
       // 全选按钮
       handleSelectAllPage(status) {
-        this.$refs.selection.selectAll(status);
-        getOutOrderList({type: this.clicked}, this.totalPage).then(res => {
-          if (res.data.code == 1) {
-            this.number = res.data.totalElements
-            this.selected = res.data.content
-            this.calculatePrice()
-          }
-        })
+        if (this.$refs.selection.selectAll(status)) {
+          getOutOrderList({type: this.clicked}, this.totalPage).then(res => {
+            if (res.data.code == 1) {
+              this.number = res.data.totalElements
+              this.selected = res.data.content
+              this.calculatePrice()
+            }
+          })
+        }
       },
       handleSelectAll(selection) {
-        //数组合并，有可能用户先选择了某几项，已经被我们push进去，因此数组合并需要去重一下
         this.selected = _.uniqBy(this.selected.concat(selection), "outOrderId");
         this.number = this.selected.length
         this.calculatePrice()
       },
       handleCancelSelectAll(selection) {
-        //从已选项中移除当页数据
         this.selected = _.differenceBy(this.selected, this.tableData, "outOrderId");
         this.number = this.selected.length
         this.calculatePrice()
       },
       handleSelect(selection, row) {
-        //添加到已选项
         this.selected.push(row)
         this.number = this.selected.length
         this.calculatePrice()
       },
       handleCancel(selection, row) {
-        //从已选项中去除取消项
         _.remove(this.selected, n => {
           return n.outOrderId === row.outOrderId;
         });
         this.number = this.selected.length
         this.calculatePrice()
       },
-      //把源数据加上_checked字段，遍历已选项数据，更新选中状态
       updateChecked() {
         for (let i = 0; i < this.tableData.length; i++) {
           this.tableData[i]._checked = false;
