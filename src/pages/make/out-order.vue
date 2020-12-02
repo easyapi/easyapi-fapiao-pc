@@ -15,10 +15,10 @@
         >{{item.name}}
         </div>
       </div>
-      <div class="bottom-24" v-if="this.minusLoadingData != '暂无数据'">
+      <div class="bottom-24" v-if="this.minusTable.length = 0">
         <p class="pd-left">有{{minusPage.total}}笔欠费金额，欠费金额小计：¥{{minusAmount}}元</p>
       </div>
-      <div class="ivu-form arrearage" v-if="this.minusLoadingData != '暂无数据'">
+      <div class="ivu-form arrearage" v-if="this.minusTable.length = 0">
         <Table
           border
           ref="selection"
@@ -33,18 +33,17 @@
       </div>
       <div class="ivu-form">
         <div class="select-btn">
-          <Button @click="handleSelectAllPage(true)" style="margin:10px 10px 10px 0">设置全选</Button>
+          <Button @click="handleSelectAllPage(true)" style="margin:10px 10px 10px 0">跨页全选</Button>
           <Button @click="handleSelectAllPage(false)">取消全选</Button>
         </div>
 
         <Table
           border
           ref="selection"
-          @on-selection-change="tableSelection"
           @on-select="handleSelect"
           @on-select-cancel="handleCancel"
           @on-select-all="handleSelectAll"
-          @on-select-all-cancel="handleSelectAll"
+          @on-select-all-cancel="handleCancelSelectAll"
           :stripe="true"
           :columns="tableTitle"
           :data="tableData"
@@ -69,7 +68,7 @@
       </div>
       <div class="askBtn">
         <div style="float: right; line-height:45px; margin-right:10px">
-          <sapn class="out-order_select">已选订单数:{{selectedIds.size}}个</sapn>
+          <sapn class="out-order_select">已选订单数:{{number}}个</sapn>
           <span style="color: #999999;font-size: 12px;">
             待开票金额：
           </span>
@@ -184,15 +183,21 @@
           size: 10,
           total: 0,
         },
+        totalPage: {
+          page: 0,
+          size: 12,
+          total: 0,
+        },
         // showMoreBtn: true,
         tableSelectData: [],
         price: 0.0,
         ids: "",
         amount: 0,
         minusAmount: 0,
+        number: 0,
         num: "",
+        selected: [],
         selectedIds: new Set(),//选中的合并项的id
-        selectedSum: 0, //选中的总数量
         total: 0,
         importAll: "",
       };
@@ -217,6 +222,7 @@
           if (res.data.code !== 0) {
             // this.page.total = res.data.totalPages;
             this.tableData = res.data.content;
+            this.updateChecked();
             for (let v of res.data.content) {
               this.amount += Number(v.price);
             }
@@ -238,7 +244,6 @@
             }).then(res => {
               if (res.data.code == 1) {
                 this.minusTable = res.data.content
-                console.log(this.minusTable)
                 for (let i = 0; i < this.minusTable.length; i++) {
                   this.minusTable[i]['_disabled'] = true
                   this.minusTable[i]['_checked'] = true
@@ -278,17 +283,12 @@
       calculatePrice() {
         let price = 0;
         let ids = "";
-        for (let v of this.tableSelectData) {
-          console.log(this.tableSelectData)
+        for (let v of this.selected) {
           price += v.price;
           ids += v.outOrderId + ",";
         }
         this.price = (price - this.minusAmount).toFixed(2)
         this.ids = ids.substring(0, ids.length - 1);
-      },
-      tableSelection(s) {
-        this.tableSelectData = s;
-        this.calculatePrice();
       },
       submitInvoice() {
         if (this.tableSelectData.length === 0) {
@@ -304,66 +304,61 @@
       changePage(page) {
         this.page.page = page - 1;
         this.getOutOrderList(this.clicked)
-        console.log(this.tableData)
-        if (!this.$refs.selection || !this.$refs.selection.data) {
-          return null;
-        }
-        // let objData = this.$refs.selection.data;
-        let objData = this.tableData;//当前页数据
-        console.log(objData)
-        if (this.importAll) {//选中所有页面
-          // this.$refs.selection.selectAll(true);
-          for (let index in objData) {
-            objData[index]._checked = true
-          }
-        } else {//没有全部选中所有页面
-          for (let index in objData) {
-            if (this.selectedIds.has(objData[index].id)) {
-              objData[index]._checked = true
-              console.log(objData[index])
-            }
-          }
-        }
+        this.calculatePrice()
       },
       pageSizeChange(pageSize) {
         this.page.size = pageSize;
+        this.page.page = 0;
         this.getOutOrderList(this.clicked);
+        this.calculatePrice()
       },
       // 全选按钮
       handleSelectAllPage(status) {
-        this.importAll = status;
         this.$refs.selection.selectAll(status);
+        getOutOrderList({type: this.clicked}, this.totalPage).then(res => {
+          if (res.data.code == 1) {
+            this.number = res.data.totalElements
+            this.selected = res.data.content
+            this.calculatePrice()
+          }
+        })
       },
       handleSelectAll(selection) {
-        if (selection && selection.length === 0) {
-          let data = this.$refs.selection.data;
-          data.forEach((item) => {
-            if (this.selectedIds.has(item.outOrderId)) {
-              this.selectedIds.delete(item.outOrderId);
-            }
-          })
-        } else {
-          selection.forEach((item) => {
-            this.selectedIds.add(item.outOrderId);
-          })
-        }
-        if (this.importAll) {//所有页选中
-          console.log(this.importAll)
-          //同步
-          this.selectedSum = this.selectedIds.size;
-        } else {
-          //同步
-          this.selectedSum = this.selectedIds.size
-        }
+        //数组合并，有可能用户先选择了某几项，已经被我们push进去，因此数组合并需要去重一下
+        this.selected = _.uniqBy(this.selected.concat(selection), "outOrderId");
+        this.number = this.selected.length
+        this.calculatePrice()
+      },
+      handleCancelSelectAll(selection) {
+        //从已选项中移除当页数据
+        this.selected = _.differenceBy(this.selected, this.tableData, "outOrderId");
+        this.number = this.selected.length
+        this.calculatePrice()
       },
       handleSelect(selection, row) {
-        console.log(this.selectedIds)
-        this.selectedIds.add(row.outOrderId);
-        this.selectedSum++;
+        //添加到已选项
+        this.selected.push(row)
+        this.number = this.selected.length
+        this.calculatePrice()
       },
       handleCancel(selection, row) {
-        this.selectedIds.delete(row.outOrderId);
-        this.selectedSum--;
+        //从已选项中去除取消项
+        _.remove(this.selected, n => {
+          return n.outOrderId === row.outOrderId;
+        });
+        this.number = this.selected.length
+        this.calculatePrice()
+      },
+      //把源数据加上_checked字段，遍历已选项数据，更新选中状态
+      updateChecked() {
+        for (let i = 0; i < this.tableData.length; i++) {
+          this.tableData[i]._checked = false;
+          for (let j = 0; j < this.selected.length; j++) {
+            if (this.selected[j].outOrderId === this.tableData[i].outOrderId) {
+              this.tableData[i]._checked = true;
+            }
+          }
+        }
       },
       // 加载更多
       // handleAddMore() {

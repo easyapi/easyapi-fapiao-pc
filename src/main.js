@@ -8,7 +8,9 @@ Vue.prototype.$ajax = axios
 
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
+import _ from 'lodash';
 
+Vue.prototype._ = _
 Vue.use(ViewUI);
 
 import './assets/styles/gobal.styl'
