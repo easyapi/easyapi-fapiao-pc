@@ -314,12 +314,23 @@
       },
       // 全选按钮
       handleSelectAllPage(status) {
-        if (this.$refs.selection.selectAll(status)) {
+        console.log(status)
+        if (status) {
+          this.$refs.selection.selectAll(status)
           getOutOrderList({type: this.clicked}, this.totalPage).then(res => {
             if (res.data.code == 1) {
               this.number = res.data.totalElements
               this.selected = res.data.content
               this.calculatePrice()
+            }
+          })
+        } else {
+          this.$refs.selection.selectAll(status)
+          getOutOrderList({type: this.clicked}, this.totalPage).then(res => {
+            if (res.data.code == 1) {
+              this.number = 0
+              this.selected = null
+              this.price = 0
             }
           })
         }
