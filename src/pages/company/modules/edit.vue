@@ -168,7 +168,7 @@
                     click: () => {
                       updateDefaultCompany(params.row.companyId).then(res => {
                         if (res.data.code === 1) {
-                          this.$Message.success('操作成功!');
+                          this.$Message.success('操作成功');
                           this.getCompanyList()
                         }
                       }).catch(error => {
@@ -337,48 +337,47 @@
       //提交地址
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.modalType === 0) {
-              let data = {}
-              data.accessToken = localStorage.getItem('accessToken');
-              data.name = this.formValidate.name;
-              data.taxNumber = this.formValidate.taxNumber;
-              data.bank = this.formValidate.bank;
-              data.bankAccount = this.formValidate.bankAccount;
-              data.address = this.formValidate.address;
-              data.phone = this.formValidate.phone;
-              data.ifDefault = this.ifDefault;
-              updateCompany(this.companyId, data).then(res => {
-                if (res.data.code === 1) {
-                  this.$Message.success('编辑成功!');
-                  this.handleReset('formValidate')
-                  this.getCompanyList();
-                }
-              }).catch(error => {
-                console.log(error.response)
-              });
-            } else if (this.modalType === 1) {
-              let data = {}
-              data.accessToken = localStorage.getItem('accessToken');
-              data.name = this.formValidate.name;
-              data.taxNumber = this.formValidate.taxNumber;
-              data.bank = this.formValidate.bank;
-              data.bankAccount = this.formValidate.bankAccount;
-              data.address = this.formValidate.address;
-              data.phone = this.formValidate.phone;
-              data.ifDefault = this.ifDefault;
-              createCompany(data).then(res => {
-                if (res.data.code === 1) {
-                  this.$Message.success('添加成功!');
-                  this.handleReset('formValidate')
-                  this.getCompanyList();
-                }
-              }).catch(error => {
-                console.log(error.response)
-              });
-            }
-          } else {
-            this.$Message.error('请将信息填写完整!');
+          if (!valid) {
+            return;
+          }
+          if (this.modalType === 0) {
+            let data = {}
+            data.accessToken = localStorage.getItem('accessToken');
+            data.name = this.formValidate.name;
+            data.taxNumber = this.formValidate.taxNumber;
+            data.bank = this.formValidate.bank;
+            data.bankAccount = this.formValidate.bankAccount;
+            data.address = this.formValidate.address;
+            data.phone = this.formValidate.phone;
+            data.ifDefault = this.ifDefault;
+            updateCompany(this.companyId, data).then(res => {
+              if (res.data.code === 1) {
+                this.$Message.success('编辑成功');
+                this.handleReset('formValidate')
+                this.getCompanyList();
+              }
+            }).catch(error => {
+              console.log(error.response)
+            });
+          } else if (this.modalType === 1) {
+            let data = {}
+            data.accessToken = localStorage.getItem('accessToken');
+            data.name = this.formValidate.name;
+            data.taxNumber = this.formValidate.taxNumber;
+            data.bank = this.formValidate.bank;
+            data.bankAccount = this.formValidate.bankAccount;
+            data.address = this.formValidate.address;
+            data.phone = this.formValidate.phone;
+            data.ifDefault = this.ifDefault;
+            createCompany(data).then(res => {
+              if (res.data.code === 1) {
+                this.$Message.success('添加成功');
+                this.handleReset('formValidate')
+                this.getCompanyList();
+              }
+            }).catch(error => {
+              console.log(error.response)
+            });
           }
         })
       },

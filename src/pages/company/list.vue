@@ -15,7 +15,8 @@
           <FormItem label="公司名称" prop="name">
             <Input v-model="formValidate.name" placeholder="请输入发票抬头" @on-change="autocomplete"
                    :disabled="!ifManageCompany"/>
-            <div class="query-results" v-if="this.queryTitleList!==''" style="position: absolute; z-index: 999; background: white; width: 368px">
+            <div class="query-results" v-if="this.queryTitleList!==''"
+                 style="position: absolute; z-index: 999; background: white; width: 368px">
               <ul>
                 <li v-for="(result, index) in queryTitleList" :key="index" @click="chooseRise(index)">
                   {{result.name}}
@@ -324,48 +325,47 @@
       //提交地址
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.modalType === 0) {
-              let data = {}
-              data.accessToken = localStorage.getItem('accessToken');
-              data.name = this.formValidate.name;
-              data.taxNumber = this.formValidate.taxNumber;
-              data.bank = this.formValidate.bank;
-              data.bankAccount = this.formValidate.bankAccount;
-              data.address = this.formValidate.address;
-              data.phone = this.formValidate.phone;
-              data.ifDefault = this.ifDefault;
-              updateCompany(this.companyId, data).then(res => {
-                if (res.data.code === 1) {
-                  this.$Message.success('编辑成功!');
-                  this.handleReset('formValidate')
-                  this.getCompanyList();
-                }
-              }).catch(error => {
-                console.log(error.response)
-              });
-            } else if (this.modalType === 1) {
-              let data = {}
-              data.accessToken = localStorage.getItem('accessToken');
-              data.name = this.formValidate.name;
-              data.taxNumber = this.formValidate.taxNumber;
-              data.bank = this.formValidate.bank;
-              data.bankAccount = this.formValidate.bankAccount;
-              data.address = this.formValidate.address;
-              data.phone = this.formValidate.phone;
-              data.ifDefault = this.ifDefault;
-              createCompany(data).then(res => {
-                if (res.data.code === 1) {
-                  this.$Message.success('添加成功!');
-                  this.handleReset('formValidate')
-                  this.getCompanyList();
-                }
-              }).catch(error => {
-                console.log(error.response)
-              });
-            }
-          } else {
-            this.$Message.error('请将信息填写完整!');
+          if (!valid) {
+            return;
+          }
+          if (this.modalType === 0) {
+            let data = {}
+            data.accessToken = localStorage.getItem('accessToken');
+            data.name = this.formValidate.name;
+            data.taxNumber = this.formValidate.taxNumber;
+            data.bank = this.formValidate.bank;
+            data.bankAccount = this.formValidate.bankAccount;
+            data.address = this.formValidate.address;
+            data.phone = this.formValidate.phone;
+            data.ifDefault = this.ifDefault;
+            updateCompany(this.companyId, data).then(res => {
+              if (res.data.code === 1) {
+                this.$Message.success('编辑成功');
+                this.handleReset('formValidate')
+                this.getCompanyList();
+              }
+            }).catch(error => {
+              console.log(error.response)
+            });
+          } else if (this.modalType === 1) {
+            let data = {}
+            data.accessToken = localStorage.getItem('accessToken');
+            data.name = this.formValidate.name;
+            data.taxNumber = this.formValidate.taxNumber;
+            data.bank = this.formValidate.bank;
+            data.bankAccount = this.formValidate.bankAccount;
+            data.address = this.formValidate.address;
+            data.phone = this.formValidate.phone;
+            data.ifDefault = this.ifDefault;
+            createCompany(data).then(res => {
+              if (res.data.code === 1) {
+                this.$Message.success('添加成功');
+                this.handleReset('formValidate')
+                this.getCompanyList();
+              }
+            }).catch(error => {
+              console.log(error.response)
+            });
           }
         })
       },
@@ -490,12 +490,13 @@
 
   .get-company .company-informations {
     font-size: 14px;
-    color: #515a6e;;
+    color: #515a6e;
     width: 280px;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis
+    text-overflow: ellipsis;
   }
+
   .add-the-address {
     width: 305px;
     height: 200px;

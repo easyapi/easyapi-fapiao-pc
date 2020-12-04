@@ -377,7 +377,7 @@
       setDefault(id) {
         updateDefaultCompany(id).then(res => {
           if (res.data.code === 1) {
-            this.$Message.success("操作成功!");
+            this.$Message.success("操作成功");
             this.getCompanyList();
           }
         }).catch(error => {
@@ -388,46 +388,45 @@
       //提交地址
       titleSubmit(name) {
         this.$refs[name].validate(valid => {
-          if (valid) {
-            if (this.modalType === 0) {
-              let obj = {};
-              obj.name = this.formInline.name;
-              obj.taxNumber = this.formInline.taxNumber;
-              obj.bank = this.formInline.bank;
-              obj.bankAccount = this.formInline.bankAccount;
-              obj.address = this.formInline.address;
-              obj.phone = this.formInline.phone;
-              obj.ifDefault = this.ifDefault;
-              updateCompany(this.companyId, obj).then(res => {
-                if (res.status === 200) {
-                  this.$Message.success("编辑成功!");
-                  this.handleReset('formInline');
-                  this.getCompanyList();
-                }
-              }).catch(error => {
-                this.$Message.error(error.response.data.message)
-              });
-            } else if (this.modalType === 1) {
-              let obj = {};
-              obj.name = this.formInline.name;
-              obj.taxNumber = this.formInline.taxNumber;
-              obj.bank = this.formInline.bank;
-              obj.bankAccount = this.formInline.bankAccount;
-              obj.address = this.formInline.address;
-              obj.phone = this.formInline.phone;
-              obj.ifDefault = this.ifDefault;
-              createCompany(obj).then(res => {
-                if (res.status === 200) {
-                  this.$Message.success("添加成功!");
-                  this.handleReset('formInline');
-                  this.getCompanyList();
-                }
-              }).catch(error => {
-                this.$Message.error(error.response.data.message)
-              });
-            }
-          } else {
-            this.$Message.error("请将信息填写完整!");
+          if (!valid) {
+            return;
+          }
+          if (this.modalType === 0) {
+            let obj = {};
+            obj.name = this.formInline.name;
+            obj.taxNumber = this.formInline.taxNumber;
+            obj.bank = this.formInline.bank;
+            obj.bankAccount = this.formInline.bankAccount;
+            obj.address = this.formInline.address;
+            obj.phone = this.formInline.phone;
+            obj.ifDefault = this.ifDefault;
+            updateCompany(this.companyId, obj).then(res => {
+              if (res.status === 200) {
+                this.$Message.success("编辑成功");
+                this.handleReset('formInline');
+                this.getCompanyList();
+              }
+            }).catch(error => {
+              this.$Message.error(error.response.data.message)
+            });
+          } else if (this.modalType === 1) {
+            let obj = {};
+            obj.name = this.formInline.name;
+            obj.taxNumber = this.formInline.taxNumber;
+            obj.bank = this.formInline.bank;
+            obj.bankAccount = this.formInline.bankAccount;
+            obj.address = this.formInline.address;
+            obj.phone = this.formInline.phone;
+            obj.ifDefault = this.ifDefault;
+            createCompany(obj).then(res => {
+              if (res.status === 200) {
+                this.$Message.success("添加成功");
+                this.handleReset('formInline');
+                this.getCompanyList();
+              }
+            }).catch(error => {
+              this.$Message.error(error.response.data.message)
+            });
           }
         });
       },
@@ -557,57 +556,55 @@
       },
       handleSubmit(name) {
         this.$refs[name].validate(valid => {
-          if (valid) {
-            let obj = this.formValidate;
-            obj.accessToken = localStorage.getItem("accessToken");
-            if (this.property === '纸质') {
-              if (this.defaultAddress == null) {
-                return this.$Message.warning("请填写邮寄地址");
-              }
-              obj.addressId = this.defaultAddress.addressId;
-              obj.category = this.category
-            }
-            if (this.companyId === null) {
-              return this.$Message.warning("请选择开票抬头");
-            }
-            obj.category = "增值税电子普通发票"
-            obj.companyId = this.companyId;
-            obj.outOrderIds = this.ids;
-            obj.property = this.property;
-            obj.email = this.formValidate.email;
-            obj.addrMobile = this.formValidate.mobile;
-
-            if (this.type === '个人') {
-              obj.purchaserName = this.formValidate.purchaserName;
-              obj.companyId = '';
-            } else if (this.type === '企业') {
-              obj.purchaserName = '';
-            }
-            this.$Modal.confirm({
-              title: "提示",
-              content: "<p>您确定要开具发票吗？</p>",
-              onOk: () => {
-                this.$ajax.post('https://fapiao-api.easyapi.com/merge-make', obj, {}).then(res => {
-                  if (res.data.code === 1) {
-                    this.$Message.success("提交成功");
-                    this.$router.push({
-                      path: "/",
-                      query: {
-                        taxNumber: localStorage.getItem("taxNumber"),
-                        accessToken: localStorage.getItem("accessToken")
-                      }
-                    });
-                  }
-                }).catch(error => {
-                  console.log(error);
-                  this.$Message.warning(error.response.data.message);
-                });
-              }
-            });
-
-          } else {
-            this.$Message.error("请将信息填写完整!");
+          if (!valid) {
+            return;
           }
+          let obj = this.formValidate;
+          obj.accessToken = localStorage.getItem("accessToken");
+          if (this.property === '纸质') {
+            if (this.defaultAddress == null) {
+              return this.$Message.warning("请填写邮寄地址");
+            }
+            obj.addressId = this.defaultAddress.addressId;
+            obj.category = this.category
+          }
+          if (this.companyId === null) {
+            return this.$Message.warning("请选择开票抬头");
+          }
+          obj.category = "增值税电子普通发票"
+          obj.companyId = this.companyId;
+          obj.outOrderIds = this.ids;
+          obj.property = this.property;
+          obj.email = this.formValidate.email;
+          obj.addrMobile = this.formValidate.mobile;
+
+          if (this.type === '个人') {
+            obj.purchaserName = this.formValidate.purchaserName;
+            obj.companyId = '';
+          } else if (this.type === '企业') {
+            obj.purchaserName = '';
+          }
+          this.$Modal.confirm({
+            title: "提示",
+            content: "<p>您确定要开具发票吗？</p>",
+            onOk: () => {
+              this.$ajax.post('https://fapiao-api.easyapi.com/merge-make', obj, {}).then(res => {
+                if (res.data.code === 1) {
+                  this.$Message.success("提交成功");
+                  this.$router.push({
+                    path: "/",
+                    query: {
+                      taxNumber: localStorage.getItem("taxNumber"),
+                      accessToken: localStorage.getItem("accessToken")
+                    }
+                  });
+                }
+              }).catch(error => {
+                console.log(error);
+                this.$Message.warning(error.response.data.message);
+              });
+            }
+          });
         });
       },
       jumpPage(url) {

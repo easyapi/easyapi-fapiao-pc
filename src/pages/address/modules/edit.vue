@@ -252,58 +252,56 @@
       //提交地址
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
-          if (valid) {
-            if (this.formValidate.province === "" || this.formValidate.province === "省") {
-              return this.$Message.warning('请将省市区填写完整');
+          if (!valid) {
+            return;
+          }
+          if (this.formValidate.province === "" || this.formValidate.province === "省") {
+            return this.$Message.warning('请将省市区填写完整');
+          }
+          if (this.modalType === 0) {
+            let data = {
+              accessToken: localStorage.getItem('accessToken'),
+              name: this.formValidate.name,
+              mobile: this.formValidate.phone,
+              province: this.formValidate.province,
+              city: this.formValidate.city,
+              district: this.formValidate.area,
+              addr: this.formValidate.addr,
+              ifDefault: this.formValidate.interest,
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }
-            if (this.modalType === 0) {
-              let data = {
-                accessToken: localStorage.getItem('accessToken'),
-                name: this.formValidate.name,
-                mobile: this.formValidate.phone,
-                province: this.formValidate.province,
-                city: this.formValidate.city,
-                district: this.formValidate.area,
-                addr: this.formValidate.addr,
-                ifDefault: this.formValidate.interest,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            getUpdateAddress(this.addressId, data).then(res => {
+              if (res.data.code === 1) {
+                this.$Message.success('修改成功');
+                this.handleReset('formValidate')
+                this.getAddressList()
               }
-              getUpdateAddress(this.addressId, data).then(res => {
-                if (res.data.code === 1) {
-                  this.$Message.success('修改成功!');
-                  this.handleReset('formValidate')
-                  this.getAddressList()
-                }
-              }).catch(error => {
-                console.log(error.response)
-              });
-            } else if (this.modalType === 1) {
-              let params = {
-                name: this.formValidate.name,
-                mobile: this.formValidate.phone,
-                province: this.formValidate.province,
-                city: this.formValidate.city,
-                district: this.formValidate.area,
-                addr: this.formValidate.addr,
-                ifDefault: this.formValidate.interest,
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-              }
-              postAddress(params).then(res => {
-                if (res.data.code === 1) {
-                  this.$Message.success('添加成功!');
-                  this.handleReset('formValidate')
-                  this.getAddressList()
-                }
-              }).catch(error => {
-                console.log(error.response)
-              });
+            }).catch(error => {
+              console.log(error.response)
+            });
+          } else if (this.modalType === 1) {
+            let params = {
+              name: this.formValidate.name,
+              mobile: this.formValidate.phone,
+              province: this.formValidate.province,
+              city: this.formValidate.city,
+              district: this.formValidate.area,
+              addr: this.formValidate.addr,
+              ifDefault: this.formValidate.interest,
+              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }
-          } else {
-            this.$Message.error('请将信息填写完整!');
+            postAddress(params).then(res => {
+              if (res.data.code === 1) {
+                this.$Message.success('添加成功');
+                this.handleReset('formValidate')
+                this.getAddressList()
+              }
+            }).catch(error => {
+              console.log(error.response)
+            });
           }
         })
-      }
-      ,
+      },
       handleReset(name) {
         this.showModal = false;
         this.formValidate.name = '';
@@ -312,7 +310,6 @@
         this.formValidate.interest = true;
         this.$refs[name].resetFields();
       }
-      ,
     },
     mounted() {
       this.getAddressList();

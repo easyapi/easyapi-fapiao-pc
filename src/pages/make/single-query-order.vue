@@ -163,7 +163,8 @@
       <Form ref="formInline" :model="formInline" :rules="rules" :label-width="120">
         <FormItem label="发票抬头" prop="name">
           <Input v-model="formInline.name" placeholder="请输入发票抬头" @on-change="autocomplete"/>
-          <div class="query-results" v-if="makeUp!==[]" style="position: absolute; z-index: 999; background: white; width: 368px">
+          <div class="query-results" v-if="makeUp!==[]"
+               style="position: absolute; z-index: 999; background: white; width: 368px">
             <ul>
               <li
                 v-for="(result, index) in makeUp"
@@ -371,7 +372,7 @@
       setDefault(companyId) {
         updateDefaultCompany(companyId).then(res => {
           if (res.data.code === 1) {
-            this.$Message.success("操作成功!");
+            this.$Message.success("操作成功");
             this.getCompanyList();
           }
         }).catch(error => {
@@ -407,48 +408,47 @@
       //提交地址
       titleSubmit(name) {
         this.$refs[name].validate(valid => {
-          if (valid) {
-            if (this.modalType === 0) {
-              let obj = {};
-              obj.accessToken = this.accessToken;
-              obj.name = this.formInline.name;
-              obj.taxNumber = this.formInline.taxNumber;
-              obj.bank = this.formInline.bank;
-              obj.bankAccount = this.formInline.bankAccount;
-              obj.address = this.formInline.address;
-              obj.phone = this.formInline.phone;
-              obj.ifDefault = this.ifDefault;
-              updateCompany(this.companyId, obj).then(res => {
-                if (res.status === 200) {
-                  this.$Message.success("编辑成功!");
-                  this.handleReset('formInline');
-                  this.getCompanyList();
-                }
-              }).catch(error => {
-                console.log(error.response);
-              });
-            } else if (this.modalType === 1) {
-              let obj = {};
-              obj.accessToken = this.accessToken;
-              obj.name = this.formInline.name;
-              obj.taxNumber = this.formInline.taxNumber;
-              obj.bank = this.formInline.bank;
-              obj.bankAccount = this.formInline.bankAccount;
-              obj.address = this.formInline.address;
-              obj.phone = this.formInline.phone;
-              obj.ifDefault = this.ifDefault;
-              createCompany(obj).then(res => {
-                if (res.status === 200) {
-                  this.$Message.success("添加成功!");
-                  this.handleReset('formInline');
-                  this.getCompanyList();
-                }
-              }).catch(error => {
-                console.log(error.response);
-              });
-            }
-          } else {
-            this.$Message.error("请将信息填写完整!");
+          if (!valid) {
+            return;
+          }
+          if (this.modalType === 0) {
+            let obj = {};
+            obj.accessToken = this.accessToken;
+            obj.name = this.formInline.name;
+            obj.taxNumber = this.formInline.taxNumber;
+            obj.bank = this.formInline.bank;
+            obj.bankAccount = this.formInline.bankAccount;
+            obj.address = this.formInline.address;
+            obj.phone = this.formInline.phone;
+            obj.ifDefault = this.ifDefault;
+            updateCompany(this.companyId, obj).then(res => {
+              if (res.status === 200) {
+                this.$Message.success("编辑成功");
+                this.handleReset('formInline');
+                this.getCompanyList();
+              }
+            }).catch(error => {
+              console.log(error.response);
+            });
+          } else if (this.modalType === 1) {
+            let obj = {};
+            obj.accessToken = this.accessToken;
+            obj.name = this.formInline.name;
+            obj.taxNumber = this.formInline.taxNumber;
+            obj.bank = this.formInline.bank;
+            obj.bankAccount = this.formInline.bankAccount;
+            obj.address = this.formInline.address;
+            obj.phone = this.formInline.phone;
+            obj.ifDefault = this.ifDefault;
+            createCompany(obj).then(res => {
+              if (res.status === 200) {
+                this.$Message.success("添加成功");
+                this.handleReset('formInline');
+                this.getCompanyList();
+              }
+            }).catch(error => {
+              console.log(error.response);
+            });
           }
         });
       },
@@ -850,5 +850,5 @@
 
   .query-results ul li {
     cursor: pointer;
-  } 
+  }
 </style>

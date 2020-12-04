@@ -63,8 +63,8 @@
       <div class="search-data-container flex-r">
         <div class="search-data flex-r">
           <div>
-            <span class="area">起止时间</span>
-            <DatePicker type="daterange" placeholder="选择日期" @on-change="timeRangeChange"
+            <span class="area">开票时间</span>
+            <DatePicker type="daterange" placeholder="开票时间范围" @on-change="timeRangeChange"
                         style="width: 220px; margin-right: 4px"></DatePicker>
             <!-- <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
                         style="width: 180px;margin-right: 5px"></DatePicker>
@@ -72,10 +72,10 @@
             <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px;margin-left: 5px"></DatePicker> -->
           </div>
           <Select clearable v-model="state" style="width:190px; margin-right:4px" class="left-10"
-                  placeholder="请选择发票状态...">
+                  placeholder="发票状态">
             <Option v-for="item in stateList" :value="item" :key="item">{{ item}}</Option>
           </Select>
-          <Input clearable v-model="purchaserName" placeholder="请输入发票抬头..." style="width: 190px" class="left-10"/>
+          <Input clearable v-model="purchaserName" placeholder="发票抬头" style="width: 190px" class="left-10"/>
         </div>
         <div>
           <Button @click="getInvoiceListReset" type="primary">查询</Button>
@@ -83,7 +83,8 @@
       </div>
       <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingData" :data="tableData"></Table>
       <div class="page-box flex-r" v-if="obtainCode!==0">
-        <Page :total='total' :page-size="pageSize" :current="current" @on-change="changePage" show-elevator></Page>
+        <Page :total='total' :page-size="pageSize" :current="current" @on-change="changePage" show-total
+              show-sizer></Page>
       </div>
       <div class="Hint">
         <dl v-html="this.content">
@@ -137,7 +138,8 @@
           {
             title: '申请日期',
             key: 'addTime',
-            align: 'center'
+            align: 'center',
+            width: 180
           },
           {
             title: '发票抬头',
@@ -221,7 +223,7 @@
         ],
         tableData: [],
         current: 1,
-        pageSize: 5,
+        pageSize: 10,
         content: "",
         total: 0,
       }

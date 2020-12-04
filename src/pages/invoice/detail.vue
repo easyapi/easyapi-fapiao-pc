@@ -8,7 +8,8 @@
     <div class="set-content">
       <div class="detail_button">
         <Button v-if="this.invoice.statements=='已开票(无须邮寄)'" @click="showInvoice">预览发票</Button>
-        <Button v-if="this.invoice.statements=='已开票(无须邮寄)'"><a :href="invoice.electronicInvoiceUrl" target="_blank">下载发票</a></Button>
+        <Button v-if="this.invoice.statements=='已开票(无须邮寄)'"><a :href="invoice.electronicInvoiceUrl"
+                                                               target="_blank">下载发票</a></Button>
       </div>
       <div class="table-container">
         <!-- <Row class-name="table-title">
@@ -123,7 +124,7 @@
           </Col>
         </Row>
         <h3 @click="num=0" :class="{active:num==0}" class="tag">发票内容</h3>
-        <h3 @click="num=1" :class="{active:num==1}" class="tag">发票明细</h3>
+        <h3 @click="num=1" :class="{active:num==1}" class="tag">订单明细</h3>
         <Row>
           <div v-show="num==0" class="ivoiveContent">
             <Table border :columns="invoiceTitle" :data="invoiceItems" disabled-hover></Table>
@@ -249,8 +250,9 @@
           {
             title: "货物或应税劳务、服务名称",
             align: "center",
+            width: 300,
             render: (h, params) => {
-              return h("p", {}, `**${params.row.name}`);
+              return h("p", {}, `*${params.row.category}*${params.row.name}`);
             }
           },
           {
@@ -298,11 +300,15 @@
       }
     },
     methods: {
-      //预览发票
+      /**
+       * 预览发票
+       */
       showInvoice() {
         this.isShowInvoice = true
       },
-      //获取订单内容
+      /**
+       * 获取订单内容
+       */
       getOutOrderList() {
         let params = {
           invoiceId: this.$route.query.id
@@ -475,7 +481,7 @@
     margin-right: 10px;
   }
 
-  .imgBox{
+  .imgBox {
     width: 100%;
     height: 640px;
     background-size: cover;

@@ -50,9 +50,6 @@
           :no-data-text="loadingData"
         ></Table>
       </div>
-      <!-- <div v-if="showMoreBtn" class="show-more-btn">
-        <Button @click="handleAddMore">加载更多</Button>
-      </div> -->
       <div class="page-box flex-r">
         <Page
           :transfer="true"
@@ -62,7 +59,7 @@
           :current="page.page+1"
           @on-change="changePage"
           @on-page-size-change="pageSizeChange"
-          show-elevator
+          show-total
           show-sizer
         ></Page>
       </div>
