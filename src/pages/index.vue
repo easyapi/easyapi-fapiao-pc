@@ -9,7 +9,7 @@
         <div class="openInvoice-money">
           <p class="invoice-base-title">可开票金额</p>
           <div class="txt-center" style="font-size: 24px">
-            ¥{{onInvoiceAccount===null?0:onInvoiceAccount.balance}}元
+            ¥{{customer===null?0:customer.balance}}元
           </div>
           <Button type="primary" @click="jumpPage('make/out-order')">索取发票</Button>
         </div>
@@ -71,19 +71,19 @@
             <span>-</span>
             <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px;margin-left: 5px"></DatePicker> -->
           </div>
-          <Select clearable v-model="state" style="width:190px; margin-right:4px" class="left-10"
+          <Select clearable v-model="search.statements" style="width:190px; margin-right:4px" class="left-10"
                   placeholder="发票状态">
-            <Option v-for="item in stateList" :value="item" :key="item">{{ item}}</Option>
+            <Option v-for="item in statementsList" :value="item" :key="item">{{ item}}</Option>
           </Select>
-          <Input clearable v-model="purchaserName" placeholder="发票抬头" style="width: 190px" class="left-10"/>
+          <Input clearable v-model="search.purchaserName" placeholder="发票抬头" style="width: 190px" class="left-10"/>
         </div>
         <div>
           <Button @click="getInvoiceListReset" type="primary">查询</Button>
         </div>
       </div>
-      <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingData" :data="tableData"></Table>
-      <div class="page-box flex-r" v-if="obtainCode!==0">
-        <Page :total='total' :page-size="pageSize" :current="current" @on-change="changePage" show-total
+      <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingText" :data="tableData"></Table>
+      <div class="page-box flex-r" v-if="page.total!=0">
+        <Page :total='page.total' :page-size="page.pageSize" :current="page.current" @on-change="changePage" show-total
               show-sizer></Page>
       </div>
       <div class="Hint">
@@ -120,20 +120,19 @@
     components: {},
     data() {
       return {
-        accessToken: '',
-        onInvoiceAccount: null,
+        customer: null,//开票用户客户信息
         showInfo: true,
-        defaultCompany: '',
+        defaultCompany: {},
         showAddressInfo: true,
-        defaultAddress: '',
-        select: null,
-        startTime: '',
-        endTime: '',
-        obtainCode: '',
-        stateList: '',
-        state: '',
-        purchaserName: '',//发票抬头
-        loadingData: '加载中',
+        defaultAddress: {},
+        search: {
+          startTime: '',
+          endTime: '',
+          purchaserName: '',//发票抬头
+          statements: '',
+        },
+        statementsList: [],
+        loadingText: '加载中',
         tableTitle: [
           {
             title: '申请日期',
@@ -222,24 +221,30 @@
           }
         ],
         tableData: [],
-        current: 1,
-        pageSize: 10,
-        content: "",
-        total: 0,
+        page: {
+          current: 1,
+          pageSize: 10,
+          total: 0,
+        },
+        content: "",//底部备注
       }
     },
     methods: {
-      //1.获取我的开票账户信息
+      /**
+       * 获取我的开票账户信息
+       */
       getCustomer() {
         getCustomer({}).then(res => {
           if (res.data.code === 1) {
-            this.onInvoiceAccount = res.data.content
+            this.customer = res.data.content
           }
         }).catch(error => {
           console.log(error.response)
         });
       },
-      //2.获取我的默认抬头信息
+      /**
+       * 获取我的默认抬头信息
+       */
       getDefaultCompany() {
         getDefaultCompany().then(res => {
           if (res.data.code === 1) {
@@ -252,7 +257,9 @@
           console.log(error.response)
         });
       },
-      //3.获取默认邮寄地址
+      /**
+       * 获取默认邮寄地址
+       */
       getAddress() {
         getDefaultAddress().then(res => {
           if (res.data.code === 1) {
@@ -265,79 +272,72 @@
           console.log(error.response)
         });
       },
+      /**
+       * 获取首页底部备注
+       */
       getSettings() {
-        let params = {
-          fieldKey: "pc_index_remark"
-        }
-        getSettings(params).then(res => {
+        getSettings({fieldKey: "pc_index_remark"}).then(res => {
           this.content = res.data.content
-          console.log(this.content)
         })
       },
       jumpPage(url) {
         this.$router.push({path: url})
       },
       timeRangeChange(t) {
-        this.startTime = t[0] && `${t[0]} 00:00:00`;
-        this.endTime = t[1] && `${t[1]} 23:59:59`;
+        this.search.startTime = t[0] && `${t[0]} 00:00:00`;
+        this.search.endTime = t[1] && `${t[1]} 23:59:59`;
       },
-      //获取发票申请记录查询选项
-      getApplicationItem() {
+      /**
+       * 获取发票状态列表
+       */
+      getStatementsList() {
         this.$ajax.get(applicationRecordUrl, {
           params: {
             accessToken: localStorage.getItem('accessToken'),
           }
         }).then(res => {
-          this.stateList = res.data.content
+          this.statementsList = res.data.content
         }).catch(error => {
           console.log(error)
         });
       },
-      //4.获取开票列表
+      /**
+       * 获取开票列表
+       */
       getInvoiceList() {
-        this.loadingData = '加载中';
+        this.loadingText = '加载中';
         let params = {
-          startAddTime: this.startTime,
-          endAddTime: this.endTime,
-          purchaserName: this.purchaserName,
-          statements: this.state,
-          page: this.current - 1,
-          size: this.pageSize,
-          property: this.select
+          ...this.search,
+          page: this.page.current - 1,
+          size: this.page.pageSize
         };
         getInvoiceList(params).then(res => {
           if (res.data.code === 1) {
             this.tableData = res.data.content;
-            this.total = Number(res.data.totalElements);
+            this.page.total = res.data.totalElements;
           } else {
-            this.loadingData = '暂无数据';
+            this.loadingText = '暂无数据';
             this.tableData = [];
-            this.total = 0;
+            this.page.total = 0;
           }
         }).catch(error => {
-          this.loadingData = '暂无数据'
-          console.log(error)
+          this.loadingText = '暂无数据'
           this.$Message.warning(error.response.data.message)
         });
       },
       getInvoiceListReset() {
-        this.current = 1;
+        this.page.current = 1;
         this.getInvoiceList()
       },
-      //分页
       changePage(current) {
-        this.current = current;
+        this.page.current = current;
         this.getInvoiceList()
       },
     },
-    //计算属性
-    computed: {},
     created() {
-      this.accessToken = this.$route.query.accessToken;
       if (this.$route.query.accessToken) {
         localStorage.setItem("accessToken", this.$route.query.accessToken);
       }
-      this.taxNumber = this.$route.query.taxNumber;
       if (this.$route.query.taxNumber) {
         localStorage.setItem("taxNumber", this.$route.query.taxNumber);
       }
@@ -347,16 +347,16 @@
       this.getDefaultCompany();
       this.getAddress();
       this.getInvoiceList();
-      this.getApplicationItem();
+      this.getStatementsList();
       this.getSettings();
-    },
-    watch: {}
+    }
   }
 </script>
 <style scoped lang="stylus">
   @import '../assets/styles/invoice.styl'
 </style>
 <style scoped>
+
   .Invoice-details {
     background-color: #fff;
     padding: 20px 40px;
@@ -374,13 +374,6 @@
     color: #999999;
     font-size: 14px;
   }
-
-  /* .openInvoice-money button {
-    background-color: #18c1d6;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 14px;
-  } */
 
   .invoice-base-info {
     background-color: #f5f6fa;
@@ -427,12 +420,6 @@
     color: #333333;
     font-size: 14px;
     float: left;
-  }
-
-  .SelectedStyle {
-    color: #2d8cf0 !important;
-    background-color: #ffffff !important;
-    border-bottom: none !important;
   }
 
   .Hint {
