@@ -79,3 +79,14 @@ export const updateDefaultCompany = id => {
   data.ifDefault = true;
   return axios.put(`${baseUrl}/company/${id}`, data)
 }
+
+
+/**
+ * 抬头信息查询（企业开票信息查询服务）
+ *
+ * @see https://www.easyai.com
+ */
+export const getCompanyCodeList = (params) => axios.get(`${baseUrl}/company/codes`, {
+  params,
+  accessToken: localStorage.getItem("accessToken")
+});

@@ -109,14 +109,14 @@
   </div>
 </template>
 <script>
-  import {queryServiceURl} from '../../api/api'
   import {
     getCompanyList,
     getCompany,
     createCompany,
     updateCompany,
     updateDefaultCompany,
-    deleteCompany
+    deleteCompany,
+    getCompanyCodeList
   } from '../../api/company'
 
   export default {
@@ -202,12 +202,7 @@
         if (this.formValidate.name.length < 4) {
           return;
         }
-        this.$ajax.get(queryServiceURl, {
-          params: {
-            accessToken: localStorage.getItem('accessToken'),
-            name: this.formValidate.name
-          }
-        }).then(res => {
+        getCompanyCodeList({name: this.formValidate.name}).then(res => {
           this.code = res.data.code;
           if (res.data.code !== 0) {
             this.message = '',
@@ -393,9 +388,7 @@
     padding-left: 10px;
 
     span {
-      // color: #18c1d6;
       font-size: 18px;
-      // border-right: 2px solid #18c1d6;
       padding: 10px 10px 10px 0;
       cursor: pointer;
     }

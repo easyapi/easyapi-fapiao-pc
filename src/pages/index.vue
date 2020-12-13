@@ -9,9 +9,9 @@
         <div class="openInvoice-money">
           <p class="invoice-base-title">可开票金额</p>
           <div class="txt-center" style="font-size: 24px">
-            ¥{{customer===null?0:customer.balance}}元
+            ¥{{customer.balance}}元
           </div>
-          <Button type="primary" @click="jumpPage('make/out-order')">索取发票</Button>
+          <Button type="primary" @click="jumpPage('/make/out-order')">索取发票</Button>
         </div>
         <div class="openInvoice-info ">
           <p class="invoice-base-title">开票信息</p>
@@ -66,10 +66,6 @@
             <span class="area">开票时间</span>
             <DatePicker type="daterange" placeholder="开票时间范围" @on-change="timeRangeChange"
                         style="width: 220px; margin-right: 4px"></DatePicker>
-            <!-- <DatePicker @on-change="startTimeChange" type="datetime" placeholder="起始时间"
-                        style="width: 180px;margin-right: 5px"></DatePicker>
-            <span>-</span>
-            <DatePicker @on-change="endTimeChange" type="datetime" placeholder="结束时间" style="width: 180px;margin-left: 5px"></DatePicker> -->
           </div>
           <Select clearable v-model="search.statements" style="width:190px; margin-right:4px" class="left-10"
                   placeholder="发票状态">
@@ -83,7 +79,7 @@
       </div>
       <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingText" :data="tableData"></Table>
       <div class="page-box flex-r" v-if="page.total!=0">
-        <Page :total='page.total' :page-size="page.pageSize" :current="page.current" @on-change="changePage" show-total
+        <Page :total='page.total' :page-size="page.size" :current="page.current" @on-change="changePage" show-total
               show-sizer></Page>
       </div>
       <div class="Hint">
@@ -95,32 +91,18 @@
   </div>
 </template>
 <script>
-  import {
-    invoiceMoneyUrl,
-    applicationRecordUrl
-  } from '../api/api'
-  import {
-    getInvoiceList
-  } from '../api/invoice'
-  import {
-    getDefaultCompany
-  } from '../api/company'
-  import {
-    getDefaultAddress
-  } from '../api/address'
-  import {
-    getCustomer
-  } from '../api/customer'
-  import {
-    getSettings
-  } from '../api/setting'
+  import {getInvoiceList, getInvoiceStatementsList} from '../api/invoice'
+  import {getDefaultCompany} from '../api/company'
+  import {getDefaultAddress} from '../api/address'
+  import {getCustomer} from '../api/customer'
+  import {getSettings} from '../api/setting'
 
   export default {
     name: '',
     components: {},
     data() {
       return {
-        customer: null,//开票用户客户信息
+        customer: {balance: 0},//开票用户客户信息
         showInfo: true,
         defaultCompany: {},
         showAddressInfo: true,
@@ -223,7 +205,7 @@
         tableData: [],
         page: {
           current: 1,
-          pageSize: 10,
+          size: 10,
           total: 0,
         },
         content: "",//底部备注
@@ -291,11 +273,7 @@
        * 获取发票状态列表
        */
       getStatementsList() {
-        this.$ajax.get(applicationRecordUrl, {
-          params: {
-            accessToken: localStorage.getItem('accessToken'),
-          }
-        }).then(res => {
+        getInvoiceStatementsList().then(res => {
           this.statementsList = res.data.content
         }).catch(error => {
           console.log(error)
@@ -309,7 +287,7 @@
         let params = {
           ...this.search,
           page: this.page.current - 1,
-          size: this.page.pageSize
+          size: this.page.size
         };
         getInvoiceList(params).then(res => {
           if (res.data.code === 1) {

@@ -202,7 +202,6 @@
   </div>
 </template>
 <script>
-  import {queryServiceURl} from "../../api/api";
   import {queryShopOrder, getState} from "../../api/query";
   import {
     getCompanyList,
@@ -210,7 +209,8 @@
     createCompany,
     updateCompany,
     updateDefaultCompany,
-    deleteCompany
+    deleteCompany,
+    getCompanyCodeList
   } from "../../api/company";
   import {getDefaultAddress} from "../../api/address";
   import {getCustomer} from "../../api/customer";
@@ -384,7 +384,7 @@
           if (res.data.code === 1 && res.data.content) {
             this.$router.replace({path: "/invoice/detail", query: {id: res.data.content[0].invoiceId}});
           }
-        })
+        });
         queryShopOrder(this.outOrderNo).then(res => {
           if (res.data.code == 1) {
             this.outOrder = res.data.content;
@@ -530,14 +530,7 @@
         if (this.formInline.name.length < 4) {
           return;
         }
-        this.$ajax({
-          method: "GET",
-          url: queryServiceURl,
-          params: {
-            accessToken: this.accessToken,
-            name: this.formInline.name
-          }
-        }).then(res => {
+        getCompanyCodeList({name: this.formInline.name}).then(res => {
           this.code = res.data.code;
           if (res.data.code !== 0) {
             (this.message = ""), (this.makeUp = res.data.content);

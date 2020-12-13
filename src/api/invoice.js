@@ -7,7 +7,7 @@ import {baseUrl} from "./api";
  *
  * @see https://www.easyai.com
  */
-export const getInvoiceList = (params) => axios.get(`${baseUrl}/api/invoice/records`, {
+export const getInvoiceList = (params) => axios.get(`${baseUrl}/invoices`, {
   params: {
     ...params,
     accessToken: localStorage.getItem("accessToken")
@@ -19,7 +19,19 @@ export const getInvoiceList = (params) => axios.get(`${baseUrl}/api/invoice/reco
  *
  * @see https://www.easyai.com
  */
-export const getInvoice = (id) => axios.get(`${baseUrl}/api/invoice/record/${id}`, {
+export const getInvoice = (id) => axios.get(`${baseUrl}/invoice/${id}`, {
+  params: {
+    accessToken: localStorage.getItem("accessToken")
+  }
+});
+
+
+/**
+ * 获取发票状态列表
+ *
+ * @see https://www.easyai.com
+ */
+export const getInvoiceStatementsList = () => axios.get(`${baseUrl}/api/invoice/record/statements`, {
   params: {
     accessToken: localStorage.getItem("accessToken")
   }

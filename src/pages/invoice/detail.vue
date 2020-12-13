@@ -12,13 +12,6 @@
                                                                target="_blank">下载发票</a></Button>
       </div>
       <div class="table-container">
-        <!-- <Row class-name="table-title">
-          <Col span="24" class-name="">
-            <p class="title">
-              您的发票开票金额¥{{invoice.price}}元
-            </p>
-          </Col>
-        </Row> -->
         <Row class-name="table-body">
           <Col span="12" class-name="">
             <div class="item-td flex-r">
@@ -127,20 +120,19 @@
         <h3 @click="num=1" :class="{active:num==1}" class="tag">订单明细</h3>
         <Row>
           <div v-show="num==0" class="ivoiveContent">
-            <Table border :columns="invoiceTitle" :data="invoiceItems" disabled-hover></Table>
+            <Table border :columns="invoiceItemTitle" :data="invoiceItems" disabled-hover></Table>
             <div class="table-amount">
               <p>税额合计：{{getTaxAmount(invoiceItems)}}元 &nbsp;&nbsp;&nbsp;&nbsp;
                 价额合计：{{getPriceAmount(invoiceItems)}}元</p>
             </div>
           </div>
           <div v-show="num==1" class="ivoiveContent">
-            <Table :columns="invoiceDetailTitle" :data="invoiceDetailItems"></Table>
+            <Table :columns="invoiceDetailTitle" :data="outOrderList"></Table>
           </div>
         </Row>
       </div>
       <h3 style="margin-bottom: 20px" v-if="invoice.serviceType==='订单开票'">订单内容</h3>
-      <Table border :stripe='true' :columns="tableTitle" :data="outOrders"
-             v-if="invoice.serviceType==='订单开票'"></Table>
+      <Table border :stripe='true' :columns="tableTitle" :data="outOrders" v-if="invoice.serviceType==='订单开票'"></Table>
     </div>
     <Modal
       width="1000px"
@@ -161,11 +153,11 @@
     components: {},
     data() {
       return {
-        invoiceId: '',
         isShowInvoice: false,
         num: 0,
-        invoice: '',
-        time: '',
+        invoice: {invoiceId: null, invoiceItems: []},//发票信息
+        outOrderList: [],//发票关联外部订单列表
+        outOrders: [],
         tableTitle: [
           {
             title: '订单编号',
@@ -228,7 +220,6 @@
             key: "tax",
             align: "center",
             render: (h, params) => {
-              console.log(params);
               let value = params.row.tax
               return h('a', {
                   on: {
@@ -243,10 +234,7 @@
             }
           }
         ],
-        invoiceItems: [],
-        invoiceDetailItems: [],
-        outOrders: [],
-        invoiceTitle: [
+        invoiceItemTitle: [
           {
             title: "货物或应税劳务、服务名称",
             align: "center",
@@ -307,16 +295,13 @@
         this.isShowInvoice = true
       },
       /**
-       * 获取订单内容
+       * 获取外部订单列表
        */
       getOutOrderList() {
-        let params = {
-          invoiceId: this.$route.query.id
-        }
-        getOutOrderList(params).then(res => {
-          console.log(res)
+        getOutOrderList({invoiceId: this.$route.query.id}).then(res => {
           if (res.data.code == 1) {
-            this.invoiceDetailItems = res.data.content
+            this.outOrderList = res.data.content
+            this.outOrders = res.data.content;
           }
         })
       },
@@ -324,31 +309,18 @@
        * 获取发票详情
        */
       getInvoice() {
-        getInvoice(this.invoiceId).then(res => {
+        getInvoice(this.$route.query.id).then(res => {
           if (res.data.code === 1) {
             this.invoice = res.data.content;
-            this.time = this.invoice.addTime;
-            this.invoiceItems = this.invoice.invoiceItems;
+
           }
         }).catch(error => {
           console.log(error.response)
         });
       },
-      getOutOrderList() {
-        this.$ajax.get('https://fapiao-api.easyapi.com/out-orders', {
-          params: {
-            accessToken: localStorage.getItem('accessToken'),
-            invoiceId: this.invoiceId
-          }
-        }).then(res => {
-          if (res.data.code !== 0) {
-            this.outOrders = res.data.content;
-          }
-        }).catch(error => {
-          console.log(error.response)
-        });
-      },
-      // 获取税额合计
+      /**
+       * 获取税额合计
+       */
       getTaxAmount(data) {
         let tmp = 0;
         data.map(el => {
@@ -356,7 +328,9 @@
         });
         return tmp;
       },
-      // 获取价格合计
+      /**
+       * 获取价格合计
+       */
       getPriceAmount(data) {
         let tmp = 0;
         data.map(el => {
@@ -365,16 +339,10 @@
         return tmp;
       }
     },
-    //计算属性
-    computed: {},
-    created() {
-      this.invoiceId = this.$route.query.id
-    },
     mounted() {
       this.getInvoice();
       this.getOutOrderList();
-    },
-    watch: {}
+    }
   }
 </script>
 <style scoped lang="stylus">

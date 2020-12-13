@@ -134,7 +134,9 @@
       }
     },
     methods: {
-      //设置默认地址
+      /**
+       * 设置默认地址
+       */
       updateAddress(addressId) {
         let data = {
           accessToken: localStorage.getItem('accessToken'),
@@ -150,7 +152,9 @@
           console.log(error.response)
         });
       },
-      //删除地址
+      /**
+       * 删除地址
+       */
       deleteAddress(addressId) {
         this.$Modal.confirm({
           title: '提示',
@@ -165,7 +169,9 @@
           }
         });
       },
-      //选择省市区
+      /**
+       * 选择省市区
+       */
       onSelected(data) {
         this.formValidate.province = data.province.value;
         this.formValidate.city = data.city.value;
@@ -181,7 +187,9 @@
         });
 
       },
-      //获取省份
+      /**
+       * 获取省份
+       */
       getProvince() {
         this.$ajax({
           method: 'GET',
@@ -195,7 +203,9 @@
           console.log(error.response)
         });
       },
-      //获取市
+      /**
+       * 获取市
+       */
       getCity() {
         this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.province + '/cities.json', {
           params: {
@@ -207,7 +217,9 @@
           console.log(error.response)
         });
       },
-      //获取区域
+      /**
+       * 获取区域
+       */
       getArea() {
         this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.city + '/districts.json', {
           params: {
@@ -220,7 +232,9 @@
           console.log(error.response)
         });
       },
-      //获取地址详情
+      /**
+       * 获取地址详情
+       */
       getAddress() {
         getAddress(this.addressId).then(res => {
           let data = res.data.content;
@@ -250,7 +264,10 @@
           this.showModal = true;
         }
       },
-      //提交地址
+      /**
+       * 提交地址
+       * @param name
+       */
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (!valid) {
@@ -291,7 +308,7 @@
               ifDefault: this.formValidate.interest,
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }
-            postAddress(params).then(res => {
+            updateAddress(params).then(res => {
               if (res.data.code === 1) {
                 this.$Message.success('添加成功');
                 this.handleReset('formValidate')

@@ -11,12 +11,12 @@
           v-for="(item, index) in orderTypeList"
           :key="index"
           @click="getOutOrderList(item.name)"
-          :class="{'active':clicked===item.name}"
+          :class="{'active':orderType===item.name}"
         >{{item.name}}
         </div>
       </div>
       <div class="bottom-24" v-if="this.minusTable.length = 0">
-        <p class="pd-left">有{{minusPage.total}}笔欠费金额，欠费金额小计：¥{{minusAmount}}元</p>
+        <p class="pd-left">有{{this.minusTable.length}}笔欠费金额，欠费金额小计：¥{{minusAmount}}元</p>
       </div>
       <div class="ivu-form arrearage" v-if="this.minusTable.length = 0">
         <Table
@@ -25,18 +25,16 @@
           :stripe="true"
           :columns="minusTableTitle"
           :data="minusTable"
-          :no-data-text="minusLoadingData"
         ></Table>
       </div>
       <div class="bottom-24">
-        <p class="pd-left">有{{page.total}}个订单可申请发票，可开票金额：¥{{amount}}元</p>
+        <p class="pd-left">有{{page.total}}个订单可申请发票，总金额：¥{{customer.balance}}元</p>
       </div>
       <div class="ivu-form">
         <div class="select-btn">
           <Button @click="handleSelectAllPage(true)" style="margin:10px 10px 10px 0">跨页全选</Button>
           <Button @click="handleSelectAllPage(false)">取消全选</Button>
         </div>
-
         <Table
           border
           ref="selection"
@@ -47,7 +45,7 @@
           :stripe="true"
           :columns="tableTitle"
           :data="tableData"
-          :no-data-text="loadingData"
+          :no-data-text="loadingText"
         ></Table>
       </div>
       <div class="page-box flex-r">
@@ -56,7 +54,7 @@
           :page-size-opts="[10, 50, 100, 200]"
           :total="page.total"
           :page-size="page.size"
-          :current="page.page+1"
+          :current="page.page + 1"
           @on-change="changePage"
           @on-page-size-change="pageSizeChange"
           show-total
@@ -65,74 +63,42 @@
       </div>
       <div class="askBtn">
         <div style="float: right; line-height:45px; margin-right:10px">
-          <sapn class="out-order_select">已选订单数:{{number}}个</sapn>
+          <sapn class="out-order_select">已选订单数:{{selected.length}}个</sapn>
           <span style="color: #999999;font-size: 12px;">
-            待开票金额：
+            开票金额：
           </span>
           <span style="color: #fa4747;font-size: 24px;vertical-align: middle">¥{{price}}元 </span>
-          <Button type="primary" @click="submitInvoice">去开票</Button>
+          <Button type="primary" @click="gotoMakeInvoice">去开票</Button>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {outOrderListUrl} from "../../api/api";
   import {getOutOrderList} from "../../api/out-order";
   import {getOrderTypeList} from "../../api/order-type";
+  import {getCustomer} from '../../api/customer'
 
   export default {
-    name: "",
+    name: "MakeOutOrder",
     components: {},
     data() {
       return {
-        orderTypeList: [],
-        clicked: "",
-        loadingData: '加载中',
-        minusLoadingData: '加载中',
-        tableTitle: [
-          {
-            type: "selection",
-            width: 60,
-            align: "center",
-          },
-          {
-            title: "订单编号",
-            key: "no",
-            align: "center"
-          },
-          {
-            title: "订单内容",
-            align: "center",
-            render: (h, params) => {
-              return h("span", Object.values(JSON.parse(params.row.fields))[0]);
-            }
-          },
-          {
-            title: "类型",
-            key: "type",
-            align: "center"
-          },
-          {
-            title: "下单时间",
-            key: "orderTime",
-            align: "center"
-          },
-          {
-            title: "实付金额",
-            align: "center",
-            render: (h, params) => {
-              return h("span", params.row.price.toFixed(2) + "元");
-            }
-          },
-          {
-            title: "可开票金额",
-            align: "center",
-            render: (h, params) => {
-              return h("span", params.row.price + "元");
-            }
-          }
-        ],
+        customer: {balance: 0},//开票用户客户信息
+        orderTypeList: [],//订单类型列表
+        orderType: "",//已选择订单类型
+        loadingText: '加载中',
+        ids: "",//已选订单IDs（多个用逗号隔开）
+        minusTable: [],//欠票订单列表
+        minusAmount: 0.0,//欠票总金额
+        price: 0.0,//已选开票金额
+        selected: [],//已选订单
+        tableData: [],//外部订单列表
+        page: {
+          page: 0,
+          size: 10,
+          total: 0,
+        },
         minusTableTitle: [
           {
             type: "selection",
@@ -169,112 +135,118 @@
             }
           }
         ],
-        tableData: [],
-        minusTable: [],
-        minusPage: {
-          page: 0,
-          size: 10,
-          total: 0,
-        },
-        page: {
-          page: 0,
-          size: 10,
-          total: 0,
-        },
-        totalPage: {
-          page: 0,
-          size: 12,
-          total: 0,
-        },
-        // showMoreBtn: true,
-        tableSelectData: [],
-        price: 0.0,
-        ids: "",
-        amount: 0,
-        minusAmount: 0,
-        number: 0,
-        num: "",
-        selected: [],
-        selectedIds: new Set(),//选中的合并项的id
-        total: 0,
-        importAll: "",
+        tableTitle: [
+          {
+            type: "selection",
+            width: 60,
+            align: "center",
+          },
+          {
+            title: "订单编号",
+            key: "no",
+            align: "center"
+          },
+          {
+            title: "订单内容",
+            align: "center",
+            render: (h, params) => {
+              return h("span", Object.values(JSON.parse(params.row.fields))[0]);
+            }
+          },
+          {
+            title: "类型",
+            key: "type",
+            align: "center"
+          },
+          {
+            title: "下单时间",
+            key: "orderTime",
+            align: "center",
+            width: 180
+          },
+          {
+            title: "实付金额",
+            align: "center",
+            width: 150,
+            render: (h, params) => {
+              return h("span", params.row.price.toFixed(2) + "元");
+            }
+          },
+          {
+            title: "可开票金额",
+            align: "center",
+            width: 150,
+            render: (h, params) => {
+              return h("span", params.row.price + "元");
+            }
+          }
+        ]
       };
     },
     methods: {
+      /**
+       * 获取订单类型
+       */
       getOrderTypeList() {
         getOrderTypeList().then(res => {
           this.orderTypeList = res.data.content;
+          this.getMinusOutOrderList(this.orderTypeList[0].name);
           this.getOutOrderList(this.orderTypeList[0].name);
         }).catch(error => {
           console.log(error.response);
         });
       },
-      getOutOrderList(name) {
-        this.loadingData = '加载中';
-        this.minusLoadingData = '加载中';
-        this.clicked = name;
-        // this.showMoreBtn = true;
-        this.amount = 0;
-        this.price = 0;
-        getOutOrderList({type: this.clicked}, this.page).then(res => {
-          if (res.data.code !== 0) {
-            // this.page.total = res.data.totalPages;
-            this.tableData = res.data.content;
-            this.updateChecked();
-            for (let v of res.data.content) {
-              this.amount += Number(v.price);
+      /**
+       * 获取全部负数（欠费）外部订单列表
+       */
+      getMinusOutOrderList(type) {
+        getOutOrderList({maxPrice: -0.01, type: type}, {page: 0, size: 10000}).then(res => {
+          if (res.data.code == 1) {
+            this.minusTable = res.data.content;
+            for (let i = 0; i < this.minusTable.length; i++) {
+              this.minusTable[i]['_disabled'] = true;
+              this.minusTable[i]['_checked'] = true;
+              this.minusAmount += Number(this.minusTable[i].price);
             }
-            this.page.total = res.data.totalElements;
-            // if (this.current + 1 > this.page.total) {
-            //   this.showMoreBtn = false;
-            // }
-            this.$ajax({
-              method: "GET",
-              url: outOrderListUrl,
-              params: {
-                maxPrice: -0.01,
-                accessToken: localStorage.getItem("accessToken"),
-                type: this.clicked,
-                state: 0,
-                page: this.minusPage.page - 1,
-                size: res.data.totalElements
-              }
-            }).then(res => {
-              if (res.data.code == 1) {
-                this.minusTable = res.data.content
-                for (let i = 0; i < this.minusTable.length; i++) {
-                  this.minusTable[i]['_disabled'] = true
-                  this.minusTable[i]['_checked'] = true
-                }
-                for (let v of res.data.content) {
-                  this.minusAmount += Number(v.price);
-                }
-              } else {
-                this.minusLoadingData = '暂无数据';
-                this.minusTable = [];
-                this.minusPage.total = 0;
-              }
-              // if (res.data.code == 0) {
-              //
-              // } else {
-              //   for (let v of res.data.content) {
-              //     this.amount += Number(v.price);
-              //   }
-              // }
-            }).catch(error => {
-              this.minusLoadingData = '暂无数据';
-              console.log(error.response);
-            });
           } else {
-            this.loadingData = '暂无数据';
-            this.minusLoadingData = '暂无数据';
-            this.tableData = [];
-            this.page.total = 0;
-            // this.showMoreBtn = false;
+            this.minusAmount = 0.0;
+            this.minusTable = [];
           }
         }).catch(error => {
-          this.loadingData = '暂无数据';
-          this.minusLoadingData = '暂无数据';
+          console.log(error.response);
+        });
+      },
+      /**
+       * 获取外部订单列表
+       */
+      getOutOrderList(name) {
+        this.loadingText = '加载中';
+        this.orderType = name;
+        this.price = 0;
+        getOutOrderList({type: this.orderType}, this.page).then(res => {
+          if (res.data.code !== 0) {
+            this.tableData = res.data.content;
+            this.updateChecked();
+            this.page.total = res.data.totalElements;
+          } else {
+            this.loadingText = '暂无数据';
+            this.tableData = [];
+            this.page.total = 0;
+          }
+        }).catch(error => {
+          this.loadingText = '暂无数据';
+        });
+      },
+      /**
+       * 获取我的开票账户信息
+       */
+      getCustomer() {
+        getCustomer({}).then(res => {
+          if (res.data.code === 1) {
+            this.customer = res.data.content
+          }
+        }).catch(error => {
+          console.log(error.response)
         });
       },
       //计算金额和ids
@@ -288,8 +260,8 @@
         this.price = (price - this.minusAmount).toFixed(2)
         this.ids = ids.substring(0, ids.length - 1);
       },
-      submitInvoice() {
-        if (this.tableSelectData.length === 0) {
+      gotoMakeInvoice() {
+        if (this.selected.length === 0) {
           return this.$Message.warning("请选择开票订单");
         } else {
           this.$router.push({
@@ -298,61 +270,51 @@
           });
         }
       },
-      //分页
       changePage(page) {
         this.page.page = page - 1;
-        this.getOutOrderList(this.clicked)
+        this.getOutOrderList(this.orderType);
         this.calculatePrice()
       },
       pageSizeChange(pageSize) {
         this.page.size = pageSize;
         this.page.page = 0;
-        this.getOutOrderList(this.clicked);
+        this.getOutOrderList(this.orderType);
         this.calculatePrice()
       },
-      // 全选按钮
+      /**
+       * 全选/取消全选操作
+       */
       handleSelectAllPage(status) {
-        console.log(status)
         if (status) {
           this.$refs.selection.selectAll(status)
-          getOutOrderList({type: this.clicked}, this.totalPage).then(res => {
+          getOutOrderList({type: this.orderType}, {page: 0, size: 10000}).then(res => {
             if (res.data.code == 1) {
-              this.number = res.data.totalElements
               this.selected = res.data.content
               this.calculatePrice()
             }
           })
         } else {
           this.$refs.selection.selectAll(status)
-          getOutOrderList({type: this.clicked}, this.totalPage).then(res => {
-            if (res.data.code == 1) {
-              this.number = 0
-              this.selected = null
-              this.price = 0
-            }
-          })
+          this.selected = [];
+          this.price = 0;
         }
       },
       handleSelectAll(selection) {
         this.selected = _.uniqBy(this.selected.concat(selection), "outOrderId");
-        this.number = this.selected.length
         this.calculatePrice()
       },
       handleCancelSelectAll(selection) {
         this.selected = _.differenceBy(this.selected, this.tableData, "outOrderId");
-        this.number = this.selected.length
         this.calculatePrice()
       },
       handleSelect(selection, row) {
         this.selected.push(row)
-        this.number = this.selected.length
         this.calculatePrice()
       },
       handleCancel(selection, row) {
         _.remove(this.selected, n => {
           return n.outOrderId === row.outOrderId;
         });
-        this.number = this.selected.length
         this.calculatePrice()
       },
       updateChecked() {
@@ -365,29 +327,10 @@
           }
         }
       },
-      // 加载更多
-      // handleAddMore() {
-      //   this.price = 0;
-      //   getOutOrderList({type: this.clicked}, this.page.page-1).then(res => {
-      //     if (res.data.code == 0) {
-      //       return this.$Message.warning("已无更多开票订单！");
-      //     } else {
-      //       if (res.data.content) {
-      //         for (let v of res.data.content) {
-      //           this.tableData.push(v);
-      //         }
-      //       }
-      //       // if (this.tableData.length == this.page.total) {
-      //       //   this.showMoreBtn = false;
-      //       // }
-      //     }
-      //   }).catch(error => {
-      //     console.log(error.response);
-      //   });
-      // }
     },
     mounted() {
       this.getOrderTypeList();
+      this.getCustomer();
     }
   };
 </script>

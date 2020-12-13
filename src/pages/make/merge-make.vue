@@ -219,11 +219,7 @@
 </template>
 <script>
   import {
-    queryServiceURl
-  } from "../../api/api";
-
-  import {
-    getCompanyList, getCompany, updateCompany, createCompany, deleteCompany, updateDefaultCompany
+    getCompanyList, getCompany, updateCompany, createCompany, deleteCompany, updateDefaultCompany, getCompanyCodeList
   } from '../../api/company'
   import {
     getDefaultAddress
@@ -312,7 +308,6 @@
       },
       //添加或编辑发票抬头
       addInvoiceTitleFn(t, id) {
-        console.log(this.companyList.length)
         this.modalType = t;
         if (t === 0) {
           this.makeUp = [];
@@ -526,13 +521,7 @@
       },
       //自动补齐
       autocomplete() {
-
-        this.$ajax.get(queryServiceURl, {
-          params: {
-            accessToken: localStorage.getItem("accessToken"),
-            name: this.formInline.name
-          }
-        }).then(res => {
+        getCompanyCodeList({name: this.formInline.name}).then(res => {
           this.code = res.data.code;
           if (res.data.code !== 0) {
             (this.message = ""), (this.makeUp = res.data.content);
@@ -611,8 +600,6 @@
         this.$router.push({path: url});
       }
     },
-    //计算属性
-    computed: {},
     created() {
       this.ids = this.$route.query.id;
       this.price = this.$route.query.price;

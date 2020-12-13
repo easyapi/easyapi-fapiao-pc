@@ -199,16 +199,15 @@
 </template>
 <script>
   import {
-    queryServiceURl
-    , orderPriceUrl
-  } from "../../api/api";
+    getOutOrder
+  } from "../../api/out-order";
   import {
     getCompanyList,
     getCompany,
-    createCompany,
     updateCompany,
     updateDefaultCompany,
-    deleteCompany
+    deleteCompany,
+    getCompanyCodeList
   } from "../../api/company";
   import {
     getDefaultAddress
@@ -318,29 +317,6 @@
           }
         }
       },
-      // 删除
-      // handleDel(id) {
-      //   this.$Modal.confirm({
-      //     title: "提示",
-      //     content: "<p>您确定要删除该条记录吗？</p>",
-      //     onOk: () => {
-      //       this.$ajax({
-      //         method: "DELETE",
-      //         url: companyUrl + "/" + id,
-      //         params: {
-      //           accessToken: this.accessToken
-      //         }
-      //       })
-      //         .then(res => {
-      //           this.$Message.info("删除成功");
-      //           this.getCompanyList();
-      //         })
-      //         .catch(error => {
-      //           console.log(error.response);
-      //         });
-      //     }
-      //   });
-      // },
       handleDel(companyId) {
         this.$Modal.confirm({
           title: "提示",
@@ -355,28 +331,6 @@
           }
         });
       },
-      // getCompany(id) {
-      //   this.$ajax({
-      //     method: "GET",
-      //     url: companyUrl + "/" + id,
-      //     params: {
-      //       accessToken: this.accessToken
-      //     }
-      //   })
-      //     .then(res => {
-      //       let data = res.data.content;
-      //       this.formInline.name = data.name;
-      //       this.formInline.taxNumber = data.taxNumber;
-      //       this.formInline.bank = data.bank;
-      //       this.formInline.bankAccount = data.bankAccount;
-      //       this.formInline.address = data.address;
-      //       this.formInline.phone = data.phone;
-      //       this.ifDefault = data.ifDefault;
-      //     })
-      //     .catch(error => {
-      //       console.log(error.response);
-      //     });
-      // },
       getCompany(companyId) {
         getCompany(companyId).then(res => {
           let data = res.data.content;
@@ -412,14 +366,12 @@
           console.log(error.response);
         });
       },
-      // 获取订单价格
+      /**
+       * 获取订单价格
+       */
       getOrderPrice() {
         if (this.$route.query.no) {
-          this.$ajax({
-            method: "GET",
-            url: orderPriceUrl + this.$route.query.no,
-            params: {}
-          }).then(res => {
+          getOutOrder(this.$route.query.no).then(res => {
             this.price = res.data.content.price;
             this.outOrderId = res.data.content.outOrderId;
           }).catch(error => {
@@ -497,30 +449,6 @@
         this.formInline.phone = this.makeUp[index].phone;
         this.makeUp = [];
       },
-      // getCompanyList() {
-      //   this.$ajax({
-      //     method: "GET",
-      //     url: companiesUrl,
-      //     params: {
-      //       accessToken: this.accessToken,
-      //     }
-      //   }).then(res => {
-      //     if (res.status == 200) {
-      //       this.companyList = res.data.content;
-      //       this.showInfo = true;
-      //       for (let k of this.companyList) {
-      //         if (k.ifDefault == true) {
-      //           this.companyId = k.companyId;
-      //         }
-      //       }
-      //     } else {
-      //       this.showInfo = false;
-      //       this.companyList = null;
-      //     }
-      //   }).catch(error => {
-      //     console.log(error.response);
-      //   });
-      // },
       getCompanyList() {
         getCompanyList({}).then(res => {
           if (res.data.code == 1) {
@@ -584,14 +512,7 @@
         if (this.formInline.name.length < 4) {
           return;
         }
-        this.$ajax({
-          method: "GET",
-          url: queryServiceURl,
-          params: {
-            accessToken: this.accessToken,
-            name: this.formInline.name
-          }
-        }).then(res => {
+        getCompanyCodeList({name: this.formInline.name}).then(res => {
           this.code = res.data.code;
           if (res.data.code !== 0) {
             (this.message = ""), (this.makeUp = res.data.content);
@@ -602,7 +523,9 @@
           console.log(error.response.data.message);
         });
       },
-      //1.获取我的开票账户信息
+      /**
+       * 获取我的开票账户信息
+       */
       getCustomer() {
         getCustomer({}).then(res => {
           if (res.data.code === 1) {
@@ -665,8 +588,6 @@
       }
     },
     created() {
-      // localStorage.setItem('accessToken', this.$route.query.accessToken);
-      // this.accessToken = this.$route.query.accessToken;
       this.ids = this.$route.query.id;
       this.formValidate.remark = this.$route.query.remark;
     },
