@@ -11,7 +11,7 @@
           <div class="txt-center" style="font-size: 24px">
             ¥{{customer.balance}}元
           </div>
-          <Button type="primary" @click="jumpPage('/make/out-order')">索取发票</Button>
+          <Button type="primary" @click="jumpPage('/out-order')">索取发票</Button>
         </div>
         <div class="openInvoice-info ">
           <p class="invoice-base-title">开票信息</p>

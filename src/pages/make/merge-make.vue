@@ -9,7 +9,7 @@
     <Breadcrumb separator="<b style='color:#333; margin-left:-8px'>/</b>">
       <img src="../../assets/images/logo.png" alt="" style="margin-right: 8px; width:25px; height: 25px;">
       <BreadcrumbItem to="/" style="color: #333;">发票管理</BreadcrumbItem>
-      <BreadcrumbItem style="color: #333" to="/make/out-order">索取发票</BreadcrumbItem>
+      <BreadcrumbItem style="color: #333" to="/out-order">索取发票</BreadcrumbItem>
       <BreadcrumbItem style="color: #333">开具发票</BreadcrumbItem>
     </Breadcrumb>
     <div class="set-content">
@@ -170,7 +170,7 @@
       </div>
 
       <Button class="btn" @click="handleSubmit('formValidate')">提交</Button>
-      <Button class="btn" to="/make/out-order">返回</Button>
+      <Button class="btn" to="/out-order">返回</Button>
       <!-- <p style="color: #999999;font-size: 12px;margin-bottom: 20px;">请仔细核对开票信息</p> -->
       <p class="tpPading-10 btPading-10">请仔细核对开票信息</p>
     </div>

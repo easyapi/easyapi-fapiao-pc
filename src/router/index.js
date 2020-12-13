@@ -10,9 +10,9 @@ const routes = [
     component: resolve => require(['../pages/index.vue'], resolve)
   },
   {
-    path: '/make/out-order',
-    name: 'MakeOutOrder',
-    component: resolve => require(['../pages/make/out-order.vue'], resolve)
+    path: '/out-order',
+    name: 'OutOrder',
+    component: resolve => require(['../pages/out-order/list.vue'], resolve)
   },
   {
     path: '/invoice/detail',
