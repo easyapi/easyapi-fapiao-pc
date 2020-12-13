@@ -38,7 +38,7 @@ yarn run build
  ├── src                   #源码
  │  ├── api                #api接口目录
  │  │  ├── api.js          #api接口列表
- │  │  └── fetch.js        #axios封装
+ │  │  └── request.js        #axios封装
  │  ├──assets              #资源目录，用于组织未编译的静态资源如STYLUS LESS、SASS 或 JavaScript
  │  │  ├── images          #图片
  │  │  └── styles          #样式、字体图片等

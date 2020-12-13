@@ -80,7 +80,7 @@
   </div>
 </template>
 <script>
-  import {getUpdateAddress, getAddress, deleteAddress, getAddressList, postAddress} from '../../api/address'
+  import {updateAddress, getAddress, deleteAddress, getAddressList, createAddress} from '../../api/address'
   import VDistpicker from 'v-distpicker'
 
   export default {
@@ -141,7 +141,7 @@
           ifDefault: true,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         };
-        getUpdateAddress(addressId, data).then(res => {
+        updateAddress(addressId, data).then(res => {
             if (res.data.code === 1) {
               this.getAddressList()
             }

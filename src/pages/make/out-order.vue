@@ -77,8 +77,9 @@
   </div>
 </template>
 <script>
-  import {getOrderTypeList, outOrderListUrl} from "../../api/api";
+  import {outOrderListUrl} from "../../api/api";
   import {getOutOrderList} from "../../api/out-order";
+  import {getOrderTypeList} from "../../api/order-type";
 
   export default {
     name: "",

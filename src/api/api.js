@@ -4,14 +4,10 @@ export const baseUrl = 'https://fapiao-api.easyapi.com';//发票API接口根地�
 
 //获取我的开票账户信息
 export const invoiceMoneyUrl = `${baseUrl}/api/user/`;
-//获取我的默认邮寄地址
-export const invoiceAddressUrl = `${baseUrl}/address/`;
 
 //获取订单价格
 export const orderPriceUrl = `${baseUrl}/out-order/`;
 
-// 获取发票业务类型列表
-export const orderTypesUrl = `${baseUrl}/order-types`;
 // 根据类型获取相应列表
 export const outOrderListUrl = `${baseUrl}/out-orders`;
 
@@ -21,11 +17,3 @@ export const queryServiceURl = `${baseUrl}/company/codes`;
 export const applicationRecordUrl = `${baseUrl}/api/invoice/record/statements`;
 
 
-/**
- * 获取订单类型列表
- */
-export const getOrderTypeList = () => axios.get(`${baseUrl}/order-types`, {
-  params: {
-    accessToken: localStorage.getItem("accessToken")
-  }
-});
