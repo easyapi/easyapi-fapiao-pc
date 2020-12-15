@@ -531,9 +531,7 @@
           } else {
             this.message = res.data.message;
           }
-        }).catch(error => {
-          this.$Message.error(error.response.data.message)
-        });
+        })
       },
       //获取我的开票账户信息
       getCustomer() {
