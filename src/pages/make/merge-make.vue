@@ -18,6 +18,7 @@
         <h3 class="h3-title">发票形式</h3>
         <div style="display: flex;height: 120px;">
           <div
+            v-show="showType=='增值税电子普通发票'"
             class="electronic-invoice"
             :class="{SelectedStyle:property==='电子'}"
             @click="selectedProperty('电子')"
@@ -32,6 +33,7 @@
             >
           </div>
           <div
+            v-show="showType!='增值税电子普通发票'"
             class="electronic-invoice"
             style="margin-left:20px;"
             :class="{SelectedStyle:property==='纸质'}"
@@ -234,6 +236,7 @@
     data() {
       return {
         companyList: "",
+        showType: "",
         showInfo: false,
         showModal: false,
         ifDefault: true,
@@ -536,6 +539,7 @@
       getCustomer() {
         getCustomer({}).then(res => {
           if (res.data.code === 1) {
+            this.showType = res.data.content.defaultCategory
             this.formValidate.email = res.data.content.email;
             this.formValidate.mobile = res.data.content.mobile;
           }
@@ -741,10 +745,6 @@
   .invioce-title > .invoice-content {
     margin-right: 20px;
     margin-bottom: 20px;
-  }
-
-  .invioce-title > .invoice-content:nth-child(3n) {
-    margin-right 0;
   }
 
   .invoice-content ul li {
