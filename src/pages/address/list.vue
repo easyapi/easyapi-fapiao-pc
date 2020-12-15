@@ -35,41 +35,33 @@
         </div>
       </Modal>
       <div class="address">
-        <div style="float:left" v-for="addressData in tableData">
-          <div class="get-address" v-if="addressData.ifDefault===false"
-               @click.stop="updateAddress(addressData.addressId)">
-            <p class="userName">
-              <span style="color: #515a6e;">{{addressData.name}}</span>
-              <span v-if="addressData.ifDefault===false" style="color: #2d8cf0;">设为默认</span>
-            </p>
-            <p class="address-informations" style="margin-top:10px;">{{addressData.mobile}}</p>
-            <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
-            <p class="address-informations">{{addressData.district + addressData.addr}}</p>
-            <div class="btn">
-              <Button size="small" style="font-size: 14px" @click.stop="openDialog(0,addressData.addressId)">修改</Button>
-              <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除
-              </Button>
-            </div>
-          </div>
-          <div class="get-address" style="border: solid 1px #2d8cf0;position: relative"
-               v-if="addressData.ifDefault===true" @click.stop="updateAddress(addressData.addressId)">
-            <p class="userName">
-              <span style="color: #515a6e;">{{addressData.name}}</span>
-              <!-- <span
-                style="width: 40px;height: 18px;background-color: #2d8cf0;border-radius: 2px; color: #fff;margin-top:8px;line-height:18px;font-size: 14px;text-align: center">默认</span> -->
-              <span style="margin-top:-3px">
-                <Button size="small" type="primary">默认</Button>
-              </span>
-            </p>
-            <p class="address-informations" style="margin-top:10px;">{{addressData.mobile}}</p>
-            <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
-            <p class="address-informations">{{addressData.district + addressData.addr}}</p>
-            <div class="btn">
-              <Button size="small" style="font-size: 14px" @click.stop="openDialog(0,addressData.addressId)">修改</Button>
-              <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除
-              </Button>
-            </div>
-            <img src="../../assets/images/default.png" alt="" style="position: absolute;bottom:0px;right: 0px;">
+        <div
+          :class="{'selecting':addressId === addressData.addressId}"
+          class="get-address"
+          @click.stop="selectAddress(addressData.addressId)"
+          style="float:left"
+          v-for="addressData in tableData">
+          <img
+            v-if="addressId === addressData.addressId"
+            src="../../assets/images/default.png"
+            alt
+            style="position: absolute;bottom:0px;right: 0px;"
+          >
+          <p class="userName">
+            <span style="color: #515a6e;">{{addressData.name}}</span>
+            <span v-if="addressData.ifDefault===false" style="color: #2d8cf0;"
+                  @click="setDefault(addressData.addressId)">设为默认</span>
+            <Button v-if="addressData.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px"
+                    type="primary">默认
+            </Button>
+          </p>
+          <p class="address-informations" style="margin-top:10px;">{{addressData.mobile}}</p>
+          <p class="address-informations">{{addressData.province }}&nbsp;&nbsp;&nbsp;&nbsp;{{addressData.city}}</p>
+          <p class="address-informations">{{addressData.district + addressData.addr}}</p>
+          <div class="btn">
+            <Button size="small" style="font-size: 14px" @click.stop="openDialog(0,addressData.addressId)">修改</Button>
+            <Button size="small" style="font-size: 14px" @click.stop="deleteAddress(addressData.addressId)">删除
+            </Button>
           </div>
         </div>
         <div class="add-the-address" @click="openDialog(1)">
@@ -80,7 +72,14 @@
   </div>
 </template>
 <script>
-  import {updateAddress, getAddress, deleteAddress, getAddressList, createAddress} from '../../api/address'
+  import {
+    updateAddress,
+    getAddress,
+    deleteAddress,
+    getAddressList,
+    createAddress,
+    getDefaultAddress
+  } from '../../api/address'
   import VDistpicker from 'v-distpicker'
 
   export default {
@@ -99,7 +98,7 @@
         showModal: false,
         modalTitle: '添加地址',
         modalType: null,
-        addressId: '',//保存地址id
+        addressId: "",//保存地址id
         formValidate: {
           name: "",
           phone: "",
@@ -134,21 +133,31 @@
       }
     },
     methods: {
+      getDefaultAddress() {
+        getDefaultAddress().then(res => {
+          if (res.data.code == 1) {
+            this.addressId = res.data.content.addressId
+          }
+        })
+      },
       /**
        * 设置默认地址
        */
-      updateAddress(addressId) {
-        let data = {
-          accessToken: localStorage.getItem('accessToken'),
-          ifDefault: true,
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        };
-        updateAddress(addressId, data).then(res => {
+      selectAddress(addressId) {
+        console.log(addressId)
+        this.addressId = addressId
+      },
+      setDefault(addressId) {
+        console.log(addressId)
+        updateAddress(addressId).then(res => {
             if (res.data.code === 1) {
+              this.$Message.success("操作成功");
               this.getAddressList()
+              this.$router.back(-1)
             }
           }
         ).catch(error => {
+          this.$Message.error(error.response.data.message)
           console.log(error.response)
         });
       },
@@ -182,7 +191,6 @@
         getAddressList(params).then(res => {
           this.tableData = res.data.content;
         }).catch(error => {
-          console.log(error)
           this.$Message.warning(error.response.data.message)
         });
 
@@ -331,6 +339,7 @@
     },
     mounted() {
       this.getAddressList();
+      this.getDefaultAddress()
     }
   }
 
@@ -384,10 +393,7 @@
     cursor: pointer;
     margin-right: 20px;
     margin-bottom: 20px;
-  }
-
-  .get-address:hover {
-    border: 1px solid #2d8cf0;
+    position: relative;
   }
 
   .get-address .userName {
@@ -448,6 +454,11 @@
     width: 32.6% !important;
     font-size: 14px !important;
     padding-left: 3px !important;
+  }
+
+  .selecting {
+    border: 1px solid #2d8cf0 !important;
+    color: #2d8cf0;
   }
 
 </style>

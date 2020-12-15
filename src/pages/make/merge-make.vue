@@ -246,7 +246,7 @@
         showAddressInfo: false,
         modalTitle: "添加发票抬头",
         makeUp: "",
-        property: "电子",
+        property: this.showType == "增值税电子通发票" ? "电子" : "纸质",
         ids: "",
         price: "",
         formValidate: {
@@ -613,8 +613,12 @@
       this.getCompanyList();
       this.getAddressList();
       this.getCustomer();
+    },
+    activated() {
+      this.getAddressList();
     }
-  };
+  }
+  ;
 </script>
 <style>
   .invoice-nature .ivu-form-item {

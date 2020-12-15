@@ -49,17 +49,16 @@ export const createAddress = (id, data) => axios.post(`${baseUrl}/address`, {
 });
 
 /**
- * 修改地址信息
+ * 设置为默认地址
  *
  * @see https://www.easyai.com
  */
-export const updateAddress = (id, data) => axios.put(`${baseUrl}/address/${id}`, {
-  data: {
-    data,
-    accessToken: localStorage.getItem("accessToken"),
-    ifDefault: true
-  }
-});
+export const updateAddress = id => {
+  let data = {};
+  data.accessToken = localStorage.getItem("accessToken");
+  data.ifDefault = true;
+  return axios.put(`${baseUrl}/address/${id}`, data)
+}
 
 
 /**

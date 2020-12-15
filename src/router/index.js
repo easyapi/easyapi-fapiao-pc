@@ -32,6 +32,9 @@ const routes = [
   {
     path: '/make/merge-make',
     name: 'MergeMake',
+    meta: {
+      keepAlive: true
+    },
     component: resolve => require(['../pages/make/merge-make.vue'], resolve)
   },
   {
