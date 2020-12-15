@@ -125,7 +125,7 @@
     data() {
       return {
         showModal: false,
-        modalTitle: '添加发票',
+        modalTitle: '添加抬头',
         modalType: null,
         queryTitleList: '',
         companyId: '',//保存发票抬头ID
@@ -148,18 +148,6 @@
           ],
           taxNumber: [
             {required: true, message: '请输入纳税人识别号', trigger: 'blur'},
-          ],
-          bank: [
-            {required: true, message: '请输入开户行', trigger: 'blur'}
-          ],
-          bankAccount: [
-            {required: true, message: '请输入开户行账号', trigger: 'blur'}
-          ],
-          address: [
-            {required: true, message: '请输入注册地址', trigger: 'blur'}
-          ],
-          phone: [
-            {required: true, message: '请输入注册电话', trigger: 'blur'}
           ],
         },
         tableData: [],
@@ -283,14 +271,14 @@
         if (t === 0) {
           this.queryTitleList = [];
           this.companyId = id;
-          this.modalTitle = "编辑发票";
+          this.modalTitle = "编辑抬头";
           this.showModal = true;
           this.getCompany();
         } else if (t === 1) {
           if (this.tableData.length < 6) {
             this.queryTitleList = [];
             this.titleReset('formValidate');
-            this.modalTitle = "添加发票";
+            this.modalTitle = "添加抬头";
             this.showModal = true;
           } else if (this.tableData.length === 6) {
             this.$Message.warning("发票最多只能添加6个")

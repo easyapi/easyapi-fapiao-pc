@@ -97,18 +97,6 @@
           taxNumber: [
             {required: true, message: '请输入纳税人识别号', trigger: 'blur'},
           ],
-          bank: [
-            {required: true, message: '请输入开户行', trigger: 'blur'}
-          ],
-          bankAccount: [
-            {required: true, message: '请输入开户行账号', trigger: 'blur'}
-          ],
-          address: [
-            {required: true, message: '请输入注册地址', trigger: 'blur'}
-          ],
-          phone: [
-            {required: true, message: '请输入注册电话', trigger: 'blur'}
-          ],
         },
         tableColumns: [
           {
