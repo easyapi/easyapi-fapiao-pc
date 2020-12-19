@@ -258,8 +258,8 @@
        * 获取首页底部备注
        */
       getSettings() {
-        getSettings({fieldKey: "pc_index_remark"}).then(res => {
-          this.content = res.data.content
+        getSettings({fieldKeys: "pc_index_remark"}).then(res => {
+          this.content = res.data.content[0].fieldValue
         })
       },
       jumpPage(url) {

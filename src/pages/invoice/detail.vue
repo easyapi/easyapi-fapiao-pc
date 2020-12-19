@@ -7,9 +7,8 @@
     </Breadcrumb>
     <div class="set-content">
       <div class="detail_button">
-        <Button v-if="this.invoice.statements=='已开票(无须邮寄)'" @click="showInvoice">预览发票</Button>
-        <Button v-if="this.invoice.statements=='已开票(无须邮寄)'"><a :href="invoice.electronicInvoiceUrl"
-                                                               target="_blank">下载发票</a></Button>
+        <Button v-if="invoice.state===1 && invoice.electronicInvoiceUrl" @click="showInvoice">预览发票</Button>
+        <Button v-if="invoice.state===1 && invoice.electronicInvoiceUrl"><a :href="invoice.electronicInvoiceUrl" target="_blank">下载发票</a></Button>
       </div>
       <div class="table-container">
         <Row class-name="table-body">
@@ -59,6 +58,18 @@
             <div class="item-td flex-r">
               <span>发票备注</span>
               <p>{{invoice.remark}}</p>
+            </div>
+          </Col>
+          <Col span="12" class-name="" v-if="invoice.code">
+            <div class="item-td flex-r">
+              <span style="min-width:120px">发票代码</span>
+              <p>{{invoice.code}}</p>
+            </div>
+          </Col>
+          <Col span="12" class-name="" v-if="invoice.code">
+            <div class="item-td flex-r">
+              <span>发票号码</span>
+              <p>{{invoice.number}}</p>
             </div>
           </Col>
         </Row>
@@ -120,10 +131,10 @@
         <h3 @click="num=1" :class="{active:num==1}" class="tag">订单明细</h3>
         <Row>
           <div v-show="num==0" class="ivoiveContent">
-            <Table border :columns="invoiceItemTitle" :data="invoiceItems" disabled-hover></Table>
+            <Table border :columns="invoiceItemTitle" :data="invoice.invoiceItems" disabled-hover></Table>
             <div class="table-amount">
-              <p>税额合计：{{getTaxAmount(invoiceItems)}}元 &nbsp;&nbsp;&nbsp;&nbsp;
-                价额合计：{{getPriceAmount(invoiceItems)}}元</p>
+              <p>税额合计：{{getTaxAmount()}}元 &nbsp;&nbsp;&nbsp;&nbsp;
+                价额合计：{{getPriceAmount()}}元</p>
             </div>
           </div>
           <div v-show="num==1" class="ivoiveContent">
@@ -323,7 +334,7 @@
        */
       getTaxAmount(data) {
         let tmp = 0;
-        data.map(el => {
+        this.invoice.invoiceItems.map(el => {
           tmp += el.tax;
         });
         return tmp;
@@ -331,9 +342,9 @@
       /**
        * 获取价格合计
        */
-      getPriceAmount(data) {
+      getPriceAmount() {
         let tmp = 0;
-        data.map(el => {
+        this.invoice.invoiceItems.map(el => {
           tmp += el.sum;
         });
         return tmp;
