@@ -77,6 +77,7 @@
     getAddress,
     deleteAddress,
     getAddressList,
+    putUpdateAddress,
     createAddress,
     getDefaultAddress
   } from '../../api/address'
@@ -189,6 +190,7 @@
       getAddressList() {
         let params = {}
         getAddressList(params).then(res => {
+          console.log(res)
           this.tableData = res.data.content;
         }).catch(error => {
           this.$Message.warning(error.response.data.message)
@@ -296,7 +298,7 @@
               ifDefault: this.formValidate.interest,
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             };
-            getUpdateAddress(this.addressId, data).then(res => {
+            putUpdateAddress(this.addressId, data).then(res => {
               if (res.data.code === 1) {
                 this.$Message.success('修改成功');
                 this.handleReset('formValidate')
@@ -306,7 +308,7 @@
               console.log(error.response)
             });
           } else if (this.modalType === 1) {
-            let params = {
+            let data = {
               name: this.formValidate.name,
               mobile: this.formValidate.phone,
               province: this.formValidate.province,
@@ -316,7 +318,7 @@
               ifDefault: this.formValidate.interest,
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }
-            updateAddress(params).then(res => {
+            createAddress(data).then(res => {
               if (res.data.code === 1) {
                 this.$Message.success('添加成功');
                 this.handleReset('formValidate')

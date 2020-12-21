@@ -40,13 +40,14 @@ export const getDefaultAddress = () => axios.get(`${baseUrl}/address/default`, {
  **
  * @see https://www.easyai.com
  */
-export const createAddress = (id, data) => axios.post(`${baseUrl}/address`, {
-  data: {
-    data,
-    accessToken: localStorage.getItem("accessToken"),
-    ifDefault: true
-  }
-});
+export const createAddress = (data) => axios.post(`${baseUrl}/address`, data);
+
+/**
+ * 修改地址信息
+ **
+ * @see https://www.easyai.com
+ */
+export const putUpdateAddress = (id, data) => axios.put(`${baseUrl}/address/${id}`, data);
 
 /**
  * 设置为默认地址
