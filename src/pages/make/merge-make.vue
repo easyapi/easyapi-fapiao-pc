@@ -18,7 +18,7 @@
         <h3 class="h3-title">发票形式</h3>
         <div style="display: flex;height: 120px;">
           <div
-            v-show="showType=='增值税电子普通发票'"
+            v-show="showType==true"
             class="electronic-invoice"
             :class="{SelectedStyle:property==='电子'}"
             @click="selectedProperty('电子')"
@@ -33,7 +33,7 @@
             >
           </div>
           <div
-            v-show="showType!='增值税电子普通发票'"
+            v-show="showType==false"
             class="electronic-invoice"
             style="margin-left:20px;"
             :class="{SelectedStyle:property==='纸质'}"
@@ -229,6 +229,7 @@
   import {
     getCustomer
   } from '../../api/customer'
+  import {getShopInfo} from '../../api/shop'
 
   export default {
     name: "",
@@ -246,7 +247,7 @@
         showAddressInfo: false,
         modalTitle: "添加发票抬头",
         makeUp: "",
-        property: this.showType == "增值税电子通发票" ? "电子" : "纸质",
+        property: this.showType = true ? "电子" : "纸质",
         ids: "",
         price: "",
         formValidate: {
@@ -296,6 +297,16 @@
       };
     },
     methods: {
+      //获取商店门户信息
+      getShopImfor() {
+        let params = {
+          accessToken: localStorage.getItem("accessToken")
+        }
+        getShopInfo(params).then(res => {
+          this.showType = res.data.content.ifElectronic
+          console.log(this.showType)
+        })
+      },
       selectedProperty(type) {
         this.property = type;
       },
@@ -524,17 +535,17 @@
         })
       },
       //获取我的开票账户信息
-      getCustomer() {
-        getCustomer({}).then(res => {
-          if (res.data.code === 1) {
-            this.showType = res.data.content.defaultCategory
-            this.formValidate.email = res.data.content.email;
-            this.formValidate.mobile = res.data.content.mobile;
-          }
-        }).catch(error => {
-          this.$Message.error(error.response.data.message)
-        });
-      },
+      // getCustomer() {
+      //   getCustomer({}).then(res => {
+      //     if (res.data.code === 1) {
+      //       this.showType = res.data.content.defaultCategory
+      //       this.formValidate.email = res.data.content.email;
+      //       this.formValidate.mobile = res.data.content.mobile;
+      //     }
+      //   }).catch(error => {
+      //     this.$Message.error(error.response.data.message)
+      //   });
+      // },
       handleSubmit(name) {
         this.$refs[name].validate(valid => {
           if (!valid) {
@@ -600,7 +611,8 @@
       this.getIfManageCompany();
       this.getCompanyList();
       this.getAddressList();
-      this.getCustomer();
+      // this.getCustomer();
+      this.getShopImfor();
     },
     activated() {
       this.getAddressList();
