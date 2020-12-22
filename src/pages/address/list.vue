@@ -51,7 +51,7 @@
             <span style="color: #515a6e;">{{addressData.name}}</span>
             <span v-if="addressData.ifDefault===false" style="color: #2d8cf0;"
                   @click="setDefault(addressData.addressId)">设为默认</span>
-            <Button v-if="addressData.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px"
+            <Button @click="goBack" v-if="addressData.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px"
                     type="primary">默认
             </Button>
           </p>
@@ -161,6 +161,9 @@
           this.$Message.error(error.response.data.message)
           console.log(error.response)
         });
+      },
+      goBack(){
+        this.$router.back(-1)
       },
       /**
        * 删除地址
