@@ -250,6 +250,7 @@
         property: "",
         ids: "",
         price: "",
+        scrollTop:'',
         formValidate: {
           type: "企业",
           email: "",
@@ -607,7 +608,12 @@
         });
       },
       jumpPage(url) {
-        this.$router.push({path: url});
+        this.scrollTop=document.documentElement.scrollTop;
+        this.$router.push({path: url,
+          query: {
+            page: this.scrollTop,
+          }
+        });
       }
     },
     created() {
