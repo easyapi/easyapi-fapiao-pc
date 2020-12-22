@@ -18,7 +18,7 @@
         <h3 class="h3-title">发票形式</h3>
         <div style="display: flex;height: 120px;">
           <div
-            v-show="showType==true"
+            v-show="showType"
             class="electronic-invoice"
             :class="{SelectedStyle:property==='电子'}"
             @click="selectedProperty('电子')"
@@ -33,7 +33,7 @@
             >
           </div>
           <div
-            v-show="showType==false"
+            v-show="!showType"
             class="electronic-invoice"
             style="margin-left:20px;"
             :class="{SelectedStyle:property==='纸质'}"
@@ -247,7 +247,7 @@
         showAddressInfo: false,
         modalTitle: "添加发票抬头",
         makeUp: "",
-        property: this.showType = true ? "电子" : "纸质",
+        property: "",
         ids: "",
         price: "",
         formValidate: {
@@ -304,7 +304,11 @@
         }
         getShopInfo(params).then(res => {
           this.showType = res.data.content.ifElectronic
-          console.log(this.showType)
+          if (this.showType) {
+            this.property = "电子"
+          } else {
+            this.property = "纸质"
+          }
         })
       },
       selectedProperty(type) {
@@ -613,6 +617,7 @@
       this.getAddressList();
       // this.getCustomer();
       this.getShopImfor();
+      console.log(this.property)
     },
     activated() {
       this.getAddressList();
