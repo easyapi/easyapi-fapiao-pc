@@ -51,7 +51,7 @@
             <span style="color: #515a6e;">{{addressData.name}}</span>
             <span v-if="addressData.ifDefault===false" style="color: #2d8cf0;"
                   @click="setDefault(addressData.addressId)">设为默认</span>
-            <Button @click="goBack" v-if="addressData.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px"
+            <Button v-if="addressData.ifDefault == true" size="small" style="margin-left: 13px; margin-left:136px"
                     type="primary">默认
             </Button>
           </p>
@@ -141,15 +141,8 @@
           }
         })
       },
-      /**
-       * 设置默认地址
-       */
       selectAddress(addressId) {
-        console.log(addressId)
         this.addressId = addressId
-      },
-      setDefault(addressId) {
-        console.log(addressId)
         updateAddress(addressId).then(res => {
             if (res.data.code === 1) {
               this.$Message.success("操作成功");
@@ -162,9 +155,23 @@
           console.log(error.response)
         });
       },
-      goBack(){
-        this.$router.back(-1)
-      },
+      /**
+       * 设置默认地址
+       */
+      // setDefault(addressId) {
+      //   console.log(addressId)
+      //   updateAddress(addressId).then(res => {
+      //       if (res.data.code === 1) {
+      //         this.$Message.success("操作成功");
+      //         this.getAddressList()
+      //         this.$router.back(-1)
+      //       }
+      //     }
+      //   ).catch(error => {
+      //     this.$Message.error(error.response.data.message)
+      //     console.log(error.response)
+      //   });
+      // },
       /**
        * 删除地址
        */
