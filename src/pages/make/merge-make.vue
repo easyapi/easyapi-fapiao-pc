@@ -564,10 +564,13 @@
             obj.addressId = this.defaultAddress.addressId;
             obj.category = this.category
           }
+          if (this.property === '电子') {
+              obj.addressId = this.defaultAddress.addressId;
+              obj.category = "增值税电子普通发票"
+            }
           if (this.companyId === null) {
             return this.$Message.warning("请选择开票抬头");
           }
-          obj.category = "增值税电子普通发票"
           obj.companyId = this.companyId;
           obj.outOrderIds = this.ids;
           obj.property = this.property;
