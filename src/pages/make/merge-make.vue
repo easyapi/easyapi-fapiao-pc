@@ -301,13 +301,15 @@
       getShopImfor() {
         let params = {
           accessToken: localStorage.getItem("accessToken")
-        }
+        };
         getShopInfo(params).then(res => {
           this.showType = res.data.content.ifElectronic
           if (this.showType) {
             this.invoiceForm.property = "电子"
+            this.getCustomer();
           } else {
             this.invoiceForm.property = "纸质"
+            this.getAddressList();
           }
         })
       },
@@ -594,12 +596,9 @@
     mounted() {
       this.getIfManageCompany();
       this.getCompanyList();
-      this.getAddressList();
-      // this.getCustomer();
       this.getShopImfor();
     },
     activated() {
-      this.getAddressList();
     }
   }
   ;
