@@ -36,10 +36,16 @@
               <p>{{invoice.statements}}</p>
             </div>
           </Col>
-          <Col span="12" class-name="">
+          <Col v-show="invoice.category=='增值税电子普通发票'" span="12" class-name="">
             <div class="item-td flex-r">
               <span>电子邮箱</span>
               <p>{{invoice.email}}</p>
+            </div>
+          </Col>
+          <Col v-show="invoice.category=='增值税普通发票'" span="12" class-name="">
+            <div class="item-td flex-r">
+              <span>邮寄地址</span>
+              <p>{{invoice.purchaserAddress}}</p>
             </div>
           </Col>
           <Col span="12" class-name="">
