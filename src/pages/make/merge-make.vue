@@ -132,6 +132,12 @@
           <!--</FormItem>-->
           <FormItem label="开票备注" style="margin-top:25px;">
             <Input v-model="invoiceForm.remark" placeholder="可输入开票备注" style="width: 200px"/>
+            <Poptip placement="right" width="400">
+              <Icon class="md-help" type="md-help" />
+              <div class="api" slot="content">
+                <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></img>
+              </div>
+            </Poptip>
           </FormItem>
           <FormItem label="接收手机" prop="mobile" v-if=" invoiceForm.property==='电子'" style="margin-top:25px;">
             <Input v-model="invoiceForm.mobile" placeholder="请输入手机号码" style="width: 200px;"/>
@@ -811,6 +817,11 @@
 
   .query-results ul li {
     cursor: pointer;
+  }
+
+  .md-help{
+    margin-left 5px
+    cursor pointer
   }
 
 </style>
