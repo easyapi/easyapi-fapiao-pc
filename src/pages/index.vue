@@ -75,6 +75,7 @@
         </div>
         <div>
           <Button @click="getInvoiceListReset" type="primary">查询</Button>
+          <Button class="export" type="primary">导出</Button>
         </div>
       </div>
       <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingText" :data="tableData"></Table>
@@ -445,5 +446,9 @@
     border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
+  }
+
+  .export{
+    margin-left: 5px;
   }
 </style>
