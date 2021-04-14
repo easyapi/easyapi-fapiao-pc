@@ -75,6 +75,7 @@
         </div>
         <div>
           <Button @click="getInvoiceListReset" type="primary">查询</Button>
+          <Button class="export" type="primary">导出</Button>
         </div>
       </div>
       <Table border :stripe='true' :columns="tableTitle" :no-data-text="loadingText" :data="tableData"></Table>
@@ -138,7 +139,28 @@
           {
             title: '发票状态',
             key: 'statements',
-            align: 'center'
+            align: 'center',
+            render: (h, params) => {
+              let texts = params.row.statements;
+              if (params.row.auditState == -1) {
+                return h("div", [
+                  h("Tooltip", {
+                    props: {
+                      placement: "top",
+                      transfer: true
+                    }
+                  }, [texts, h("span", {
+                    slot: "content",
+                    style: {
+                      whiteSpace: "normal"
+                    }
+                  }, params.row.consoleReason)
+                  ])
+                ]);
+              }else{
+                return h("div",texts )
+              }
+            }
           },
           {
             title: '发票性质',
@@ -424,5 +446,9 @@
     border-bottom: 1px solid #ddd;
     color: #666;
     font-weight: bold;
+  }
+
+  .export{
+    margin-left: 5px;
   }
 </style>
