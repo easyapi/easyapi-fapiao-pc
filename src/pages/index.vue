@@ -95,7 +95,7 @@
   import {getDefaultCompany} from '../api/company'
   import {getDefaultAddress} from '../api/address'
   import {getCustomer} from '../api/customer'
-  import {getSettings} from '../api/setting'
+  import {findSetting} from '../api/setting'
 
   export default {
     name: '',
@@ -257,8 +257,8 @@
       /**
        * 获取首页底部备注
        */
-      getSettings() {
-        getSettings({fieldKeys: "pc_index_remark"}).then(res => {
+      findSetting() {
+        findSetting({fieldKeys: "pc_index_remark"}).then(res => {
           this.content = res.data.content[0].fieldValue
         })
       },
@@ -326,7 +326,7 @@
       this.getAddress();
       this.getInvoiceList();
       this.getStatementsList();
-      this.getSettings();
+      this.findSetting();
     }
   }
 </script>
