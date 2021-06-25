@@ -8,8 +8,9 @@
     <div class="set-content">
       <div class="detail_button">
         <Button v-if="invoice.state===1 && invoice.electronicInvoiceUrl" @click="showInvoice">预览发票</Button>
-        <Button v-if="invoice.state===1 && invoice.electronicInvoiceUrl"><a :href="invoice.electronicInvoiceUrl"
-                                                                            target="_blank">下载发票</a></Button>
+        <Button v-if="invoice.state===1 && invoice.electronicInvoiceUrl">
+          <a :href="invoice.electronicInvoiceUrl" target="_blank">下载发票</a>
+        </Button>
       </div>
       <div class="table-container">
         <Row class-name="table-body">
@@ -37,13 +38,13 @@
               <p>{{invoice.statements}}</p>
             </div>
           </Col>
-          <Col v-show="invoice.category=='增值税电子普通发票'" span="12" class-name="">
+          <Col v-show="invoice.category === '增值税电子普通发票'" span="12" class-name="">
             <div class="item-td flex-r">
               <span>电子邮箱</span>
               <p>{{invoice.email}}</p>
             </div>
           </Col>
-          <Col v-show="invoice.category=='增值税普通发票'" span="12" class-name="">
+          <Col v-show="invoice.category === '增值税普通发票'" span="12" class-name="">
             <div class="item-td flex-r">
               <span>邮寄地址</span>
               <p>{{invoice.purchaserAddress}}</p>
@@ -134,30 +135,30 @@
             </div>
           </Col>
         </Row>
-        <h3 @click="num=0" :class="{active:num==0}" class="tag">发票内容</h3>
-        <h3 @click="num=1" :class="{active:num==1}" class="tag">订单明细</h3>
+        <h3 @click="num=0" :class="{active:num === 0}" class="tag">发票内容</h3>
+        <h3 @click="num=1" :class="{active:num ===1 }" class="tag">订单明细</h3>
         <Row>
-          <div v-show="num==0" class="ivoiveContent">
+          <div v-show="num === 0" class="ivoiveContent">
             <Table border :columns="invoiceItemTitle" :data="invoice.invoiceItems" disabled-hover></Table>
             <div class="table-amount">
               <p>税额合计：{{getTaxAmount()}}元 &nbsp;&nbsp;&nbsp;&nbsp;
                 价额合计：{{getPriceAmount()}}元</p>
             </div>
           </div>
-          <div v-show="num==1" class="ivoiveContent">
+          <div v-show="num === 1" class="ivoiveContent">
             <Table :columns="invoiceDetailTitle" :data="outOrderList"></Table>
           </div>
         </Row>
       </div>
-      <h3 style="margin-bottom: 20px" v-if="invoice.serviceType==='订单开票'">订单内容</h3>
-      <Table border :stripe='true' :columns="tableTitle" :data="outOrders" v-if="invoice.serviceType==='订单开票'"></Table>
+      <h3 style="margin-bottom: 20px" v-if="invoice.serviceType === '订单开票'">订单内容</h3>
+      <Table border :stripe='true' :columns="tableTitle" :data="outOrders" v-if="invoice.serviceType ==='订单开票'"></Table>
     </div>
     <Modal
       width="1000px"
       v-model="isShowInvoice"
       title="预览发票"
-      @on-ok="isShowInvoice==false"
-      @on-cancel="isShowInvoice==false">
+      @on-ok="isShowInvoice === false"
+      @on-cancel="isShowInvoice === false">
       <div class="imgBox" :style="{backgroundImage:'url('+invoice.electronicInvoiceImg+')'}"></div>
     </Modal>
   </div>
@@ -320,10 +321,8 @@
        * 获取外部订单列表
        */
       getOutOrderList() {
-        console.log(111)
         getOutOrderList({invoiceId: this.$route.query.id}, this.page).then(res => {
-          console.log(res)
-          if (res.code == 1) {
+          if (res.code === 1) {
             this.outOrderList = res.data.content
             this.outOrders = res.data.content;
           }
