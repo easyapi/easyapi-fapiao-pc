@@ -123,8 +123,8 @@ export default {
      * 获取全部负数（欠费）外部订单列表
      */
     getMinusOutOrderList(type) {
-      getOutOrderList({maxPrice: -0.01, type: type}, {page: 0, size: 10000}).then(res => {
-        if (res.data.code == 1) {
+      getOutOrderList({state: 0, maxPrice: -0.01, type: type}, {page: 0, size: 10000}).then(res => {
+        if (res.data.code === 1) {
           this.minusTable = res.data.content;
           for (let i = 0; i < this.minusTable.length; i++) {
             this.minusTable[i]['_disabled'] = true;
@@ -146,7 +146,7 @@ export default {
       this.loadingText = '加载中';
       this.orderType = name;
       this.price = 0;
-      getOutOrderList({type: this.orderType}, this.page).then(res => {
+      getOutOrderList({state: 0, type: this.orderType}, this.page).then(res => {
         if (res.data.code !== 0) {
           this.tableData = res.data.content;
           this.updateChecked();
@@ -210,8 +210,8 @@ export default {
     handleSelectAllPage(status) {
       if (status) {
         this.$refs.selection.selectAll(status)
-        getOutOrderList({type: this.orderType}, {page: 0, size: 10000}).then(res => {
-          if (res.data.code == 1) {
+        getOutOrderList({state: 0, type: this.orderType}, {page: 0, size: 10000}).then(res => {
+          if (res.data.code === 1) {
             this.selected = res.data.content
             this.calculatePrice()
           }

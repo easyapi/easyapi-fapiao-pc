@@ -8,7 +8,8 @@
     <div class="set-content">
       <div class="detail_button">
         <Button v-if="invoice.state===1 && invoice.electronicInvoiceUrl" @click="showInvoice">预览发票</Button>
-        <Button v-if="invoice.state===1 && invoice.electronicInvoiceUrl"><a :href="invoice.electronicInvoiceUrl" target="_blank">下载发票</a></Button>
+        <Button v-if="invoice.state===1 && invoice.electronicInvoiceUrl"><a :href="invoice.electronicInvoiceUrl"
+                                                                            target="_blank">下载发票</a></Button>
       </div>
       <div class="table-container">
         <Row class-name="table-body">
@@ -316,7 +317,7 @@
        */
       getOutOrderList() {
         getOutOrderList({invoiceId: this.$route.query.id}).then(res => {
-          if (res.data.code == 1) {
+          if (res.data.code === 1) {
             this.outOrderList = res.data.content
             this.outOrders = res.data.content;
           }
