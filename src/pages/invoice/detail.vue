@@ -322,7 +322,7 @@
        */
       getOutOrderList() {
         getOutOrderList({invoiceId: this.$route.query.id}, this.page).then(res => {
-          if (res.code === 1) {
+          if (res.data.code === 1) {
             this.outOrderList = res.data.content
             this.outOrders = res.data.content;
           }
@@ -335,7 +335,6 @@
         getInvoice(this.$route.query.id).then(res => {
           if (res.data.code === 1) {
             this.invoice = res.data.content;
-
           }
         }).catch(error => {
           console.log(error.response)
