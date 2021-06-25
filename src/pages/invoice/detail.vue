@@ -176,6 +176,10 @@
         invoice: {invoiceId: null, invoiceItems: []},//发票信息
         outOrderList: [],//发票关联外部订单列表
         outOrders: [],
+        page: {
+          size: 10,
+          page: 0
+        },
         tableTitle: [
           {
             title: '订单编号',
@@ -316,8 +320,10 @@
        * 获取外部订单列表
        */
       getOutOrderList() {
-        getOutOrderList({invoiceId: this.$route.query.id}).then(res => {
-          if (res.data.code === 1) {
+        console.log(111)
+        getOutOrderList({invoiceId: this.$route.query.id}, this.page).then(res => {
+          console.log(res)
+          if (res.code == 1) {
             this.outOrderList = res.data.content
             this.outOrders = res.data.content;
           }
