@@ -9,23 +9,23 @@
   },
   "dependencies": {
     "area-data": "^5.0.6",
-    "axios": "^0.21.1",
-    "core-js": "^3.15.2",
+    "axios": "^0.24.0",
+    "core-js": "^3.20.2",
     "lodash": "^4.17.21",
     "v-distpicker": "^1.2.12",
-    "view-design": "^4.6.1",
+    "view-design": "^4.7.0",
     "vue": "^2.6.14",
-    "vue-area-linkage": "^5.1.0",
-    "vue-router": "^3.5.2",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "vue-router": "^3.5.3",
+    "vue-area-linkage": "^5.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.5.13",
-    "@vue/cli-plugin-router": "^4.5.13",
-    "@vue/cli-plugin-vuex": "^4.5.13",
-    "@vue/cli-service": "^4.5.13",
-    "stylus": "^0.54.8",
-    "stylus-loader": "^3.0.2",
+    "@vue/cli-plugin-babel": "^4.5.15",
+    "@vue/cli-plugin-router": "^4.5.15",
+    "@vue/cli-plugin-vuex": "^4.5.15",
+    "@vue/cli-service": "^4.5.15",
+    "stylus": "^0.56.0",
+    "stylus-loader": "^6.2.0",
     "vue-template-compiler": "^2.6.14"
   }
 }

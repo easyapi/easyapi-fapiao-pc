@@ -1,7 +1,7 @@
 //公共样式
 .main
   width 1260px
-  margin 0px auto
+  margin 0 auto
   padding-top 24px
   padding-bottom 50px;
 
@@ -9,6 +9,7 @@
   justify-content space-between
   align-items center
   margin-bottom 24px
+
   .search-data
     justify-content flex-start
     align-items center
@@ -17,28 +18,35 @@
   border 1px solid #d6d6d6
   padding 24px 0
   margin-bottom 24px
+
   & > div
     width calc(33.3333% - 1px)
     border-right 1px solid #d6d6d6
-    padding 0px 16px
+    padding 0 16px
+
     &:last-child
       border-right none
+
   .openInvoice-info, .openInvoice-mailInfo
     & > div
       justify-content flex-start
       align-items flex-end
+
       a
         justify-content flex-start
         align-items flex-end
         margin-left 10px
+
     .onInvoice-content
       justify-content flex-start
       align-items flex-start
       margin-top 5px
+
       & > div
         p, span
           height 20px
           line-height 20px
+
       a
         margin-left 0
         margin-top 5px
@@ -47,14 +55,18 @@
 .openInvoiceInfo
   justify-content space-between
   margin-bottom 24px
+
   & > div
     padding 20px
     width 400px
     border 1px solid #d6d6d6
+
     & > ul > li > span
       margin-right 5px
+
     & > p
       padding 10px 0
+
     & > a
       display inline-block
       padding 10px 0
@@ -68,14 +80,17 @@
 //发票详情
 .table-container
   margin-bottom 24px
+
   .table-title
     .title
       height 36px
       line-height 36px
       padding-left 20px
+
   .table-body
     border-left 1px solid #d6d6d6
     border-top 1px solid #d6d6d6
+
     .item-td
       height 42px
       line-height 42px
