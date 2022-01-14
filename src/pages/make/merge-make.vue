@@ -133,7 +133,7 @@
           <FormItem label="开票备注" style="margin-top:25px;">
             <Input v-model="invoiceForm.remark" placeholder="可输入开票备注" style="width: 200px"/>
             <Poptip placement="right" width="400">
-              <Icon class="md-help" type="md-help" />
+              <Icon class="md-help" type="md-help"/>
               <div class="api" slot="content">
                 <img src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></img>
               </div>
@@ -236,6 +236,7 @@
     getCustomer
   } from '../../api/customer'
   import {getShopInfo} from '../../api/shop'
+  import {findSetting} from '../../api/setting'
 
   export default {
     name: "",
@@ -256,7 +257,7 @@
         price: "",
         scrollTop: '',
         invoiceForm: {
-          category: "增值税普通发票",
+          category: "",
           property: "",
           type: "企业",
           email: "",
@@ -316,6 +317,17 @@
           } else {
             this.invoiceForm.property = "纸质"
             this.getAddressList();
+          }
+        })
+      },
+      //获取发票默认类型
+      findSetting() {
+        let params = {
+          fieldKeys: "default-invoice-category"
+        }
+        findSetting(params).then(res => {
+          if (res.data.code == 1) {
+            this.invoiceForm.category = res.data.content[0].fieldValue
           }
         })
       },
@@ -538,8 +550,7 @@
             return this.$Message.warning("请填写邮寄地址");
           }
           this.invoiceForm.addressId = this.defaultAddress.addressId;
-        }
-        else if (this.invoiceForm.property === '电子') {
+        } else if (this.invoiceForm.property === '电子') {
           this.invoiceForm.addressId = null;
           this.invoiceForm.category = "增值税电子普通发票"
         }
@@ -603,6 +614,7 @@
       this.getIfManageCompany();
       this.getCompanyList();
       this.getShopImfor();
+      this.findSetting();
     },
     activated() {
     }
@@ -819,7 +831,7 @@
     cursor: pointer;
   }
 
-  .md-help{
+  .md-help {
     margin-left 5px
     cursor pointer
   }
