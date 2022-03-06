@@ -451,11 +451,11 @@
       },
       getCompanyList() {
         getCompanyList({}).then(res => {
-          if (res.data.code == 1) {
+          if (res.data.code === 1) {
             this.companyList = res.data.content;
             this.showInfo = true;
             for (let k of this.companyList) {
-              if (k.ifDefault == true) {
+              if (k.ifDefault) {
                 this.companyId = k.companyId;
                 this.invoiceForm.purchaserName = k.name;
                 this.invoiceForm.purchaserTaxpayerNumber = k.taxNumber;
