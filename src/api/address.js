@@ -6,7 +6,7 @@ import {baseUrl} from "./api";
 /**
  * 获取发票地址列表
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getAddressList = (params) => axios.get(`${baseUrl}/addresses`, {
   params,
@@ -16,7 +16,7 @@ export const getAddressList = (params) => axios.get(`${baseUrl}/addresses`, {
 /**
  * 获取发票地址信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getAddress = id => axios.get(`${baseUrl}/address/${id}`, {
   params: {
@@ -38,21 +38,21 @@ export const getDefaultAddress = () => axios.get(`${baseUrl}/address/default`, {
 /**
  * 添加地址信息
  **
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const createAddress = (data) => axios.post(`${baseUrl}/address`, data);
 
 /**
  * 修改地址信息
  **
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const putUpdateAddress = (id, data) => axios.put(`${baseUrl}/address/${id}`, data);
 
 /**
  * 设置为默认地址
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const updateAddress = id => {
   let data = {};
@@ -65,7 +65,7 @@ export const updateAddress = id => {
 /**
  * 删除地址
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const deleteAddress = id => {
   let params = {}

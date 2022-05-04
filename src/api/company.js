@@ -5,7 +5,7 @@ import {baseUrl} from "./api";
 /**
  * 获取默认抬头信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getCompanyList = (params) => axios.get(`${baseUrl}/companies`, {
   params,
@@ -15,7 +15,7 @@ export const getCompanyList = (params) => axios.get(`${baseUrl}/companies`, {
 /**
  * 获取公司抬头信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getCompany = id => axios.get(`${baseUrl}/company/${id}`, {
   params: {
@@ -27,7 +27,7 @@ export const getCompany = id => axios.get(`${baseUrl}/company/${id}`, {
 /**
  * 添加公司抬头信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const createCompany = (data) => {
   data.accessToken = localStorage.getItem("accessToken");
@@ -37,7 +37,7 @@ export const createCompany = (data) => {
 /**
  * 修改公司抬头信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const updateCompany = (id, data) => {
   data.accessToken = localStorage.getItem("accessToken");
@@ -47,7 +47,7 @@ export const updateCompany = (id, data) => {
 /**
  * 删除公司抬头信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const deleteCompany = id => {
   let params = {}
@@ -59,7 +59,7 @@ export const deleteCompany = id => {
 /**
  * 获取默认抬头信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getDefaultCompany = () => axios.get(`${baseUrl}/company/default`, {
   params: {
@@ -71,7 +71,7 @@ export const getDefaultCompany = () => axios.get(`${baseUrl}/company/default`, {
 /**
  * 设置为默认抬头
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const updateDefaultCompany = id => {
   let data = {};
@@ -84,7 +84,7 @@ export const updateDefaultCompany = id => {
 /**
  * 抬头信息查询（企业开票信息查询服务）
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getCompanyCodeList = (params) => axios.get(`${baseUrl}/company/codes`, {
   params,

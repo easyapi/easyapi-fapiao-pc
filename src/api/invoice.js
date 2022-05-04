@@ -5,7 +5,7 @@ import {baseUrl} from "./api";
 /**
  * 获取发票列表
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getInvoiceList = (params) => axios.get(`${baseUrl}/invoices`, {
   params: {
@@ -17,7 +17,7 @@ export const getInvoiceList = (params) => axios.get(`${baseUrl}/invoices`, {
 /**
  * 获取发票详情信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getInvoice = (id) => axios.get(`${baseUrl}/invoice/${id}`, {
   params: {
@@ -29,7 +29,7 @@ export const getInvoice = (id) => axios.get(`${baseUrl}/invoice/${id}`, {
 /**
  * 获取发票状态列表
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getInvoiceStatementsList = () => axios.get(`${baseUrl}/api/invoice/record/statements`, {
   params: {

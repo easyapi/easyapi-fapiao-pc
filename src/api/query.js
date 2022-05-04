@@ -5,7 +5,7 @@ import {baseUrl} from "./api";
 /**
  * 查询客户服务器订单信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const queryShopOrder = (outOrderNo) => axios.get(`${baseUrl}/shop-order/${outOrderNo}/query`, {
   params: {

@@ -4,7 +4,7 @@ import {baseUrl} from "./api";
 /**
  * 查询设置信息
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const findSetting = (params) => axios.get(`${baseUrl}/setting/find`, {
   params: {

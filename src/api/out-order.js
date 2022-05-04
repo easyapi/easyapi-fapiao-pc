@@ -4,7 +4,7 @@ import {baseUrl} from "./api";
 /**
  * 获取外部订单列表
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getOutOrderList = (params, page) => {
   params.size = page.size;
@@ -20,7 +20,7 @@ export const getOutOrderList = (params, page) => {
 /**
  * 获取外部订单详情
  *
- * @see https://www.easyai.com
+ * @see https://www.easyapi.com
  */
 export const getOutOrder = no => axios.get(`${baseUrl}/out-order/${no}`, {
   params: {
