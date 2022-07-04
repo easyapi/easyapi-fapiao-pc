@@ -179,7 +179,7 @@
       getProvince() {
         this.$ajax({
           method: 'GET',
-          url: 'https://api2.easyapi.com/area/all.json',
+          url: 'https://api.easyapi.com/area/all.json',
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -192,7 +192,7 @@
       ,
       //获取市
       getCity() {
-        this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.province + '/cities.json', {
+        this.$ajax.get('https://api.easyapi.com/area/' + this.formValidate.province + '/cities.json', {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }
@@ -205,7 +205,7 @@
       ,
       //获取区域
       getArea() {
-        this.$ajax.get('https://api2.easyapi.com/area/' + this.formValidate.city + '/districts.json', {
+        this.$ajax.get('https://api.easyapi.com/area/' + this.formValidate.city + '/districts.json', {
           params: {
             accessToken: localStorage.getItem('accessToken')
           }

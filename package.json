@@ -27,7 +27,8 @@
     "@vue/cli-service": "^4.5.15",
     "less-loader": "^5.0.0",
     "stylus": "^0.56.0",
-    "stylus-loader": "^6.2.0",
+    "stylus-loader": "^3.0.2",
+    "prettier": "^2.7.1",
     "vue-template-compiler": "^2.6.14"
   }
 }
