@@ -1,31 +1,28 @@
-# EasyAPI电子发票PC端
+# EasyAPI电子发票H5移动端
 
 ## 项目介绍
-EasyAPI电子发票PC端是标准的发票申请与发票记录查询模块，功能类似阿里云、腾讯云申请发票模块，可直接嵌入到PC端Web项目中，极速实现发票申请的功能。
+EasyAPI电子发票H5移动端是标准的发票申请与发票记录查询模块，功能类似滴滴打车、顺丰快递申请发票模块，可直接嵌入到小程序、微信H5，APP中，极速实现发票申请的功能。
 ## 前序准备
-需要在本地安装 node。本项目技术栈基于 ES2015+、vue、vuex、vue-router 、vue-cli 、axios 和 view-design
+需要在本地安装 node。本项目技术栈基于 `Vue3`, `Vite3`, `Vant4`, `Pinia2`, `Vitest`, `TypeScript`
 ## 相关技术和第三方库
 
-* [vue2.0中文网](https://vuefe.cn/v2/guide/)
-* [ECMAScript 6 入门](http://es6.ruanyifeng.com/)
-* [vuex中文文档](https://vuex.vuejs.org/zh-cn/)
-* [vue-router中文文档](https://router.vuejs.org/zh-cn/)
-* [iview组件库](https://www.iviewui.com/)
-* [vue-cli脚手架](https://github.com/vuejs/vue-cli)
+* [Vue.js JavaScript 框架](https://cn.vuejs.org/)
+* [Vite3 下一代前端开发与构建工具](https://vitejs.cn/)
+* [Vant4 轻量、可靠的移动端组件库](https://vant-contrib.gitee.io/vant/#/zh-CN)
 
 ---
 
 ## 开发调试
 
 ``` bash
-# Project setup
+# install dependencies
 yarn install
 
-# Compiles and hot-reloads for development
-yarn run serve
+# serve with hot reload at localhost:8080
+yarn dev
 
-# Compiles and minifies for production
-yarn run build
+# build for production with minification
+yarn build
 
 ```
 
@@ -38,7 +35,7 @@ yarn run build
  ├── src                   #源码
  │  ├── api                #api接口目录
  │  │  ├── api.js          #api接口列表
- │  │  └── request.js        #axios封装
+ │  │  └── fetch.js        #axios封装
  │  ├──assets              #资源目录，用于组织未编译的静态资源如STYLUS LESS、SASS 或 JavaScript
  │  │  ├── images          #图片
  │  │  └── styles          #样式、字体图片等
@@ -46,10 +43,11 @@ yarn run build
  │  ├── pages              #页面目录  
  │  ├── router             #页面路由  
  │  ├── store              #vuex状态管理
+ │  ├── util               #放置公用方法   
  │  ├── App.vue            #  
  │  └── main.js            #入口文件  
  ├── static                #静态资源文件
- │  └── images               #图片
+ │  └── images             #图片
  └── package.json          #入口 
 
 ```
