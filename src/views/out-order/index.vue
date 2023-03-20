@@ -1,12 +1,237 @@
 <script setup lang="ts">
+import { getOutOrderListApi } from '../../api/out-order'
+import { getOrderTypeListApi } from '../../api/order-type'
+import { getCustomerApi } from '../../api/customer'
 import { localStorage } from '@/utils/local-storage'
+import { ElMessage } from 'element-plus'
+import type { TabsPaneContext } from 'element-plus'
+import { ElTable } from 'element-plus'
 
-const route = useRoute()
+const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+
 const router = useRouter()
 
-onMounted(() => {})
+const state = reactive({
+  customer: {
+    balance: 0,
+  }, //开票用户客户信息
+  orderTypeList: [], //订单类型列表
+  orderType: '' as any, //已选择订单类型
+  ids: '', //已选订单IDs（多个用逗号隔开）
+  minusTable: [], //欠票订单列表
+  minusAmount: 0, //欠票总金额
+  price: 0 as any, //已选开票金额
+  selected: [], //已选订单
+  tableData: [], //外部订单列表
+  loading: false,
+})
+
+const pagination = reactive({
+  page: 1,
+  size: 10,
+  total: 0,
+})
+
+/**
+ * 获取订单类型
+ */
+function getOrderTypeList() {
+  getOrderTypeListApi().then((res) => {
+    if (res.code === 1) {
+      state.orderTypeList = res.content
+      state.orderType = state.orderTypeList[0].name
+      getMinusOutOrderList()
+      getOutOrderList()
+    }
+  })
+}
+
+/**
+ * 获取全部负数（欠费）外部订单列表
+ */
+function getMinusOutOrderList() {
+  let params = {
+    state: 0,
+    maxPrice: -0.01,
+    type: state.orderType,
+    page: 0,
+    size: 10000,
+  }
+  getOutOrderListApi(params).then((res) => {
+    if (res.code === 1) {
+      state.minusTable = res.content
+      state.minusTable.forEach((item) => {
+        item['_disabled'] = true
+        item['_checked'] = true
+        state.minusAmount += Number(item.price)
+      })
+    } else {
+      state.minusAmount = 0
+      state.minusTable = []
+    }
+  })
+}
+
+/**
+ * 获取外部订单列表
+ */
+function getOutOrderList() {
+  state.loading = true
+  let params = {
+    state: 0,
+    sort: 'orderTime,desc',
+    type: state.orderType,
+    page: pagination.page - 1,
+    size: pagination.size,
+  }
+  getOutOrderListApi(params).then((res) => {
+    state.loading = false
+    if (res.code === 1) {
+      state.tableData = res.content
+      // this.updateChecked()
+      pagination.total = res.totalElements
+    } else {
+      state.tableData = []
+      pagination.total = 0
+    }
+  })
+}
+
+function handleCurrentChange(page) {
+  pagination.page = page
+  getOutOrderList()
+  this.calculatePrice()
+}
+
+function handleSizeChange(size) {
+  pagination.size = size
+  getOutOrderList()
+  this.calculatePrice()
+}
+
+/**
+ * 获取我的开票账户信息
+ */
+function getCustomer() {
+  getCustomerApi().then((res) => {
+    if (res.code === 1) {
+      state.customer = res.content
+    }
+  })
+}
+
+//计算金额和ids
+function calculatePrice() {
+  let price = 0
+  let ids = ''
+  state.selected.forEach((item) => {
+    price += item.price
+    ids += item.outOrderId + ','
+  })
+  state.price = (price - state.minusAmount).toFixed(2)
+  state.ids = ids.substring(0, ids.length - 1)
+}
+
+function gotoMakeInvoice() {
+  if (state.selected.length === 0) {
+    return ElMessage.warning('请选择开票订单')
+  } else {
+    router.push({
+      path: '/make/merge-make',
+      query: {
+        id: state.ids,
+        price: state.price,
+      },
+    })
+  }
+}
+
+onMounted(() => {
+  getOrderTypeList()
+  getCustomer()
+})
 </script>
 
 <template>
-  <div>索取发票</div>
+  <div class="outOrder">
+    <el-tabs type="border-card">
+      <el-tab-pane
+        v-model="state.orderType"
+        :label="item.name"
+        v-for="(item, index) in state.orderTypeList"
+        :key="index"
+        @tab-change="getOutOrderList()"
+      ></el-tab-pane>
+    </el-tabs>
+    <div class="my-4" v-if="state.minusTable.length != 0">
+      有{{ state.minusTable.length }}笔欠费金额，欠费金额小计：¥{{
+        minusAmount
+      }}元
+    </div>
+    <div class="my-4">
+      有{{ pagination.total }}个订单可申请发票，总金额：¥{{
+        state.customer.balance
+      }}元
+    </div>
+    <div>
+      <el-button @click="handleSelectAllPage(true)" type="primary"
+        >跨页全选</el-button
+      >
+      <el-button @click="handleSelectAllPage(false)">取消全选</el-button>
+    </div>
+    <el-table
+      v-loading="state.loading"
+      border
+      element-loading-text="老铁别急，这就给你整上..."
+      :header-cell-style="{
+        background: 'rgb(244, 244, 244)',
+      }"
+      :data="state.tableData"
+      class="mt-4"
+    >
+      <el-table-column type="selection" width="55" />
+      <el-table-column label="订单编号" prop="no" align="center">
+      </el-table-column>
+      <el-table-column label="订单内容" align="center">
+        <template #default="scope">
+          {{ Object.values(JSON.parse(scope.row.fields))[0] }}
+        </template>
+      </el-table-column>
+      <el-table-column label="类型" prop="type" align="center">
+      </el-table-column>
+      <el-table-column
+        label="下单时间"
+        prop="orderTime"
+        align="center"
+      ></el-table-column>
+      <el-table-column label="实付金额" align="center">
+        <template #default="scope">
+          {{ scope.row.price.toFixed(2) }}元
+        </template>
+      </el-table-column>
+      <el-table-column label="可开票金额" align="center">
+        <template #default="scope"> {{ scope.row.price }}元 </template>
+      </el-table-column>
+    </el-table>
+    <div class="mt-6 flex justify-end">
+      <el-pagination
+        :current-page="pagination.page"
+        :page-size="pagination.size"
+        background
+        layout="total, prev, pager, next, sizes"
+        :page-sizes="[10, 25, 50, 100]"
+        :total="pagination.total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
+    </div>
+  </div>
 </template>
+
+<style lang="less">
+.outOrder {
+  .el-tabs--border-card > .el-tabs__content {
+    display: none !important;
+  }
+}
+</style>

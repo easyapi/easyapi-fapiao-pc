@@ -79,8 +79,8 @@ export async function getDefaultCompanyApi(): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function defaultCompanyApi(id): Promise<any> {
-  return request.put(`/company/${id}`, {
+export async function updateCompanySetDefaultApi(id): Promise<any> {
+  return request.post(`/company/${id}/set-default`, {
     accessToken: localStorage.get('accessToken'),
     ifDefault: true,
   })
@@ -97,5 +97,18 @@ export async function getCompanyCodeListApi(params): Promise<any> {
       accessToken: localStorage.get('accessToken'),
       ...params,
     },
+  })
+}
+
+/**
+ * 获取是否可以管理公司抬头信息
+ *
+ * @see https://www.easyapi.com
+ */
+export async function getIfManageCompanyApi(): Promise<any> {
+  return request.get('/shop/0/setting?field=ifManageCompany', {
+    params: {
+      accessToken: localStorage.get('accessToken'),
+    }
   })
 }

@@ -4,7 +4,8 @@
  * @returns {Boolean}
  */
 export function validMobile(mobile) {
-  return mobile.startsWith('1')
+  const reg = /^[0-9]{11}$/
+  return reg.test(mobile)
 }
 
 /**
