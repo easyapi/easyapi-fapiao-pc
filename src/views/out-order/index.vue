@@ -47,6 +47,30 @@ function getOrderTypeList() {
 }
 
 /**
+ * 全选/取消全选操作
+ */
+// function handleSelectAllPage(status) {
+//   if (status) {
+//     let params = {
+//       state: 0,
+//       sort: 'orderTime,desc',
+//       type: state.orderType,
+//       page: 0,
+//       size: 10000,
+//     }
+//     getOutOrderListApi(params).then((res) => {
+//       if (res.code === 1) {
+//         state.selected = res.data.content
+//         calculatePrice()
+//       }
+//     })
+//   } else {
+//     state.selected = []
+//     state.price = 0
+//   }
+// }
+
+/**
  * 获取全部负数（欠费）外部订单列表
  */
 function getMinusOutOrderList() {
@@ -88,7 +112,6 @@ function getOutOrderList() {
     state.loading = false
     if (res.code === 1) {
       state.tableData = res.content
-      // this.updateChecked()
       pagination.total = res.totalElements
     } else {
       state.tableData = []
@@ -100,13 +123,11 @@ function getOutOrderList() {
 function handleCurrentChange(page) {
   pagination.page = page
   getOutOrderList()
-  this.calculatePrice()
 }
 
 function handleSizeChange(size) {
   pagination.size = size
   getOutOrderList()
-  this.calculatePrice()
 }
 
 /**
@@ -120,7 +141,9 @@ function getCustomer() {
   })
 }
 
-//计算金额和ids
+/**
+ * 计算金额和ids
+ */
 function calculatePrice() {
   let price = 0
   let ids = ''
@@ -132,9 +155,13 @@ function calculatePrice() {
   state.ids = ids.substring(0, ids.length - 1)
 }
 
+/**
+ * 去开票
+ */
 function gotoMakeInvoice() {
   if (state.selected.length === 0) {
-    return ElMessage.warning('请选择开票订单')
+    ElMessage.warning('请选择开票订单')
+    return
   } else {
     router.push({
       path: '/make/merge-make',
@@ -154,26 +181,58 @@ onMounted(() => {
 
 <template>
   <div class="outOrder">
-    <el-tabs type="border-card">
+    <el-tabs
+      v-model="state.orderType"
+      class="mt-2"
+      @tab-change="getOutOrderList"
+    >
       <el-tab-pane
-        v-model="state.orderType"
         :label="item.name"
+        :name="item.name"
         v-for="(item, index) in state.orderTypeList"
         :key="index"
-        @tab-change="getOutOrderList()"
       ></el-tab-pane>
     </el-tabs>
-    <div class="my-4" v-if="state.minusTable.length != 0">
-      有{{ state.minusTable.length }}笔欠费金额，欠费金额小计：¥{{
-        minusAmount
-      }}元
+    <div class="mt-2" v-if="state.minusTable.length != 0">
+      <p>
+        有{{ state.minusTable.length }}笔欠费金额，欠费金额小计：¥{{
+          satte.minusAmount
+        }}元
+      </p>
+      <el-table
+        border
+        :header-cell-style="{
+          background: '#F5F7FA',
+        }"
+        :data="state.minusTable"
+        class="my-4"
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column label="订单编号" prop="no" align="center">
+        </el-table-column>
+        <el-table-column label="订单内容" align="center">
+          <template #default="scope">
+            {{ Object.values(JSON.parse(scope.row.fields))[0] }}
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" prop="type" align="center">
+        </el-table-column>
+        <el-table-column
+          label="下单时间"
+          prop="orderTime"
+          align="center"
+        ></el-table-column>
+        <el-table-column label="可开票金额" align="center">
+          <template #default="scope"> {{ scope.row.price }}元 </template>
+        </el-table-column>
+      </el-table>
     </div>
-    <div class="my-4">
+    <p>
       有{{ pagination.total }}个订单可申请发票，总金额：¥{{
         state.customer.balance
       }}元
-    </div>
-    <div>
+    </p>
+    <div class="mt-4">
       <el-button @click="handleSelectAllPage(true)" type="primary"
         >跨页全选</el-button
       >
@@ -184,10 +243,12 @@ onMounted(() => {
       border
       element-loading-text="老铁别急，这就给你整上..."
       :header-cell-style="{
-        background: 'rgb(244, 244, 244)',
+        background: '#F5F7FA',
       }"
       :data="state.tableData"
       class="mt-4"
+      ref="multipleTableRef"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55" />
       <el-table-column label="订单编号" prop="no" align="center">
@@ -225,13 +286,15 @@ onMounted(() => {
         @size-change="handleSizeChange"
       />
     </div>
+    <div class="border mt-6 text-right p-3 flex justify-end">
+      <div class="flex items-center">
+        <sapn>已选订单数：{{ state.selected.length }}个</sapn>
+        <span class="ml-6">开票金额：</span>
+        <span class="mr-6 text-xl text-red-600 tracking-wider"
+          >¥{{ state.price }}元
+        </span>
+        <el-button type="primary" @click="gotoMakeInvoice">去开票</el-button>
+      </div>
+    </div>
   </div>
 </template>
-
-<style lang="less">
-.outOrder {
-  .el-tabs--border-card > .el-tabs__content {
-    display: none !important;
-  }
-}
-</style>

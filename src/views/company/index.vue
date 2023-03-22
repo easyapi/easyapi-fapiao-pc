@@ -97,8 +97,7 @@ onMounted(() => {
 
 <template>
   <div class="company">
-    <h3 class="my-4">发票抬头</h3>
-    <div class="flex flex-wrap">
+    <div class="mt-6 flex flex-wrap">
       <div
         v-for="(item, index) in state.tableData"
         :key="index"
@@ -112,7 +111,7 @@ onMounted(() => {
           <div
             class="flex justify-between items-center companyList-item_name mb-2"
           >
-            <span class="text-sm font-semibold">{{ item.name }}</span>
+            <span class="text-base font-semibold">{{ item.name }}</span>
             <el-tag type="primary" effect="dark" v-if="item.ifDefault"
               >默认</el-tag
             >
@@ -159,8 +158,8 @@ onMounted(() => {
 <style lang="less" scoped>
 .company {
   .companyList-item {
-    width: 310px;
-    height: 240px;
+    width: 340px;
+    height: 250px;
     border-radius: 4px;
     border: solid 1px #dddddd;
     padding: 0px 15px 15px;
@@ -195,7 +194,7 @@ onMounted(() => {
 
   .add-company {
     width: 340px;
-    height: 255px;
+    height: 250px;
     border-radius: 4px;
     border: solid 1px #dddddd;
     margin-bottom: 20px;

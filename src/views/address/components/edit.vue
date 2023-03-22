@@ -91,14 +91,6 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
   })
 }
 
-/**
- * 重置
- */
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.resetFields()
-}
-
 watch(
   () => props.modelValue,
   (value) => {
@@ -109,7 +101,7 @@ watch(
         Object.assign(state.formData, props.addressDetail)
       } else {
         state.title = '添加地址'
-        Object.assign(state.formData, {
+        state.formData = {
           name: '',
           mobile: '',
           province: '',
@@ -118,8 +110,7 @@ watch(
           addr: '',
           addressId: '',
           ifDefault: true,
-        })
-        resetForm(ruleFormRef.value)
+        }
       }
     }
   },

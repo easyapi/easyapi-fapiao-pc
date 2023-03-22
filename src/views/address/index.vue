@@ -70,8 +70,7 @@ onMounted(() => {
 
 <template>
   <div class="address">
-    <h3 class="my-4">邮寄地址</h3>
-    <div class="flex flex-wrap">
+    <div class="mt-6 flex flex-wrap">
       <div
         v-for="(item, index) in state.tableData"
         :key="index"
@@ -85,7 +84,7 @@ onMounted(() => {
           <div
             class="flex justify-between items-center addressList-item_name mb-2"
           >
-            <span class="text-sm font-semibold">{{ item.name }}</span>
+            <span class="text-base font-semibold">{{ item.name }}</span>
             <el-tag type="primary" effect="dark" v-if="item.ifDefault"
               >默认</el-tag
             >
@@ -132,8 +131,8 @@ onMounted(() => {
 <style lang="less" scoped>
 .address {
   .addressList-item {
-    width: 310px;
-    height: 200px;
+    width: 340px;
+    height: 215px;
     border-radius: 4px;
     border: solid 1px #dddddd;
     padding: 0px 15px 15px;

@@ -164,7 +164,7 @@ onMounted(() => {
 
 <template>
   <div class="invoice">
-    <div class="invoice-base-info flex my-6 p-4">
+    <div class="invoice-base-info flex mt-6 p-4">
       <div class="w-1/3">
         <div class="text-base mb-4 font-semibold">可开票金额</div>
         <div class="text-2xl mb-4 tracking-tight">
@@ -243,7 +243,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mt-6">
       <div class="flex items-center">
         <el-date-picker
           v-model="state.time"
@@ -255,7 +255,7 @@ onMounted(() => {
           @change="timeRangeChange"
         />
 
-        <div class="w-52 mx-4">
+        <div class="mx-4">
           <el-select
             clearable
             v-model="searchData.statements"
@@ -287,9 +287,10 @@ onMounted(() => {
       border
       element-loading-text="老铁别急，这就给你整上..."
       :header-cell-style="{
-        background: 'rgb(244, 244, 244)',
+        background: '#F5F7FA',
       }"
       :data="state.tableData"
+      class="mt-6"
     >
       <el-table-column label="申请日期" prop="addTime" align="center">
       </el-table-column>
@@ -336,7 +337,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .invoice-base-info {
-  background-color: #f5f6fa;
+  background-color: #f5f7fa;
 }
 </style>
 

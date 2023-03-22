@@ -20,7 +20,7 @@ watch(
 </script>
 
 <template>
-  <div class="breadcrumb flex items-center">
+  <div class="pb-6 border-b flex items-center">
     <img src="../../assets/images/logo.png" class="w-6 h-6 mr-2" />
     <el-breadcrumb separator="/">
       <el-breadcrumb-item
@@ -33,10 +33,3 @@ watch(
     </el-breadcrumb>
   </div>
 </template>
-
-<style lang="less" scoped>
-.breadcrumb {
-  padding: 0 0 20px;
-  border-bottom: 1px solid #ddd;
-}
-</style>
