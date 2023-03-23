@@ -133,10 +133,7 @@ watch(
         label-width="auto"
       >
         <el-form-item label="收件人姓名" prop="name">
-          <el-input
-            v-model="state.formData.name"
-            placeholder="请输入收件人姓名"
-          />
+          <el-input v-model="state.formData.name" placeholder="请输入收件人姓名"/>
         </el-form-item>
         <el-form-item label="手机号码" prop="mobile">
           <el-input
@@ -146,10 +143,7 @@ watch(
         </el-form-item>
         <el-form-item label="所在省市区"> </el-form-item>
         <el-form-item label="详细地址">
-          <el-input
-            v-model="state.formData.addr"
-            placeholder="请输入详细地址"
-          />
+          <el-input v-model="state.formData.addr" placeholder="请输入详细地址"/>
         </el-form-item>
         <el-form-item label="设为默认">
           <el-checkbox v-model="state.formData.ifDefault" />

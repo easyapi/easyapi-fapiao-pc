@@ -85,24 +85,22 @@ onMounted(() => {
             class="flex justify-between items-center addressList-item_name mb-2"
           >
             <span class="text-base font-semibold">{{ item.name }}</span>
-            <el-tag type="primary" effect="dark" v-if="item.ifDefault"
-              >默认</el-tag
-            >
+            <el-tag type="primary" effect="dark" v-if="item.ifDefault">
+              默认
+            </el-tag>
             <span v-else class="text-blue-400">设为默认</span>
           </div>
           <p>{{ item.mobile }}</p>
           <p>
-            {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{
-              item.district
-            }}
+            {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{item.district}}
           </p>
           <p>{{ item.addr }}</p>
           <div class="mt-4">
-            <el-button type="primary" @click.stop="openEditModal(item)"
-              >修改
+            <el-button type="primary" @click.stop="openEditModal(item)">
+              修改
             </el-button>
-            <el-button type="danger" @click.stop="deleteAddress(item.addressId)"
-              >删除
+            <el-button type="danger" plain @click.stop="deleteAddress(item.addressId)">
+              删除
             </el-button>
           </div>
           <img
@@ -135,7 +133,7 @@ onMounted(() => {
     height: 215px;
     border-radius: 4px;
     border: solid 1px #dddddd;
-    padding: 0px 15px 15px;
+    padding: 0 15px 15px;
     cursor: pointer;
     margin-right: 20px;
     margin-bottom: 20px;

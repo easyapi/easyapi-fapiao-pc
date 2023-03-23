@@ -117,17 +117,17 @@ onMounted(() => {
             >
             <span v-else class="text-blue-400">设为默认</span>
           </div>
-          <p>{{ item.taxNumber || '——' }}</p>
-          <p>{{ item.bank || '——' }}</p>
-          <p>{{ item.bankAccount || '——' }}</p>
-          <p>{{ item.address || '——' }}</p>
-          <p>{{ item.phone || '——' }}</p>
+          <p>{{ item.taxNumber || '-' }}</p>
+          <p>{{ item.bank || '-' }}</p>
+          <p>{{ item.bankAccount || '-' }}</p>
+          <p>{{ item.address || '-' }}</p>
+          <p>{{ item.phone || '-' }}</p>
           <div class="mt-4">
-            <el-button type="primary" @click.stop="openEditModal(item)"
-              >修改
+            <el-button type="primary" @click.stop="openEditModal(item)">
+              修改
             </el-button>
-            <el-button type="danger" @click.stop="deleteCompany(item.companyId)"
-              >删除
+            <el-button type="danger" plain @click.stop="deleteCompany(item.companyId)">
+              删除
             </el-button>
           </div>
           <img

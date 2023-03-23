@@ -114,7 +114,7 @@ watch(
     <el-dialog
       v-model="show"
       :title="state.title"
-      width="30%"
+      width="600px"
       :before-close="handleClose"
     >
       <el-form
@@ -124,25 +124,16 @@ watch(
         label-width="auto"
       >
         <el-form-item label="公司名称" prop="name">
-          <el-input
-            v-model="state.formData.name"
-            placeholder="请输入发票抬头"
-          />
+          <el-input v-model="state.formData.name" placeholder="请输入发票抬头"/>
         </el-form-item>
         <el-form-item label="纳税人识别号" prop="taxNumber">
-          <el-input
-            v-model="state.formData.taxNumber"
-            placeholder="请输入纳税人识别号"
-          />
+          <el-input v-model="state.formData.taxNumber" placeholder="请输入纳税人识别号"/>
         </el-form-item>
         <el-form-item label="开户行">
           <el-input v-model="state.formData.bank" placeholder="请输入开户行" />
         </el-form-item>
         <el-form-item label="开户行账号">
-          <el-input
-            v-model="state.formData.bankAccount"
-            placeholder="请输入开户行账号"
-          />
+          <el-input v-model="state.formData.bankAccount" placeholder="请输入开户行账号"/>
         </el-form-item>
         <el-form-item label="地址">
           <el-input v-model="state.formData.address" placeholder="请输入地址" />
