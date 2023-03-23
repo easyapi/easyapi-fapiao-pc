@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { getDefaultCompanyApi } from '../api/company'
-import { getDefaultAddressApi } from '../api/address'
-import { getCustomerApi } from '../api/customer'
-import { findSettingApi } from '../api/setting'
-import { localStorage } from '@/utils/local-storage'
-import { getInvoiceListApi, getInvoiceStatementsListApi } from '@/api/invoice'
-import { Edit } from '@element-plus/icons-vue'
+import {getDefaultCompanyApi} from '../api/company'
+import {getDefaultAddressApi} from '../api/address'
+import {getCustomerApi} from '../api/customer'
+import {findSettingApi} from '../api/setting'
+import {localStorage} from '@/utils/local-storage'
+import {getInvoiceListApi, getInvoiceStatementsListApi} from '@/api/invoice'
+import {Edit} from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
 
 const state = reactive({
-  customer: { balance: 0 }, //开票用户客户信息
+  customer: {balance: 0}, //开票用户客户信息
   showInfo: true,
   defaultCompany: {},
   showAddressInfo: true,
@@ -23,9 +23,9 @@ const state = reactive({
   time: '',
 })
 
-const searchData = reactive({
-  startTime: '',
-  endTime: '',
+const query = reactive({
+  startAddTime: '',
+  endAddTime: '',
   purchaserName: '', //发票抬头
   statements: '',
 })
@@ -79,7 +79,7 @@ function getDefaultAddress() {
  * 获取首页底部备注
  */
 function findSetting() {
-  findSettingApi({ fieldKeys: 'pc_index_remark' }).then((res) => {
+  findSettingApi({fieldKeys: 'pc_index_remark'}).then((res) => {
     if (res.code === 1) {
       state.content = res.content[0].fieldValue
     }
@@ -87,8 +87,13 @@ function findSetting() {
 }
 
 function timeRangeChange(time) {
-  searchData.startTime = time[0] ? `${time[0]} 00:00:00` : time[0]
-  searchData.endTime = time[1] ? `${time[1]} 23:59:59` : time[1]
+  if (time) {
+    query.startAddTime = time[0] ? `${time[0]} 00:00:00` : time[0]
+    query.endAddTime = time[1] ? `${time[1]} 23:59:59` : time[1]
+  } else {
+    query.startAddTime = ''
+    query.endAddTime = ''
+  }
 }
 
 function search() {
@@ -113,7 +118,7 @@ function getInvoiceStatementsList() {
 function getInvoiceList() {
   state.loading = true
   let params = {
-    ...searchData,
+    ...query,
     page: pagination.page - 1,
     size: pagination.size,
   }
@@ -170,9 +175,9 @@ onMounted(() => {
         <div class="text-2xl mb-4 tracking-tight">
           ¥{{ state.customer.balance }}元
         </div>
-        <el-button type="primary" @click="gotoPage('/out-order')"
-          >索取发票</el-button
-        >
+        <el-button type="primary" @click="gotoPage('/out-order')">
+          索取发票
+        </el-button>
       </div>
       <div class="w-1/3">
         <div class="text-base mb-4 font-semibold">开票信息</div>
@@ -185,23 +190,19 @@ onMounted(() => {
             <span class="text-gray-400">税号：</span>
             <span>{{ state.defaultCompany.taxNumber }}</span>
           </div>
-          <span
-            class="text-blue-500 cursor-pointer"
-            @click="gotoPage('/company')"
-            >更改开票信息
+          <span class="text-blue-500 cursor-pointer" @click="gotoPage('/company')">
+            更改开票信息
             <el-icon class="align-middle" :size="16">
-              <Edit />
+              <Edit/>
             </el-icon>
           </span>
         </div>
         <div v-else>
           <span>您还没有填写开票信息</span>
-          <span
-            class="ml-1 text-blue-500 cursor-pointer"
-            @click="gotoPage('/company')"
-            >现在填写
+          <span class="ml-1 text-blue-500 cursor-pointer" @click="gotoPage('/company')">
+            现在填写
             <el-icon class="align-middle" :size="16">
-              <Edit />
+              <Edit/>
             </el-icon>
           </span>
         </div>
@@ -221,23 +222,19 @@ onMounted(() => {
             <span class="mr-2">{{ state.defaultAddress.district }}</span>
             <span>{{ state.defaultAddress.addr }}</span>
           </div>
-          <span
-            class="text-blue-500 cursor-pointer"
-            @click="gotoPage('/address')"
-            >更改邮寄地址
+          <span class="text-blue-500 cursor-pointer" @click="gotoPage('/address')">
+            更改邮寄地址
             <el-icon class="align-middle" :size="16">
-              <Edit />
+              <Edit/>
             </el-icon>
           </span>
         </div>
         <div v-else>
           <span>您还没有填写邮寄信息</span>
-          <span
-            class="ml-1 text-blue-500 cursor-pointer"
-            @click="gotoPage('/address')"
-            >现在填写
+          <span class="ml-1 text-blue-500 cursor-pointer" @click="gotoPage('/address')">
+            现在填写
             <el-icon class="align-middle" :size="16">
-              <Edit />
+              <Edit/>
             </el-icon>
           </span>
         </div>
@@ -256,23 +253,16 @@ onMounted(() => {
         />
 
         <div class="mx-4">
-          <el-select
-            clearable
-            v-model="searchData.statements"
-            placeholder="发票状态"
-          >
-            <el-option
-              v-for="item in state.statementsList"
-              :value="item"
-              :key="item"
-              >{{ item }}</el-option
-            >
+          <el-select clearable v-model="query.statements" placeholder="发票状态">
+            <el-option v-for="item in state.statementsList" :value="item" :key="item">
+              {{ item }}
+            </el-option>
           </el-select>
         </div>
         <div class="w-52">
           <el-input
             clearable
-            v-model="searchData.purchaserName"
+            v-model="query.purchaserName"
             placeholder="发票抬头"
           />
         </div>
@@ -302,20 +292,18 @@ onMounted(() => {
       >
       </el-table-column>
       <el-table-column label="金额" align="center">
-        <template #default="scope"> {{ scope.row.price }}元 </template>
+        <template #default="scope"> {{ scope.row.price }}元</template>
       </el-table-column>
       <el-table-column label="发票状态" align="center">
-        <template #default="scope"> {{ scope.row.statements }} </template>
+        <template #default="scope"> {{ scope.row.statements }}</template>
       </el-table-column>
       <el-table-column label="发票性质" prop="type" align="center">
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button
-            type="primary"
-            @click="gotoPage(`/invoice/detail?id=${scope.row.invoiceId}`)"
-            >详情</el-button
-          >
+          <el-button type="primary" @click="gotoPage(`/invoice/detail?id=${scope.row.invoiceId}`)">
+            详情
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
