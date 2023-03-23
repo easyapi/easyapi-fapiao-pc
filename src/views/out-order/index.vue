@@ -17,13 +17,14 @@ const state = reactive({
   }, //开票用户客户信息
   orderTypeList: [], //订单类型列表
   orderType: '' as any, //已选择订单类型
-  ids: '', //已选订单IDs（多个用逗号隔开）
   minusTable: [], //欠票订单列表
+  tableData: [], //外部订单列表
   minusAmount: 0, //欠票总金额
   price: 0 as any, //已选开票金额
-  selected: [], //已选订单
-  tableData: [], //外部订单列表
+  outOrderListAll: [], //全部订单数据
+  checkData: [], //已选订单
   loading: false,
+  isCheckAll: false,
 })
 
 const pagination = reactive({
@@ -42,33 +43,30 @@ function getOrderTypeList() {
       state.orderType = state.orderTypeList[0].name
       getMinusOutOrderList()
       getOutOrderList()
+      getOutOrderListAll()
     }
   })
 }
 
 /**
- * 全选/取消全选操作
+ * 获取所有的外部订单数据
  */
-// function handleSelectAllPage(status) {
-//   if (status) {
-//     let params = {
-//       state: 0,
-//       sort: 'orderTime,desc',
-//       type: state.orderType,
-//       page: 0,
-//       size: 10000,
-//     }
-//     getOutOrderListApi(params).then((res) => {
-//       if (res.code === 1) {
-//         state.selected = res.data.content
-//         calculatePrice()
-//       }
-//     })
-//   } else {
-//     state.selected = []
-//     state.price = 0
-//   }
-// }
+function getOutOrderListAll() {
+  let params = {
+    state: 0,
+    sort: 'orderTime,desc',
+    type: state.orderType,
+    page: 0,
+    size: 10000,
+  }
+  getOutOrderListApi(params).then((res) => {
+    if (res.code == 1) {
+      state.outOrderListAll = res.content
+    } else {
+      state.outOrderListAll = []
+    }
+  })
+}
 
 /**
  * 获取全部负数（欠费）外部订单列表
@@ -85,8 +83,6 @@ function getMinusOutOrderList() {
     if (res.code === 1) {
       state.minusTable = res.content
       state.minusTable.forEach((item) => {
-        item['_disabled'] = true
-        item['_checked'] = true
         state.minusAmount += Number(item.price)
       })
     } else {
@@ -113,6 +109,7 @@ function getOutOrderList() {
     if (res.code === 1) {
       state.tableData = res.content
       pagination.total = res.totalElements
+      changePageCheck()
     } else {
       state.tableData = []
       pagination.total = 0
@@ -146,31 +143,99 @@ function getCustomer() {
  */
 function calculatePrice() {
   let price = 0
-  let ids = ''
-  state.selected.forEach((item) => {
+  state.checkData.forEach((item) => {
     price += item.price
-    ids += item.outOrderId + ','
   })
   state.price = (price - state.minusAmount).toFixed(2)
-  state.ids = ids.substring(0, ids.length - 1)
 }
 
 /**
  * 去开票
  */
 function gotoMakeInvoice() {
-  if (state.selected.length === 0) {
+  if (state.checkData.length === 0) {
     ElMessage.warning('请选择开票订单')
     return
   } else {
     router.push({
       path: '/make/merge-make',
       query: {
-        id: state.ids,
         price: state.price,
       },
     })
   }
+}
+
+/**
+ * 手动勾选数据行的Checkbox时触发的事件
+ */
+function select(selection, row) {
+  if (state.checkData.filter((x) => x.outOrderId == row.outOrderId).length == 0) {
+    state.checkData.push(row)
+    calculatePrice()
+    return
+  }
+  state.checkData.forEach((item, index) => {
+    if (item.outOrderId === row.outOrderId) {
+      state.checkData.splice(index, 1)
+    }
+  })
+  calculatePrice()
+}
+
+/**
+ * 手动勾选全选Checkbox时触发的事件
+ */
+function selectAll(selection) {
+  if (selection.length == 0) {
+    let list = []
+    state.checkData.forEach((row, index) => {
+      if (state.tableData.filter((x) => x.outOrderId === row.outOrderId).length === 0) {
+        list.push(row)
+      }
+    })
+    state.checkData = JSON.parse(JSON.stringify(list))
+  } else {
+    selection.forEach((row) => {
+      if (state.checkData.filter((x) => x.outOrderId === row.outOrderId).length === 0) {
+        state.checkData.push(row)
+      }
+    })
+  }
+  calculatePrice()
+}
+
+/**
+ * 跨页全选/取消全选
+ */
+function handleSelectAllPage(value) {
+  if (value) {
+    state.checkData = JSON.parse(JSON.stringify(state.outOrderListAll))
+    state.tableData.forEach((row) => {
+      multipleTableRef.value.toggleRowSelection(row, true)
+    })
+    calculatePrice()
+  } else {
+    state.checkData = []
+    state.price = 0
+    multipleTableRef.value.clearSelection()
+  }
+  state.isCheckAll = value
+}
+
+/**
+ * 切换分页之后选中
+ */
+function changePageCheck() {
+  state.checkData.forEach((item) => {
+    state.tableData.forEach((row) => {
+      if (item.outOrderId === row.outOrderId) {
+        nextTick(() => {
+          multipleTableRef.value.toggleRowSelection(row, true)
+        })
+      }
+    })
+  })
 }
 
 onMounted(() => {
@@ -248,7 +313,8 @@ onMounted(() => {
       :data="state.tableData"
       class="mt-4"
       ref="multipleTableRef"
-      @selection-change="handleSelectionChange"
+      @select="select"
+      @select-all="selectAll"
     >
       <el-table-column type="selection" width="55" />
       <el-table-column label="订单编号" prop="no" align="center">
@@ -288,7 +354,7 @@ onMounted(() => {
     </div>
     <div class="border mt-6 text-right p-3 flex justify-end">
       <div class="flex items-center">
-        <sapn>已选订单数：{{ state.selected.length }}个</sapn>
+        <sapn>已选订单数：{{ state.checkData.length }}个</sapn>
         <span class="ml-6">开票金额：</span>
         <span class="mr-6 text-xl text-red-600 tracking-wider"
           >¥{{ state.price }}元

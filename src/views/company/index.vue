@@ -22,8 +22,9 @@ const state = reactive({
 /**
  * 更新默认抬头
  */
-function updateCompanySetDefault(companyId) {
-  updateCompanySetDefaultApi(companyId).then((res) => {
+function updateCompanySetDefault(event) {
+  if(event.ifDefault) return
+  updateCompanySetDefaultApi(event.companyId).then((res) => {
     if (res.code === 1) {
       ElMessage.success(res.message)
       getCompanyList()
@@ -101,7 +102,7 @@ onMounted(() => {
       <div
         v-for="(item, index) in state.tableData"
         :key="index"
-        @click="updateCompanySetDefault(item.companyId)"
+        @click="updateCompanySetDefault(item)"
       >
         <div
           :class="

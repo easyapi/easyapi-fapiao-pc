@@ -86,3 +86,14 @@ export async function deleteAddressApi(id): Promise<any> {
     },
   })
 }
+
+
+
+/**
+ * 获取省市区
+ *
+ * @see https://www.easyapi.com
+ */
+export async function getAreaListApi(): Promise<any> {
+  return request.get(`https://qiniu.easyapi.com/area.json`)
+}

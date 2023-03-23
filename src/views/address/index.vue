@@ -42,8 +42,9 @@ function deleteAddress(addressId) {
 /**
  * 设置默认地址
  */
-function defaultAddress(addressId) {
-  defaultAddressApi(addressId).then((res) => {
+function defaultAddress(event) {
+  if(event.ifDefault) return
+  defaultAddressApi(event.addressId).then((res) => {
     if (res.code === 1) {
       ElMessage.success(res.message)
       getAddressList()
@@ -74,7 +75,7 @@ onMounted(() => {
       <div
         v-for="(item, index) in state.tableData"
         :key="index"
-        @click="defaultAddress(item.addressId)"
+        @click="defaultAddress(item)"
       >
         <div
           :class="
