@@ -240,7 +240,7 @@ onMounted(() => {
 </template>
 
 
-<style >
+<style>
 .invoiceDeatil .el-descriptions__label.el-descriptions__cell.is-bordered-label {
   @apply w-2/12;
 }

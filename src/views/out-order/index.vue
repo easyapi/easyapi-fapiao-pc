@@ -7,7 +7,7 @@ import { ElMessage } from 'element-plus'
 import type { TabsPaneContext } from 'element-plus'
 import { ElTable } from 'element-plus'
 
-const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+const outOrderTableRef = ref<InstanceType<typeof ElTable>>()
 
 const router = useRouter()
 
@@ -15,14 +15,14 @@ const state = reactive({
   customer: {
     balance: 0,
   }, //开票用户客户信息
-  orderTypeList: [], //订单类型列表
-  orderType: '' as any, //已选择订单类型
-  minusTable: [], //欠票订单列表
-  tableData: [], //外部订单列表
-  minusAmount: 0, //欠票总金额
-  price: 0 as any, //已选开票金额
+  minusTableData: [], //欠票订单列表
+  outOrderTableData: [], //外部订单列表
   outOrderListAll: [], //全部订单数据
   checkData: [], //已选订单
+  orderTypeList: [], //订单类型列表
+  orderType: '' as any, //已选择订单类型
+  minusAmount: 0, //欠票总金额
+  price: 0 as any, //已选开票金额
   loading: false,
   isCheckAll: false,
 })
@@ -81,13 +81,13 @@ function getMinusOutOrderList() {
   }
   getOutOrderListApi(params).then((res) => {
     if (res.code === 1) {
-      state.minusTable = res.content
-      state.minusTable.forEach((item) => {
+      state.minusTableData = res.content
+      state.minusTableData.forEach((item) => {
         state.minusAmount += Number(item.price)
       })
     } else {
       state.minusAmount = 0
-      state.minusTable = []
+      state.minusTableData = []
     }
   })
 }
@@ -107,11 +107,11 @@ function getOutOrderList() {
   getOutOrderListApi(params).then((res) => {
     state.loading = false
     if (res.code === 1) {
-      state.tableData = res.content
+      state.outOrderTableData = res.content
       pagination.total = res.totalElements
       changePageCheck()
     } else {
-      state.tableData = []
+      state.outOrderTableData = []
       pagination.total = 0
     }
   })
@@ -157,6 +157,11 @@ function gotoMakeInvoice() {
     ElMessage.warning('请选择开票订单')
     return
   } else {
+    let outOrderIds = []
+    state.checkData.forEach((item) => {
+      outOrderIds.push(item.outOrderId)
+    })
+    localStorage.set('outOrderIds', outOrderIds.toString())
     router.push({
       path: '/make/merge-make',
       query: {
@@ -170,7 +175,9 @@ function gotoMakeInvoice() {
  * 手动勾选数据行的Checkbox时触发的事件
  */
 function select(selection, row) {
-  if (state.checkData.filter((x) => x.outOrderId == row.outOrderId).length == 0) {
+  if (
+    state.checkData.filter((x) => x.outOrderId == row.outOrderId).length == 0
+  ) {
     state.checkData.push(row)
     calculatePrice()
     return
@@ -190,14 +197,20 @@ function selectAll(selection) {
   if (selection.length == 0) {
     let list = []
     state.checkData.forEach((row, index) => {
-      if (state.tableData.filter((x) => x.outOrderId === row.outOrderId).length === 0) {
+      if (
+        state.outOrderTableData.filter((x) => x.outOrderId === row.outOrderId)
+          .length === 0
+      ) {
         list.push(row)
       }
     })
     state.checkData = JSON.parse(JSON.stringify(list))
   } else {
     selection.forEach((row) => {
-      if (state.checkData.filter((x) => x.outOrderId === row.outOrderId).length === 0) {
+      if (
+        state.checkData.filter((x) => x.outOrderId === row.outOrderId)
+          .length === 0
+      ) {
         state.checkData.push(row)
       }
     })
@@ -211,14 +224,14 @@ function selectAll(selection) {
 function handleSelectAllPage(value) {
   if (value) {
     state.checkData = JSON.parse(JSON.stringify(state.outOrderListAll))
-    state.tableData.forEach((row) => {
-      multipleTableRef.value.toggleRowSelection(row, true)
+    state.outOrderTableData.forEach((row) => {
+      outOrderTableRef.value.toggleRowSelection(row, true)
     })
     calculatePrice()
   } else {
     state.checkData = []
     state.price = 0
-    multipleTableRef.value.clearSelection()
+    outOrderTableRef.value.clearSelection()
   }
   state.isCheckAll = value
 }
@@ -228,10 +241,10 @@ function handleSelectAllPage(value) {
  */
 function changePageCheck() {
   state.checkData.forEach((item) => {
-    state.tableData.forEach((row) => {
+    state.outOrderTableData.forEach((row) => {
       if (item.outOrderId === row.outOrderId) {
         nextTick(() => {
-          multipleTableRef.value.toggleRowSelection(row, true)
+          outOrderTableRef.value.toggleRowSelection(row, true)
         })
       }
     })
@@ -258,9 +271,9 @@ onMounted(() => {
         :key="index"
       ></el-tab-pane>
     </el-tabs>
-    <div class="mt-2" v-if="state.minusTable.length != 0">
+    <div class="mt-2" v-if="state.minusTableData.length != 0">
       <p>
-        有{{ state.minusTable.length }}笔欠费金额，欠费金额小计：¥{{
+        有{{ state.minusTableData.length }}笔欠费金额，欠费金额小计：¥{{
           satte.minusAmount
         }}元
       </p>
@@ -269,7 +282,7 @@ onMounted(() => {
         :header-cell-style="{
           background: '#F5F7FA',
         }"
-        :data="state.minusTable"
+        :data="state.minusTableData"
         class="my-4"
       >
         <el-table-column type="selection" width="55" />
@@ -310,9 +323,9 @@ onMounted(() => {
       :header-cell-style="{
         background: '#F5F7FA',
       }"
-      :data="state.tableData"
+      :data="state.outOrderTableData"
       class="mt-4"
-      ref="multipleTableRef"
+      ref="outOrderTableRef"
       @select="select"
       @select-all="selectAll"
     >

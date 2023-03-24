@@ -1,34 +1,37 @@
 <script setup lang="ts">
 import {
   getCompanyListApi,
-  getCompanyApi,
-  updateCompanyApi,
-  createCompanyApi,
   deleteCompanyApi,
-  getCompanyCodeListApi,
+  updateCompanySetDefaultApi,
 } from '../../api/company'
 import { getShopInfoApi } from '../../api/shop'
-import { getDefaultAddressApi } from '../../api/address'
+import {
+  getAddressListApi,
+  deleteAddressApi,
+  defaultAddressApi,
+} from '../../api/address'
 import { findSettingApi } from '../../api/setting'
 import { localStorage } from '@/utils/local-storage'
+import type { FormInstance, FormRules } from 'element-plus'
+import CompanyEdit from '../company/components/edit.vue'
+import AddressEdit from '../address/components/edit.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { mergeMakeApi } from '../../api/invoice'
 
+const formRef = ref<FormInstance>()
 const route = useRoute()
 const router = useRouter()
 
 const state = reactive({
   companyList: [],
+  companyEditdDialog: false,
+  addressEditDialog: false,
+  companyDetail: null,
+  addressDetail: null,
+  addressList: [],
   showType: false,
-  showInfo: false,
-  showModal: false,
-  defaultAddress: '',
-  ifManageCompany: true, //是否可以管理公司抬头
-  showAddressInfo: false,
-  modalTitle: '添加发票抬头',
-  makeUp: '',
-  ids: '',
-  price: '',
-  scrollTop: '',
-  invoiceForm: {
+  price: 0 as any,
+  form: {
     category: '',
     property: '',
     type: '企业',
@@ -38,17 +41,21 @@ const state = reactive({
     purchaserName: '个人',
     companyId: '',
     addressId: '',
+    outOrderIds: '',
   },
-  companyForm: {
-    companyId: '',
-    name: '',
-    taxNumber: '',
-    bank: '',
-    bankAccount: '',
-    address: '',
-    phone: '',
-    ifDefault: true,
-  },
+})
+
+const formRules = reactive<FormRules>({
+  type: [{ required: true, message: '请选择抬头类型', trigger: 'change' }],
+  category: [{ required: true, message: '请选择发票类型', trigger: 'change' }],
+  purchaserName: [
+    { required: true, message: '请输入发票抬头', trigger: 'change' },
+  ],
+  mobile: [{ required: true, message: '请输入接收手机', trigger: 'blur' }],
+  email: [
+    { required: true, message: '请填写接收邮箱', trigger: 'blur' },
+    { type: 'email', message: '请填写正确的邮箱', trigger: 'blur' },
+  ],
 })
 
 /**
@@ -59,9 +66,9 @@ function getShopInfo() {
     if (res.code === 1) {
       state.showType = res.content.ifElectronic
       if (state.showType) {
-        state.invoiceForm.property = '电子'
+        state.form.property = '电子'
       } else {
-        state.invoiceForm.property = '纸质'
+        state.form.property = '纸质'
         getAddressList()
       }
     }
@@ -77,105 +84,426 @@ function findSetting() {
   }
   findSettingApi(params).then((res) => {
     if (res.code === 1) {
-      state.invoiceForm.category = res.content[0].fieldValue
+      state.form.category = res.content[0].fieldValue
     }
   })
 }
 
 /**
- * 获取默认邮寄地址
+ * 获地址列表
  */
 function getAddressList() {
-  getDefaultAddressApi().then((res) => {
+  let params = {}
+  getAddressListApi(params).then((res) => {
     if (res.code === 1) {
-      state.defaultAddress = res.content
-      state.showAddressInfo = true
-    } else if (res.code === 0) {
-      state.showAddressInfo = false
-      state.defaultAddress = null
+      state.addressList = res.content
+      for (let address of state.addressList) {
+        if (address.ifDefault == true) {
+          state.form.addressId = address.addressId
+        }
+      }
+    } else {
+      state.addressList = []
+      state.form.addressId = ''
     }
   })
 }
 
+/**
+ * 删除地址
+ */
+function deleteAddress(addressId) {
+  ElMessageBox.confirm('您确定要删除该地址吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteAddressApi(addressId).then((res) => {
+      if (res.code === 1) {
+        ElMessage.success(res.message)
+        getAddressList()
+      }
+    })
+  })
+}
+
+/**
+ * 设置默认地址
+ */
+function defaultAddress(event) {
+  if (event.ifDefault) return
+  defaultAddressApi(event.addressId).then((res) => {
+    if (res.code === 1) {
+      ElMessage.success(res.message)
+      getAddressList()
+    }
+  })
+}
+
+/**
+ * 打开地址抬头弹窗
+ */
+function openAddressEditModal(event) {
+  state.addressEditDialog = true
+  state.addressDetail = event
+}
+
+/**
+ * 获地公司抬头列表
+ */
 function getCompanyList() {
   let params = {
-    accessToken: localStorage.get('accessToken'),
+    page: 0,
+    size: 6,
   }
   getCompanyListApi(params).then((res) => {
     if (res.code == 1) {
       state.companyList = res.content
-      state.showInfo = true
       for (let company of state.companyList) {
         if (company.ifDefault == true) {
-          state.companyForm.companyId = company.companyId
+          state.form.companyId = company.companyId
         }
       }
     } else {
-      state.showInfo = false
       state.companyList = []
+      state.form.companyId = ''
     }
   })
 }
 
-function getCompany(id) {
-  getCompanyApi(id).then((res) => {
+/**
+ * 删除抬头
+ */
+function deleteCompany(companyId) {
+  ElMessageBox.confirm('您确定要删除该抬头吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteCompanyApi(companyId).then((res) => {
+      if (res.code === 1) {
+        ElMessage.success(res.message)
+        getCompanyList()
+      }
+    })
+  })
+}
+
+/**
+ * 更新默认抬头
+ */
+function updateCompanySetDefault(event) {
+  if (event.ifDefault) return
+  updateCompanySetDefaultApi(event.companyId).then((res) => {
     if (res.code === 1) {
-      state.companyForm.name = res.content.name
-      state.companyForm.taxNumber = res.content.taxNumber
-      state.companyForm.bank = res.content.bank
-      state.companyForm.bankAccount = res.content.bankAccount
-      state.companyForm.address = res.content.address
-      state.companyForm.phone = res.content.phone
-      state.companyForm.ifDefault = res.content.ifDefault
+      ElMessage.success(res.message)
+      getCompanyList()
+    }
+  })
+}
+
+/**
+ * 打开编辑抬头弹窗
+ */
+function openCompanyEditModal(event) {
+  state.companyEditdDialog = true
+  state.companyDetail = event
+}
+
+/**
+ * 选择发票类型
+ */
+function selectProperty(type) {
+  state.form.property = type
+}
+
+/**
+ * 提交
+ */
+const onSubmit = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  if (state.form.property === '纸质' && !state.form.addressId) {
+    return ElMessage.error('请选择邮寄地址')
+  }
+  if (state.form.type === '企业' && !state.form.companyId) {
+    return ElMessage.error('请选择开票抬头')
+  }
+  await formEl.validate((valid) => {
+    if (valid) {
+      ElMessageBox.confirm('您确定要开具发票吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).then(() => {
+        if (state.form.property === '电子') {
+          state.form.addressId = ''
+          state.form.category = '增值税电子普通发票'
+        }
+        if (state.form.type === '个人') {
+          if (state.form.property === '纸质') {
+            state.form.category = '增值税普通发票'
+          }
+          state.form.companyId = ''
+        }
+        if (state.form.type === '企业') state.form.purchaserName = ''
+        let data = state.form
+        data.outOrderIds = localStorage.get('outOrderIds')
+        mergeMakeApi(data).then((res) => {
+          if (res.code === 1) {
+            ElMessage.success('提交成功')
+            router.push('/')
+          }
+        })
+      })
     }
   })
 }
 
 onMounted(() => {
-  // getIfManageCompany();
-  // getCompanyList()
-  // getShopInfo()
-  // findSetting()
+  state.price = route.query.price
+  getCompanyList()
+  getShopInfo()
+  findSetting()
 })
 </script>
 
 <template>
-  <div>
-    <!-- <div class="invoice-nature">
-      <h3 class="h3-title">发票形式</h3>
-      <div style="display: flex; height: 120px">
+  <div class="merge-make">
+    <el-form
+      ref="formRef"
+      :model="state.form"
+      :rules="formRules"
+      label-width="auto"
+    >
+      <h3 class="text-base font-semibold my-4">发票形式</h3>
+      <div class="flex">
         <div
-          v-show="showType"
-          class="electronic-invoice"
-          :class="{ SelectedStyle: invoiceForm.property === '电子' }"
-          @click="selectedProperty('电子')"
+          v-if="state.showType"
+          :class="{ selectStyle: state.form.property === '电子' }"
+          class="flex items-center justify-center w-48 h-24 mr-4 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
+          @click="selectProperty('电子')"
         >
-          <span style="color: #333333; font-size: 14px">电子发票</span>
-          <span style="font-size: 12px; color: #999999">最快5分钟开具</span>
+          <div class="text-center">
+            <p>电子发票</p>
+            <p class="text-xs">最快5分钟开具</p>
+          </div>
           <img
-            v-if="invoiceForm.property === '电子'"
+            v-if="state.form.property === '电子'"
             src="../../assets/images/default.png"
-            alt
-            style="position: absolute; bottom: 0px; right: 0px"
+            class="absolute bottom-0 right-0"
           />
         </div>
         <div
-          v-show="!showType"
-          class="electronic-invoice"
-          style="margin-left: 20px"
-          :class="{ SelectedStyle: invoiceForm.property === '纸质' }"
-          @click="selectedProperty('纸质')"
+          v-else
+          class="flex items-center justify-center w-48 h-24 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
+          :class="{ selectStyle: state.form.property === '纸质' }"
+          @click="selectProperty('纸质')"
         >
-          <span style="color: #333333; font-size: 14px">纸质发票</span>
-          <span style="font-size: 12px; color: #999999">预计2天送达</span>
+          <div class="text-center">
+            <p>纸质发票</p>
+            <p class="text-xs">预计2天送达</p>
+          </div>
           <img
-            v-if="invoiceForm.property === '纸质'"
+            v-if="state.form.property === '纸质'"
             src="../../assets/images/default.png"
-            alt
-            style="position: absolute; bottom: 0px; right: 0px"
+            class="absolute bottom-0 right-0"
           />
         </div>
       </div>
-    </div> -->
+      <h3 class="text-base font-semibold my-4">发票抬头</h3>
+      <el-form-item label="抬头类型" prop="type">
+        <el-radio-group v-model="state.form.type">
+          <el-radio label="企业">企业</el-radio>
+          <el-radio label="个人">个人</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item
+        v-if="state.form.type === '企业' && state.form.property === '纸质'"
+        label="发票类型"
+        prop="category"
+      >
+        <el-radio-group v-model="state.form.category">
+          <el-radio label="增值税普通发票">增值税普通发票</el-radio>
+          <el-radio label="增值税专用发票">增值税专用发票</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item
+        v-if="state.form.type === '个人'"
+        label="发票抬头"
+        prop="purchaserName"
+      >
+        <el-input
+          v-model="state.form.purchaserName"
+          placeholder="可输入个人姓名或事业单位名称"
+          class="w-80"
+        />
+      </el-form-item>
+      <div v-if="state.form.type === '企业'" class="flex flex-wrap">
+        <div
+          :class="item.ifDefault ? 'border-blue-600 relative' : ''"
+          class="commpany-item rounded border px-4 pb-4 mr-4 mt-4 cursor-pointer hover:border-blue-600"
+          v-for="(item, index) in state.companyList"
+          :key="index"
+          @click="updateCompanySetDefault(item)"
+        >
+          <div class="flex justify-between items-center border-b h-10 mb-2">
+            <span class="text-base font-semibold">{{ item.name }}</span>
+            <el-tag type="primary" effect="dark" v-if="item.ifDefault">
+              默认
+            </el-tag>
+            <span v-else class="text-blue-400">设为默认</span>
+          </div>
+          <p class="text-base font-semibold">{{ item.taxNumber }}</p>
+          <div class="mt-4">
+            <el-button type="primary" @click.stop="openCompanyEditModal(item)">
+              修改
+            </el-button>
+            <el-button
+              type="danger"
+              plain
+              @click.stop="deleteCompany(item.companyId)"
+            >
+              删除
+            </el-button>
+          </div>
+          <img
+            v-if="item.ifDefault"
+            src="../../assets/images/default.png"
+            class="absolute bottom-0 right-0"
+          />
+        </div>
+        <div
+          class="add-company flex border mt-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
+          @click="openCompanyEditModal(null)"
+          v-if="state.companyList.length < 6"
+        >
+          <img src="../../assets/images/plus.png" alt="" />
+        </div>
+      </div>
+      <h3 class="text-base font-semibold my-4">发票信息</h3>
+      <el-form-item label="发票金额">
+        <span>{{ state.price }} 元</span>
+      </el-form-item>
+      <el-form-item label="发票备注">
+        <el-input
+          v-model="state.form.remark"
+          placeholder="可输入开票备注"
+          class="w-80"
+        />
+      </el-form-item>
+      <el-form-item
+        v-if="state.form.property === '电子'"
+        label="接收手机"
+        prop="mobile"
+      >
+        <el-input
+          v-model="state.form.mobile"
+          placeholder="请输入手机号码"
+          class="w-80"
+        />
+      </el-form-item>
+      <el-form-item
+        v-if="state.form.property === '电子'"
+        label="接收邮箱"
+        prop="email"
+      >
+        <el-input
+          v-model="state.form.email"
+          placeholder="接收邮箱"
+          class="w-80"
+        />
+      </el-form-item>
+      <div v-if="state.form.property !== '电子'">
+        <h3 class="text-base font-semibold mt-4">邮寄地址</h3>
+        <div class="flex flex-wrap">
+          <div
+            :class="item.ifDefault ? 'border-blue-600 relative' : ''"
+            class="address-item rounded border px-4 pb-4 mr-4 mt-4 cursor-pointer hover:border-blue-600"
+            v-for="(item, index) in state.addressList"
+            :key="index"
+            @click="defaultAddress(item)"
+          >
+            <div class="flex justify-between items-center border-b h-10 mb-2">
+              <span class="text-base font-semibold">{{ item.name }}</span>
+              <el-tag type="primary" effect="dark" v-if="item.ifDefault">
+                默认
+              </el-tag>
+              <span v-else class="text-blue-400">设为默认</span>
+            </div>
+            <div class="leading-7">
+              <p class="overflow">{{ item.mobile }}</p>
+              <p class="overflow">
+                {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{
+                  item.district
+                }}
+              </p>
+              <p class="overflow">{{ item.addr }}</p>
+            </div>
+            <div class="mt-4">
+              <el-button
+                type="primary"
+                @click.stop="openAddressEditModal(item)"
+              >
+                修改
+              </el-button>
+              <el-button
+                type="danger"
+                plain
+                @click.stop="deleteAddress(item.addressId)"
+              >
+                删除
+              </el-button>
+            </div>
+            <img
+              v-if="item.ifDefault"
+              src="../../assets/images/default.png"
+              class="absolute bottom-0 right-0"
+            />
+          </div>
+          <div
+            class="add-address flex border mt-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
+            @click="openAddressEditModal(null)"
+            v-if="state.companyList.length < 6"
+          >
+            <img src="../../assets/images/plus.png" alt="" />
+          </div>
+        </div>
+      </div>
+      <el-form-item class="mt-4">
+        <el-button type="primary" @click="onSubmit(formRef)">提交</el-button>
+      </el-form-item>
+    </el-form>
   </div>
+  <CompanyEdit
+    v-model="state.companyEditdDialog"
+    :company-detail="state.companyDetail"
+    @getCompanyList="getCompanyList"
+  />
+  <AddressEdit
+    v-model="state.addressEditDialog"
+    :address-detail="state.addressDetail"
+    @getAddressList="getAddressList"
+  />
 </template>
+
+<style lang="less" scoped>
+.selectStyle {
+  @apply border border-blue-600 text-blue-600;
+}
+
+.commpany-item,
+.add-company {
+  width: 345px;
+  height: 140px;
+}
+
+.address-item,
+.add-address {
+  width: 345px;
+  height: 200px;
+}
+
+.overflow {
+  @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
+}
+</style>

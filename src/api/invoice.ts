@@ -39,4 +39,14 @@ export async function getInvoiceStatementsListApi(): Promise<any> {
   })
 }
 
+/**
+ * 发票开具
+ *
+ * @see https://www.easyapi.com
+ */
+export async function mergeMakeApi(data): Promise<any> {
+  data.accessToken = localStorage.get('accessToken')
+  return request.post(`/merge-make`, data)
+}
+
 

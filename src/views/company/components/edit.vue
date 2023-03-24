@@ -4,7 +4,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 const emit = defineEmits(['update:modelValue', 'getCompanyList'])
 
-const ruleFormRef = ref<FormInstance>()
+const formRef = ref<FormInstance>()
 const show = ref(false)
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const props = defineProps({
 
 const state = reactive({
   title: '',
-  formData: {
+  form: {
     name: '',
     taxNumber: '',
     bank: '',
@@ -59,9 +59,9 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        let data = state.formData
-        if (state.formData.companyId) {
-          updateCompanyApi(state.formData.companyId, data).then((res) => {
+        let data = state.form
+        if (state.form.companyId) {
+          updateCompanyApi(state.form.companyId, data).then((res) => {
             if (res.code === 1) {
               ElMessage.success('编辑成功')
               handleClose()
@@ -89,10 +89,10 @@ watch(
     if (value) {
       if (props.companyDetail) {
         state.title = '编辑抬头'
-        Object.assign(state.formData, props.companyDetail)
+        Object.assign(state.form, props.companyDetail)
       } else {
         state.title = '添加抬头'
-        state.formData = {
+        state.form = {
           name: '',
           taxNumber: '',
           bank: '',
@@ -118,37 +118,43 @@ watch(
       :before-close="handleClose"
     >
       <el-form
-        ref="ruleFormRef"
-        :model="state.formData"
+        ref="formRef"
+        :model="state.form"
         :rules="formRules"
         label-width="auto"
       >
         <el-form-item label="公司名称" prop="name">
-          <el-input v-model="state.formData.name" placeholder="请输入发票抬头"/>
+          <el-input v-model="state.form.name" placeholder="请输入发票抬头" />
         </el-form-item>
         <el-form-item label="纳税人识别号" prop="taxNumber">
-          <el-input v-model="state.formData.taxNumber" placeholder="请输入纳税人识别号"/>
+          <el-input
+            v-model="state.form.taxNumber"
+            placeholder="请输入纳税人识别号"
+          />
         </el-form-item>
         <el-form-item label="开户行">
-          <el-input v-model="state.formData.bank" placeholder="请输入开户行" />
+          <el-input v-model="state.form.bank" placeholder="请输入开户行" />
         </el-form-item>
         <el-form-item label="开户行账号">
-          <el-input v-model="state.formData.bankAccount" placeholder="请输入开户行账号"/>
+          <el-input
+            v-model="state.form.bankAccount"
+            placeholder="请输入开户行账号"
+          />
         </el-form-item>
         <el-form-item label="地址">
-          <el-input v-model="state.formData.address" placeholder="请输入地址" />
+          <el-input v-model="state.form.address" placeholder="请输入地址" />
         </el-form-item>
         <el-form-item label="电话">
-          <el-input v-model="state.formData.phone" placeholder="请输入电话" />
+          <el-input v-model="state.form.phone" placeholder="请输入电话" />
         </el-form-item>
         <el-form-item label="设为默认">
-          <el-checkbox v-model="state.formData.ifDefault" />
+          <el-checkbox v-model="state.form.ifDefault" />
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取消</el-button>
-          <el-button type="primary" @click="onSubmit(ruleFormRef)">
+          <el-button type="primary" @click="onSubmit(formRef)">
             确定
           </el-button>
         </span>

@@ -9,7 +9,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { validMobile } from '@/utils/validate'
 const emit = defineEmits(['update:modelValue', 'getAddressList'])
 
-const ruleFormRef = ref<FormInstance>()
+const formRef = ref<FormInstance>()
 const show = ref(false)
 
 const props = defineProps({
@@ -33,7 +33,7 @@ const mobileCodeVerify = (rule, value, callback) => {
 const state = reactive({
   title: '',
   areaList: [],
-  formData: {
+  form: {
     name: '',
     mobile: '',
     province: '',
@@ -112,14 +112,14 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        let data = state.formData
-        data.province = state.formData.selectAddressList[0]
-        data.city = state.formData.selectAddressList[1]
-        data.district = state.formData.selectAddressList[2]
-          ? state.formData.selectAddressList[2]
+        let data = state.form
+        data.province = state.form.selectAddressList[0]
+        data.city = state.form.selectAddressList[1]
+        data.district = state.form.selectAddressList[2]
+          ? state.form.selectAddressList[2]
           : ''
-        if (state.formData.addressId) {
-          updateAddressApi(state.formData.addressId, data).then((res) => {
+        if (state.form.addressId) {
+          updateAddressApi(state.form.addressId, data).then((res) => {
             if (res.code === 1) {
               ElMessage.success('编辑成功')
               handleClose()
@@ -148,15 +148,15 @@ watch(
       getAreaList()
       if (props.addressDetail) {
         state.title = '编辑地址'
-        Object.assign(state.formData, props.addressDetail)
-        state.formData.selectAddressList = [
+        Object.assign(state.form, props.addressDetail)
+        state.form.selectAddressList = [
           props.addressDetail.province,
           props.addressDetail.city,
           props.addressDetail.district,
         ]
       } else {
         state.title = '添加地址'
-        state.formData = {
+        state.form = {
           name: '',
           mobile: '',
           province: '',
@@ -183,20 +183,17 @@ watch(
       :before-close="handleClose"
     >
       <el-form
-        ref="ruleFormRef"
-        :model="state.formData"
+        ref="formRef"
+        :model="state.form"
         :rules="formRules"
         label-width="auto"
       >
         <el-form-item label="收件人姓名" prop="name">
-          <el-input
-            v-model="state.formData.name"
-            placeholder="请输入收件人姓名"
-          />
+          <el-input v-model="state.form.name" placeholder="请输入收件人姓名" />
         </el-form-item>
         <el-form-item label="手机号码" prop="mobile">
           <el-input
-            v-model="state.formData.mobile"
+            v-model="state.form.mobile"
             placeholder="请输入正确的手机号码"
           />
         </el-form-item>
@@ -204,26 +201,23 @@ watch(
           <el-cascader
             class="w-full"
             placeholder="请选择所在省市区"
-            v-model="state.formData.selectAddressList"
+            v-model="state.form.selectAddressList"
             :options="state.areaList"
             :props="{ expandTrigger: 'hover' }"
             filterable
           />
         </el-form-item>
         <el-form-item label="详细地址" prop="addr">
-          <el-input
-            v-model="state.formData.addr"
-            placeholder="请输入详细地址"
-          />
+          <el-input v-model="state.form.addr" placeholder="请输入详细地址" />
         </el-form-item>
         <el-form-item label="设为默认">
-          <el-checkbox v-model="state.formData.ifDefault" />
+          <el-checkbox v-model="state.form.ifDefault" />
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取消</el-button>
-          <el-button type="primary" @click="onSubmit(ruleFormRef)">
+          <el-button type="primary" @click="onSubmit(formRef)">
             确定
           </el-button>
         </span>

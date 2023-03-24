@@ -10,7 +10,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { title } from 'process'
 import Edit from './components/edit.vue'
 
-const editRefs = ref()
+const editRef = ref()
 
 const state = reactive({
   ifManageCompany: true, //是否可以管理公司抬头
@@ -23,7 +23,7 @@ const state = reactive({
  * 更新默认抬头
  */
 function updateCompanySetDefault(event) {
-  if(event.ifDefault) return
+  if (event.ifDefault) return
   updateCompanySetDefaultApi(event.companyId).then((res) => {
     if (res.code === 1) {
       ElMessage.success(res.message)
@@ -105,29 +105,32 @@ onMounted(() => {
         @click="updateCompanySetDefault(item)"
       >
         <div
-          :class="
-            item.ifDefault ? 'companyList-item select' : 'companyList-item'
-          "
+          :class="item.ifDefault ? ' border-blue-600 relative ' : ''"
+          class="commpany-item rounded border px-4 pb-4 mr-4 mb-4 cursor-pointer hover:border-blue-600"
         >
-          <div
-            class="flex justify-between items-center companyList-item_name mb-2"
-          >
+          <div class="flex justify-between items-center border-b h-10 mb-2">
             <span class="text-base font-semibold">{{ item.name }}</span>
-            <el-tag type="primary" effect="dark" v-if="item.ifDefault"
-              >默认</el-tag
-            >
+            <el-tag type="primary" effect="dark" v-if="item.ifDefault">
+              默认
+            </el-tag>
             <span v-else class="text-blue-400">设为默认</span>
           </div>
-          <p>{{ item.taxNumber || '-' }}</p>
-          <p>{{ item.bank || '-' }}</p>
-          <p>{{ item.bankAccount || '-' }}</p>
-          <p>{{ item.address || '-' }}</p>
-          <p>{{ item.phone || '-' }}</p>
-          <div class="mt-4">
+          <div class="leading-7">
+            <p class="overflow">{{ item.taxNumber || '-' }}</p>
+            <p class="overflow">{{ item.bank || '-' }}</p>
+            <p class="overflow">{{ item.bankAccount || '-' }}</p>
+            <p class="overflow">{{ item.address || '-' }}</p>
+            <p class="overflow">{{ item.phone || '-' }}</p>
+          </div>
+          <div class="mt-2">
             <el-button type="primary" @click.stop="openEditModal(item)">
               修改
             </el-button>
-            <el-button type="danger" plain @click.stop="deleteCompany(item.companyId)">
+            <el-button
+              type="danger"
+              plain
+              @click.stop="deleteCompany(item.companyId)"
+            >
               删除
             </el-button>
           </div>
@@ -139,7 +142,7 @@ onMounted(() => {
         </div>
       </div>
       <div
-        class="add-company flex items-center justify-center cursor-pointer hover:shadow-md"
+        class="add-company flex border mb-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
         @click="openEditModal(null)"
         v-if="state.tableData.length < 6"
       >
@@ -149,7 +152,7 @@ onMounted(() => {
     <p class="text-gray-400 text-sm">注意：发票抬头最多可以添加6个</p>
   </div>
   <Edit
-    refs="editRefs"
+    refs="editRef"
     v-model="state.dialogVisible"
     :company-detail="state.companyDetail"
     @getCompanyList="getCompanyList"
@@ -158,47 +161,13 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .company {
-  .companyList-item {
-    width: 340px;
-    height: 250px;
-    border-radius: 4px;
-    border: solid 1px #dddddd;
-    padding: 0px 15px 15px;
-    cursor: pointer;
-    margin-right: 20px;
-    margin-bottom: 20px;
-
-    .companyList-item_name {
-      border-bottom: 1px solid #dddddd;
-      height: 40px;
-    }
-
-    p {
-      font-size: 14px;
-      line-height: 26px;
-      width: 280px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      color: #515a6e;
-    }
-
-    &:hover {
-      border-color: #2d8cf0;
-    }
-  }
-
-  .select {
-    border: solid 1px #2d8cf0;
-    position: relative;
-  }
-
+  .commpany-item,
   .add-company {
-    width: 340px;
+    width: 345px;
     height: 250px;
-    border-radius: 4px;
-    border: solid 1px #dddddd;
-    margin-bottom: 20px;
+  }
+  .overflow {
+    @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
   }
 }
 </style>
