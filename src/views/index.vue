@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import {getDefaultCompanyApi} from '../api/company'
-import {getDefaultAddressApi} from '../api/address'
-import {getCustomerApi} from '../api/customer'
-import {findSettingApi} from '../api/setting'
-import {localStorage} from '@/utils/local-storage'
-import {getInvoiceListApi, getInvoiceStatementsListApi} from '@/api/invoice'
-import {Edit} from '@element-plus/icons-vue'
+import { Edit } from '@element-plus/icons-vue'
+import { getDefaultCompanyApi } from '../api/company'
+import { getDefaultAddressApi } from '../api/address'
+import { getCustomerApi } from '../api/customer'
+import { findSettingApi } from '../api/setting'
+import { localStorage } from '@/utils/local-storage'
+import { getInvoiceListApi, getInvoiceStatementsListApi } from '@/api/invoice'
 
 const route = useRoute()
 const router = useRouter()
 
 const state = reactive({
-  customer: {balance: 0}, //开票用户客户信息
+  customer: { balance: 0 }, // 开票用户客户信息
   showInfo: true,
   defaultCompany: {},
   showAddressInfo: true,
   defaultAddress: {},
   statementsList: [],
   tableData: [],
-  content: '', //底部备注
+  content: '', // 底部备注
   loading: false,
   time: '',
 })
@@ -26,7 +26,7 @@ const state = reactive({
 const query = reactive({
   startAddTime: '',
   endAddTime: '',
-  purchaserName: '', //发票抬头
+  purchaserName: '', // 发票抬头
   statements: '',
 })
 
@@ -41,9 +41,8 @@ const pagination = reactive({
  */
 function getCustomer() {
   getCustomerApi().then((res) => {
-    if (res.code === 1) {
+    if (res.code === 1)
       state.customer = res.content
-    }
   })
 }
 
@@ -79,10 +78,9 @@ function getDefaultAddress() {
  * 获取首页底部备注
  */
 function findSetting() {
-  findSettingApi({fieldKeys: 'pc_index_remark'}).then((res) => {
-    if (res.code === 1) {
+  findSettingApi({ fieldKeys: 'pc_index_remark' }).then((res) => {
+    if (res.code === 1)
       state.content = res.content[0].fieldValue
-    }
   })
 }
 
@@ -106,9 +104,8 @@ function search() {
  */
 function getInvoiceStatementsList() {
   getInvoiceStatementsListApi().then((res) => {
-    if (res.code === 1) {
+    if (res.code === 1)
       state.statementsList = res.content
-    }
   })
 }
 
@@ -117,7 +114,7 @@ function getInvoiceStatementsList() {
  */
 function getInvoiceList() {
   state.loading = true
-  let params = {
+  const params = {
     ...query,
     page: pagination.page - 1,
     size: pagination.size,
@@ -152,12 +149,12 @@ function gotoPage(path) {
 }
 
 onMounted(() => {
-  if (route.query.accessToken) {
+  if (route.query.accessToken)
     localStorage.set('accessToken', route.query.accessToken)
-  }
-  if (route.query.taxNumber) {
+
+  if (route.query.taxNumber)
     localStorage.set('taxNumber', route.query.taxNumber)
-  }
+
   getCustomer()
   getDefaultCompany()
   getDefaultAddress()
@@ -171,7 +168,9 @@ onMounted(() => {
   <div class="invoice">
     <div class="invoice-base-info flex mt-6 p-4">
       <div class="w-1/3">
-        <div class="text-base mb-4 font-semibold">可开票金额</div>
+        <div class="text-base mb-4 font-semibold">
+          可开票金额
+        </div>
         <div class="text-2xl mb-4 tracking-tight">
           ¥{{ state.customer.balance }}元
         </div>
@@ -180,7 +179,9 @@ onMounted(() => {
         </el-button>
       </div>
       <div class="w-1/3">
-        <div class="text-base mb-4 font-semibold">开票信息</div>
+        <div class="text-base mb-4 font-semibold">
+          开票信息
+        </div>
         <div v-if="state.showInfo">
           <div class="mb-4">
             <span class="text-gray-400">抬头：</span>
@@ -193,7 +194,7 @@ onMounted(() => {
           <span class="text-blue-500 cursor-pointer" @click="gotoPage('/company')">
             更改开票信息
             <el-icon class="align-middle" :size="16">
-              <Edit/>
+              <Edit />
             </el-icon>
           </span>
         </div>
@@ -202,13 +203,15 @@ onMounted(() => {
           <span class="ml-1 text-blue-500 cursor-pointer" @click="gotoPage('/company')">
             现在填写
             <el-icon class="align-middle" :size="16">
-              <Edit/>
+              <Edit />
             </el-icon>
           </span>
         </div>
       </div>
       <div class="w-1/3">
-        <p class="text-base mb-4 font-semibold">邮寄信息</p>
+        <p class="text-base mb-4 font-semibold">
+          邮寄信息
+        </p>
         <div v-if="state.showAddressInfo">
           <div class="mb-4">
             <span class="text-gray-400">收件人：</span>
@@ -225,7 +228,7 @@ onMounted(() => {
           <span class="text-blue-500 cursor-pointer" @click="gotoPage('/address')">
             更改邮寄地址
             <el-icon class="align-middle" :size="16">
-              <Edit/>
+              <Edit />
             </el-icon>
           </span>
         </div>
@@ -234,7 +237,7 @@ onMounted(() => {
           <span class="ml-1 text-blue-500 cursor-pointer" @click="gotoPage('/address')">
             现在填写
             <el-icon class="align-middle" :size="16">
-              <Edit/>
+              <Edit />
             </el-icon>
           </span>
         </div>
@@ -253,23 +256,23 @@ onMounted(() => {
         />
 
         <div class="mx-4">
-          <el-select clearable v-model="query.statements" placeholder="发票状态">
-            <el-option v-for="item in state.statementsList" :value="item" :key="item">
+          <el-select v-model="query.statements" clearable placeholder="发票状态">
+            <el-option v-for="item in state.statementsList" :key="item" :value="item">
               {{ item }}
             </el-option>
           </el-select>
         </div>
         <div class="w-52">
-          <el-input
-            clearable
-            v-model="query.purchaserName"
-            placeholder="发票抬头"
-          />
+          <el-input v-model="query.purchaserName" clearable placeholder="发票抬头"/>
         </div>
       </div>
       <div>
-        <el-button @click="search" type="primary">查询</el-button>
-        <el-button type="primary">导出</el-button>
+        <el-button type="primary" @click="search">
+          查询
+        </el-button>
+        <el-button type="primary">
+          导出
+        </el-button>
       </div>
     </div>
     <el-table
@@ -282,23 +285,24 @@ onMounted(() => {
       :data="state.tableData"
       class="mt-6"
     >
-      <el-table-column label="申请日期" prop="addTime" align="center">
-      </el-table-column>
+      <el-table-column label="申请日期" prop="addTime" align="center" />
       <el-table-column
         label="发票抬头"
         prop="purchaserName"
         align="center"
         width="250"
-      >
-      </el-table-column>
+      />
       <el-table-column label="金额" align="center">
-        <template #default="scope"> {{ scope.row.price }}元</template>
+        <template #default="scope">
+          {{ scope.row.price }}元
+        </template>
       </el-table-column>
       <el-table-column label="发票状态" align="center">
-        <template #default="scope"> {{ scope.row.statements }}</template>
+        <template #default="scope">
+          {{ scope.row.statements }}
+        </template>
       </el-table-column>
-      <el-table-column label="发票性质" prop="type" align="center">
-      </el-table-column>
+      <el-table-column label="发票性质" prop="type" align="center" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button type="primary" @click="gotoPage(`/invoice/detail?id=${scope.row.invoiceId}`)">
@@ -319,7 +323,7 @@ onMounted(() => {
         @size-change="handleSizeChange"
       />
     </div>
-    <div v-if="state.content" class="mt-6" v-html="state.content"></div>
+    <div v-if="state.content" class="mt-6" v-html="state.content" />
   </div>
 </template>
 

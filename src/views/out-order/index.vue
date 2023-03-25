@@ -1,28 +1,27 @@
 <script setup lang="ts">
-import { getOutOrderListApi } from '../../api/out-order'
-import { getOrderTypeListApi } from '../../api/order-type'
-import { getCustomerApi } from '../../api/customer'
+import { ElMessage, ElTable } from 'element-plus'
+import { getOutOrderListApi } from '@/api/out-order'
+import { getOrderTypeListApi } from '@/api/order-type'
+import { getCustomerApi } from '@/api/customer'
 import { localStorage } from '@/utils/local-storage'
-import { ElMessage } from 'element-plus'
-import type { TabsPaneContext } from 'element-plus'
-import { ElTable } from 'element-plus'
 
 const outOrderTableRef = ref<InstanceType<typeof ElTable>>()
 
 const router = useRouter()
 
 const state = reactive({
+  // 开票用户客户信息
   customer: {
     balance: 0,
-  }, //开票用户客户信息
-  minusTableData: [], //欠票订单列表
-  outOrderTableData: [], //外部订单列表
-  outOrderListAll: [], //全部订单数据
-  checkData: [], //已选订单
-  orderTypeList: [], //订单类型列表
-  orderType: '' as any, //已选择订单类型
-  minusAmount: 0, //欠票总金额
-  price: 0 as any, //已选开票金额
+  },
+  minusTableData: [], // 欠票订单列表
+  outOrderTableData: [], // 外部订单列表
+  outOrderListAll: [], // 全部订单数据
+  checkData: [], // 已选订单
+  orderTypeList: [], // 订单类型列表
+  orderType: '' as any, // 已选择订单类型
+  minusAmount: 0, // 欠票总金额
+  price: 0 as any, // 已选开票金额
   loading: false,
   isCheckAll: false,
 })
@@ -52,7 +51,7 @@ function getOrderTypeList() {
  * 获取所有的外部订单数据
  */
 function getOutOrderListAll() {
-  let params = {
+  const params = {
     state: 0,
     sort: 'orderTime,desc',
     type: state.orderType,
@@ -60,11 +59,10 @@ function getOutOrderListAll() {
     size: 10000,
   }
   getOutOrderListApi(params).then((res) => {
-    if (res.code == 1) {
+    if (res.code === 1)
       state.outOrderListAll = res.content
-    } else {
+    else
       state.outOrderListAll = []
-    }
   })
 }
 
@@ -72,7 +70,7 @@ function getOutOrderListAll() {
  * 获取全部负数（欠费）外部订单列表
  */
 function getMinusOutOrderList() {
-  let params = {
+  const params = {
     state: 0,
     maxPrice: -0.01,
     type: state.orderType,
@@ -97,7 +95,7 @@ function getMinusOutOrderList() {
  */
 function getOutOrderList() {
   state.loading = true
-  let params = {
+  const params = {
     state: 0,
     sort: 'orderTime,desc',
     type: state.orderType,
@@ -132,9 +130,8 @@ function handleSizeChange(size) {
  */
 function getCustomer() {
   getCustomerApi().then((res) => {
-    if (res.code === 1) {
+    if (res.code === 1)
       state.customer = res.content
-    }
   })
 }
 
@@ -155,9 +152,8 @@ function calculatePrice() {
 function gotoMakeInvoice() {
   if (state.checkData.length === 0) {
     ElMessage.warning('请选择开票订单')
-    return
   } else {
-    let outOrderIds = []
+    const outOrderIds = []
     state.checkData.forEach((item) => {
       outOrderIds.push(item.outOrderId)
     })
@@ -176,16 +172,15 @@ function gotoMakeInvoice() {
  */
 function select(selection, row) {
   if (
-    state.checkData.filter((x) => x.outOrderId == row.outOrderId).length == 0
+    state.checkData.filter(x => x.outOrderId === row.outOrderId).length === 0
   ) {
     state.checkData.push(row)
     calculatePrice()
     return
   }
   state.checkData.forEach((item, index) => {
-    if (item.outOrderId === row.outOrderId) {
+    if (item.outOrderId === row.outOrderId)
       state.checkData.splice(index, 1)
-    }
   })
   calculatePrice()
 }
@@ -194,25 +189,17 @@ function select(selection, row) {
  * 手动勾选全选Checkbox时触发的事件
  */
 function selectAll(selection) {
-  if (selection.length == 0) {
-    let list = []
-    state.checkData.forEach((row, index) => {
-      if (
-        state.outOrderTableData.filter((x) => x.outOrderId === row.outOrderId)
-          .length === 0
-      ) {
+  if (selection.length === 0) {
+    const list = []
+    state.checkData.forEach((row) => {
+      if (state.outOrderTableData.filter(x => x.outOrderId === row.outOrderId).length === 0)
         list.push(row)
-      }
     })
     state.checkData = JSON.parse(JSON.stringify(list))
   } else {
     selection.forEach((row) => {
-      if (
-        state.checkData.filter((x) => x.outOrderId === row.outOrderId)
-          .length === 0
-      ) {
+      if (state.checkData.filter(x => x.outOrderId === row.outOrderId).length === 0)
         state.checkData.push(row)
-      }
     })
   }
   calculatePrice()
@@ -265,19 +252,17 @@ onMounted(() => {
       @tab-change="getOutOrderList"
     >
       <el-tab-pane
-        :label="item.name"
-        :name="item.name"
         v-for="(item, index) in state.orderTypeList"
         :key="index"
-      ></el-tab-pane>
+        :label="item.name"
+        :name="item.name"
+      />
     </el-tabs>
-    <div class="mt-2" v-if="state.minusTableData.length != 0">
+    <div v-if="state.minusTableData.length !== 0" class="mt-2">
       <p>
-        有{{ state.minusTableData.length }}笔欠费金额，欠费金额小计：¥{{
-          satte.minusAmount
-        }}元
+        有{{ state.minusTableData.length }}笔欠费金额，欠费金额小计：¥{{ state.minusAmount }}元
       </p>
-      <el-table
+      <ElTable
         border
         :header-cell-style="{
           background: '#F5F7FA',
@@ -286,37 +271,38 @@ onMounted(() => {
         class="my-4"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column label="订单编号" prop="no" align="center">
-        </el-table-column>
+        <el-table-column label="订单编号" prop="no" align="center" />
         <el-table-column label="订单内容" align="center">
           <template #default="scope">
             {{ Object.values(JSON.parse(scope.row.fields))[0] }}
           </template>
         </el-table-column>
-        <el-table-column label="类型" prop="type" align="center">
-        </el-table-column>
+        <el-table-column label="类型" prop="type" align="center" />
         <el-table-column
           label="下单时间"
           prop="orderTime"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column label="可开票金额" align="center">
-          <template #default="scope"> {{ scope.row.price }}元 </template>
+          <template #default="scope">
+            {{ scope.row.price }}元
+          </template>
         </el-table-column>
-      </el-table>
+      </ElTable>
     </div>
     <p>
-      有{{ pagination.total }}个订单可申请发票，总金额：¥{{
-        state.customer.balance
-      }}元
+      有{{ pagination.total }}个订单可申请发票，总金额：¥{{ state.customer.balance }}元
     </p>
     <div class="mt-4">
-      <el-button @click="handleSelectAllPage(true)" type="primary"
-        >跨页全选</el-button
-      >
-      <el-button @click="handleSelectAllPage(false)">取消全选</el-button>
+      <el-button type="primary" @click="handleSelectAllPage(true)">
+        跨页全选
+      </el-button>
+      <el-button @click="handleSelectAllPage(false)">
+        取消全选
+      </el-button>
     </div>
-    <el-table
+    <ElTable
+      ref="outOrderTableRef"
       v-loading="state.loading"
       border
       element-loading-text="老铁别急，这就给你整上..."
@@ -325,34 +311,29 @@ onMounted(() => {
       }"
       :data="state.outOrderTableData"
       class="mt-4"
-      ref="outOrderTableRef"
       @select="select"
       @select-all="selectAll"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="订单编号" prop="no" align="center">
-      </el-table-column>
+      <el-table-column label="订单编号" prop="no" align="center" />
       <el-table-column label="订单内容" align="center">
         <template #default="scope">
           {{ Object.values(JSON.parse(scope.row.fields))[0] }}
         </template>
       </el-table-column>
-      <el-table-column label="类型" prop="type" align="center">
-      </el-table-column>
-      <el-table-column
-        label="下单时间"
-        prop="orderTime"
-        align="center"
-      ></el-table-column>
+      <el-table-column label="类型" prop="type" align="center" />
+      <el-table-column label="下单时间" prop="orderTime" align="center" />
       <el-table-column label="实付金额" align="center">
         <template #default="scope">
           {{ scope.row.price.toFixed(2) }}元
         </template>
       </el-table-column>
       <el-table-column label="可开票金额" align="center">
-        <template #default="scope"> {{ scope.row.price }}元 </template>
+        <template #default="scope">
+          {{ scope.row.price }}元
+        </template>
       </el-table-column>
-    </el-table>
+    </ElTable>
     <div class="mt-6 flex justify-end">
       <el-pagination
         :current-page="pagination.page"
@@ -369,10 +350,11 @@ onMounted(() => {
       <div class="flex items-center">
         <sapn>已选订单数：{{ state.checkData.length }}个</sapn>
         <span class="ml-6">开票金额：</span>
-        <span class="mr-6 text-xl text-red-600 tracking-wider"
-          >¥{{ state.price }}元
+        <span class="mr-6 text-xl text-red-600 tracking-wider">¥{{ state.price }}元
         </span>
-        <el-button type="primary" @click="gotoMakeInvoice">去开票</el-button>
+        <el-button type="primary" @click="gotoMakeInvoice">
+          去开票
+        </el-button>
       </div>
     </div>
   </div>

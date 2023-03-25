@@ -33,7 +33,7 @@ export async function getAddressApi(id): Promise<any> {
  * 获取我的默认地址信息
  */
 export async function getDefaultAddressApi(): Promise<any> {
-  return request.get(`/address/default`, {
+  return request.get('/address/default', {
     params: {
       accessToken: localStorage.get('accessToken'),
     },
@@ -87,13 +87,11 @@ export async function deleteAddressApi(id): Promise<any> {
   })
 }
 
-
-
 /**
  * 获取省市区
  *
  * @see https://www.easyapi.com
  */
 export async function getAreaListApi(): Promise<any> {
-  return request.get(`https://qiniu.easyapi.com/area.json`)
+  return request.get('https://qiniu.easyapi.com/area.json')
 }

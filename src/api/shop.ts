@@ -7,7 +7,7 @@ import { localStorage } from '@/utils/local-storage'
  * @see https://www.easyapi.com
  */
 export async function getShopInfoApi(): Promise<any> {
-  return request.get(`/api/shop`, {
+  return request.get('/api/shop', {
     params: {
       accessToken: localStorage.get('accessToken'),
     },

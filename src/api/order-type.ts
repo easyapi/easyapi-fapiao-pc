@@ -7,9 +7,9 @@ import { localStorage } from '@/utils/local-storage'
  * @see https://www.easyapi.com
  */
 export async function getOrderTypeListApi(): Promise<any> {
-    return request.get('/order-types', {
-        params: {
-            accessToken: localStorage.get('accessToken'),
-        },
-    })
+  return request.get('/order-types', {
+    params: {
+      accessToken: localStorage.get('accessToken'),
+    },
+  })
 }

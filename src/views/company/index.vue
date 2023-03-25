@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import {
-  getCompanyListApi,
-  updateCompanySetDefaultApi,
-  deleteCompanyApi,
-  getIfManageCompanyApi,
-} from '@/api/company'
-import { localStorage } from '@/utils/local-storage'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { title } from 'process'
 import Edit from './components/edit.vue'
+import {
+  deleteCompanyApi,
+  getCompanyListApi,
+  getIfManageCompanyApi,
+  updateCompanySetDefaultApi,
+} from '@/api/company'
 
 const editRef = ref()
 
 const state = reactive({
-  ifManageCompany: true, //是否可以管理公司抬头
+  ifManageCompany: true, // 是否可以管理公司抬头
   tableData: [],
   dialogVisible: false,
   companyDetail: null,
@@ -23,7 +21,8 @@ const state = reactive({
  * 更新默认抬头
  */
 function updateCompanySetDefault(event) {
-  if (event.ifDefault) return
+  if (event.ifDefault)
+    return
   updateCompanySetDefaultApi(event.companyId).then((res) => {
     if (res.code === 1) {
       ElMessage.success(res.message)
@@ -56,10 +55,9 @@ function deleteCompany(companyId) {
 function getIfManageCompany() {
   getIfManageCompanyApi().then((res) => {
     if (res.code === 1) {
-      for (let setting of res.content) {
-        if (setting.field === 'ifManageCompany') {
+      for (const setting of res.content) {
+        if (setting.field === 'ifManageCompany')
           state.ifManageCompany = setting.value
-        }
       }
     }
   })
@@ -69,16 +67,15 @@ function getIfManageCompany() {
  * 获取抬头列表
  */
 function getCompanyList() {
-  let params = {
+  const params = {
     page: 0,
     size: 6,
   }
   getCompanyListApi(params).then((res) => {
-    if (res.code === 1) {
+    if (res.code === 1)
       state.tableData = res.content
-    } else {
+    else
       state.tableData = []
-    }
   })
 }
 
@@ -106,31 +103,37 @@ onMounted(() => {
       >
         <div
           :class="item.ifDefault ? ' border-blue-600 relative ' : ''"
-          class="commpany-item rounded border px-4 pb-4 mr-4 mb-4 cursor-pointer hover:border-blue-600"
+          class="company-item rounded border px-4 pb-4 mr-4 mb-4 cursor-pointer hover:border-blue-600"
         >
           <div class="flex justify-between items-center border-b h-10 mb-2">
             <span class="text-base font-semibold">{{ item.name }}</span>
-            <el-tag type="primary" effect="dark" v-if="item.ifDefault">
+            <el-tag v-if="item.ifDefault" type="primary" effect="dark">
               默认
             </el-tag>
             <span v-else class="text-blue-400">设为默认</span>
           </div>
           <div class="leading-7">
-            <p class="overflow">{{ item.taxNumber || '-' }}</p>
-            <p class="overflow">{{ item.bank || '-' }}</p>
-            <p class="overflow">{{ item.bankAccount || '-' }}</p>
-            <p class="overflow">{{ item.address || '-' }}</p>
-            <p class="overflow">{{ item.phone || '-' }}</p>
+            <p class="overflow">
+              {{ item.taxNumber || '-' }}
+            </p>
+            <p class="overflow">
+              {{ item.bank || '-' }}
+            </p>
+            <p class="overflow">
+              {{ item.bankAccount || '-' }}
+            </p>
+            <p class="overflow">
+              {{ item.address || '-' }}
+            </p>
+            <p class="overflow">
+              {{ item.phone || '-' }}
+            </p>
           </div>
           <div class="mt-2">
             <el-button type="primary" @click.stop="openEditModal(item)">
               修改
             </el-button>
-            <el-button
-              type="danger"
-              plain
-              @click.stop="deleteCompany(item.companyId)"
-            >
+            <el-button type="danger" plain @click.stop="deleteCompany(item.companyId)">
               删除
             </el-button>
           </div>
@@ -138,22 +141,24 @@ onMounted(() => {
             v-if="item.ifDefault === true"
             src="../../assets/images/default.png"
             class="absolute bottom-0 right-0"
-          />
+          >
         </div>
       </div>
       <div
+        v-if="state.tableData.length < 6"
         class="add-company flex border mb-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
         @click="openEditModal(null)"
-        v-if="state.tableData.length < 6"
       >
-        <img src="../../assets/images/plus.png" alt="" />
+        <img src="../../assets/images/plus.png" alt="">
       </div>
     </div>
-    <p class="text-gray-400 text-sm">注意：发票抬头最多可以添加6个</p>
+    <p class="text-gray-400 text-sm">
+      注意：发票抬头最多可以添加6个
+    </p>
   </div>
   <Edit
-    refs="editRef"
     v-model="state.dialogVisible"
+    refs="editRef"
     :company-detail="state.companyDetail"
     @getCompanyList="getCompanyList"
   />
@@ -161,7 +166,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .company {
-  .commpany-item,
+  .company-item,
   .add-company {
     width: 345px;
     height: 250px;

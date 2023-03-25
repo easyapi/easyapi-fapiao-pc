@@ -109,6 +109,6 @@ export async function getIfManageCompanyApi(): Promise<any> {
   return request.get('/shop/0/setting?field=ifManageCompany', {
     params: {
       accessToken: localStorage.get('accessToken'),
-    }
+    },
   })
 }

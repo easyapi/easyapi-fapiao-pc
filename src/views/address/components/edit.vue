@@ -1,17 +1,12 @@
 <script setup lang="ts">
-import {
-  createAddressApi,
-  updateAddressApi,
-  getAreaListApi,
-} from '@/api/address'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+  createAddressApi,
+  getAreaListApi,
+  updateAddressApi,
+} from '@/api/address'
 import { validMobile } from '@/utils/validate'
-const emit = defineEmits(['update:modelValue', 'getAddressList'])
-
-const formRef = ref<FormInstance>()
-const show = ref(false)
-
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -23,10 +18,15 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['update:modelValue', 'getAddressList'])
+
+const formRef = ref<FormInstance>()
+const show = ref(false)
+
 const mobileCodeVerify = (rule, value, callback) => {
-  if (validMobile(value) === false) {
+  if (validMobile(value) === false)
     return callback(new Error('请输入正确格式的11位手机号码'))
-  }
+
   callback()
 }
 
@@ -71,7 +71,7 @@ function handleClose() {
  */
 const getAreaList = () => {
   getAreaListApi().then((res) => {
-    let arr = []
+    const arr = []
     res.provinces.forEach((item, index) => {
       arr.push({
         value: item.name,
@@ -104,7 +104,8 @@ const getAreaList = () => {
  * 提交
  */
 const onSubmit = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
+  if (!formEl)
+    return
   await formEl.validate((valid) => {
     if (valid) {
       ElMessageBox.confirm('您确定要提交吗？', '提示', {
@@ -112,7 +113,7 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        let data = state.form
+        const data = state.form
         data.province = state.form.selectAddressList[0]
         data.city = state.form.selectAddressList[1]
         data.district = state.form.selectAddressList[2]
@@ -170,7 +171,7 @@ watch(
       }
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 
@@ -199,9 +200,9 @@ watch(
         </el-form-item>
         <el-form-item label="所在省市区" prop="selectAddressList">
           <el-cascader
+            v-model="state.form.selectAddressList"
             class="w-full"
             placeholder="请选择所在省市区"
-            v-model="state.form.selectAddressList"
             :options="state.areaList"
             :props="{ expandTrigger: 'hover' }"
             filterable

@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { createCompanyApi, updateCompanyApi } from '@/api/company'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
-const emit = defineEmits(['update:modelValue', 'getCompanyList'])
-
-const formRef = ref<FormInstance>()
-const show = ref(false)
-
+import { createCompanyApi, updateCompanyApi } from '@/api/company'
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -17,6 +12,11 @@ const props = defineProps({
     default: null,
   },
 })
+
+const emit = defineEmits(['update:modelValue', 'getCompanyList'])
+
+const formRef = ref<FormInstance>()
+const show = ref(false)
 
 const state = reactive({
   title: '',
@@ -51,7 +51,8 @@ function handleClose() {
  * 提交
  */
 const onSubmit = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
+  if (!formEl)
+    return
   await formEl.validate((valid) => {
     if (valid) {
       ElMessageBox.confirm('您确定要提交吗？', '提示', {
@@ -59,7 +60,7 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        let data = state.form
+        const data = state.form
         if (state.form.companyId) {
           updateCompanyApi(state.form.companyId, data).then((res) => {
             if (res.code === 1) {
@@ -105,7 +106,7 @@ watch(
       }
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 
@@ -127,19 +128,13 @@ watch(
           <el-input v-model="state.form.name" placeholder="请输入发票抬头" />
         </el-form-item>
         <el-form-item label="纳税人识别号" prop="taxNumber">
-          <el-input
-            v-model="state.form.taxNumber"
-            placeholder="请输入纳税人识别号"
-          />
+          <el-input v-model="state.form.taxNumber" placeholder="请输入纳税人识别号" />
         </el-form-item>
         <el-form-item label="开户行">
           <el-input v-model="state.form.bank" placeholder="请输入开户行" />
         </el-form-item>
         <el-form-item label="开户行账号">
-          <el-input
-            v-model="state.form.bankAccount"
-            placeholder="请输入开户行账号"
-          />
+          <el-input v-model="state.form.bankAccount" placeholder="请输入开户行账号"/>
         </el-form-item>
         <el-form-item label="地址">
           <el-input v-model="state.form.address" placeholder="请输入地址" />

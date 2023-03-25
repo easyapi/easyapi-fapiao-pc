@@ -7,10 +7,10 @@ import { localStorage } from '@/utils/local-storage'
  * @see https://www.easyapi.com
  */
 export async function findSettingApi(params): Promise<any> {
-  return request.get(`/setting/find`, {
+  return request.get('/setting/find', {
     params: {
       accessToken: localStorage.get('accessToken'),
-        ...params,
+      ...params,
     },
   })
 }

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import {
-  getAddressListApi,
-  defaultAddressApi,
-  deleteAddressApi,
-} from '@/api/address'
-import { localStorage } from '@/utils/local-storage'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Edit from './components/edit.vue'
+import {
+  defaultAddressApi,
+  deleteAddressApi,
+  getAddressListApi,
+} from '@/api/address'
 
 const editRef = ref()
 
@@ -43,7 +42,8 @@ function deleteAddress(addressId) {
  * 设置默认地址
  */
 function defaultAddress(event) {
-  if (event.ifDefault) return
+  if (event.ifDefault)
+    return
   defaultAddressApi(event.addressId).then((res) => {
     if (res.code === 1) {
       ElMessage.success(res.message)
@@ -56,11 +56,10 @@ function defaultAddress(event) {
  * 获取地址列表
  */
 function getAddressList() {
-  let params = {}
+  const params = {}
   getAddressListApi(params).then((res) => {
-    if (res.code === 1) {
+    if (res.code === 1)
       state.tableData = res.content
-    }
   })
 }
 
@@ -83,19 +82,23 @@ onMounted(() => {
         >
           <div class="flex justify-between items-center border-b h-10 mb-2">
             <span class="text-base font-semibold">{{ item.name }}</span>
-            <el-tag type="primary" effect="dark" v-if="item.ifDefault">
+            <el-tag v-if="item.ifDefault" type="primary" effect="dark">
               默认
             </el-tag>
             <span v-else class="text-blue-400">设为默认</span>
           </div>
           <div class="leading-7">
-            <p class="overflow">{{ item.mobile }}</p>
+            <p class="overflow">
+              {{ item.mobile }}
+            </p>
             <p class="overflow">
               {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{
                 item.district
               }}
             </p>
-            <p class="overflow">{{ item.addr }}</p>
+            <p class="overflow">
+              {{ item.addr }}
+            </p>
           </div>
           <div class="mt-4">
             <el-button type="primary" @click.stop="openEditModal(item)">
@@ -113,22 +116,24 @@ onMounted(() => {
             v-if="item.ifDefault === true"
             src="../../assets/images/default.png"
             class="absolute bottom-0 right-0"
-          />
+          >
         </div>
       </div>
       <div
+        v-if="state.tableData.length < 6"
         class="add-address flex border mb-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
         @click="openEditModal(null)"
-        v-if="state.tableData.length < 6"
       >
-        <img src="../../assets/images/plus.png" alt="" />
+        <img src="../../assets/images/plus.png" alt="">
       </div>
     </div>
-    <p class="text-gray-400 text-sm">注意：邮寄地址最多可以添加6个</p>
+    <p class="text-gray-400 text-sm">
+      注意：邮寄地址最多可以添加6个
+    </p>
   </div>
   <Edit
-    refs="editRef"
     v-model="state.dialogVisible"
+    refs="editRef"
     :address-detail="state.addressDetail"
     @getAddressList="getAddressList"
   />

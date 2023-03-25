@@ -10,7 +10,7 @@ export async function getOutOrderListApi(params): Promise<any> {
   return request.get('/out-orders', {
     params: {
       accessToken: localStorage.get('accessToken'),
-      ...params
+      ...params,
     },
   })
 }
@@ -34,13 +34,10 @@ export async function getOutOrderApi(no): Promise<any> {
  * @see https://www.easyapi.com
  */
 export async function getOutOrderIdsApi(params): Promise<any> {
-  return request.get(`/out-order/ids`, {
+  return request.get('/out-order/ids', {
     params: {
       ...params,
       accessToken: localStorage.get('accessToken'),
     },
   })
 }
-
-
-
