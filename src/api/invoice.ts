@@ -48,3 +48,17 @@ export async function mergeMakeApi(data): Promise<any> {
   data.accessToken = localStorage.get('accessToken')
   return request.post('/merge-make', data)
 }
+
+/**
+ * 导出发票列表
+ *
+ * @see https://www.easyapi.com
+ */
+export async function invoiceExportApi(params): Promise<any> {
+  return request.get('/invoice-export', {
+    params: {
+      accessToken: localStorage.get('accessToken'),
+      ...params,
+    },
+  })
+}
