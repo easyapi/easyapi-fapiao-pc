@@ -5,7 +5,12 @@ import { getDefaultAddressApi } from '../api/address'
 import { getCustomerApi } from '../api/customer'
 import { findSettingApi } from '../api/setting'
 import { localStorage } from '@/utils/local-storage'
-import { getInvoiceListApi, getInvoiceStatementsListApi } from '@/api/invoice'
+import {
+  getInvoiceListApi,
+  getInvoiceStatementsListApi,
+  invoiceExportApi,
+} from '@/api/invoice'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,11 +26,14 @@ const state = reactive({
   content: '', // 底部备注
   loading: false,
   time: '',
+  makeInvoiceTime: '',
 })
 
 const query = reactive({
   startAddTime: '',
   endAddTime: '',
+  startPrintTime: '',
+  endPrintTime: '',
   purchaserName: '', // 发票抬头
   statements: '',
 })
@@ -41,8 +49,7 @@ const pagination = reactive({
  */
 function getCustomer() {
   getCustomerApi().then((res) => {
-    if (res.code === 1)
-      state.customer = res.content
+    if (res.code === 1) state.customer = res.content
   })
 }
 
@@ -75,12 +82,41 @@ function getDefaultAddress() {
 }
 
 /**
+ * 导出
+ */
+function invoiceExport() {
+  ElMessageBox.confirm('您确定要导出吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    let params = {
+      ...query,
+    }
+    invoiceExportApi(params).then((res) => {
+      ElMessage.success('导出成功，请查看文件')
+      let blob = new Blob([res], {
+        type: 'application/vnd.ms-excel;charset=utf-8',
+      })
+      const fileName = '发票记录.xlsx' //下载文件名称
+      const elink = document.createElement('a')
+      elink.download = fileName
+      elink.style.display = 'none'
+      elink.href = URL.createObjectURL(blob)
+      document.body.appendChild(elink)
+      elink.click()
+      URL.revokeObjectURL(elink.href) // 释放URL 对象
+      document.body.removeChild(elink)
+    })
+  })
+}
+
+/**
  * 获取首页底部备注
  */
 function findSetting() {
   findSettingApi({ fieldKeys: 'pc_index_remark' }).then((res) => {
-    if (res.code === 1)
-      state.content = res.content[0].fieldValue
+    if (res.code === 1) state.content = res.content[0].fieldValue
   })
 }
 
@@ -94,6 +130,16 @@ function timeRangeChange(time) {
   }
 }
 
+function makeInvoiceTimeRangeChange(time) {
+  if (time) {
+    query.startPrintTime = time[0] ? `${time[0]} 00:00:00` : time[0]
+    query.endPrintTime = time[1] ? `${time[1]} 23:59:59` : time[1]
+  } else {
+    query.startPrintTime = ''
+    query.endPrintTime = ''
+  }
+}
+
 function search() {
   pagination.page = 1
   getInvoiceList()
@@ -104,8 +150,7 @@ function search() {
  */
 function getInvoiceStatementsList() {
   getInvoiceStatementsListApi().then((res) => {
-    if (res.code === 1)
-      state.statementsList = res.content
+    if (res.code === 1) state.statementsList = res.content
   })
 }
 
@@ -168,9 +213,7 @@ onMounted(() => {
   <div class="invoice">
     <div class="invoice-base-info flex mt-6 p-4">
       <div class="w-1/3">
-        <div class="text-base mb-4 font-semibold">
-          可开票金额
-        </div>
+        <div class="text-base mb-4 font-semibold">可开票金额</div>
         <div class="text-2xl mb-4 tracking-tight">
           ¥{{ state.customer.balance }}元
         </div>
@@ -179,9 +222,7 @@ onMounted(() => {
         </el-button>
       </div>
       <div class="w-1/3">
-        <div class="text-base mb-4 font-semibold">
-          开票信息
-        </div>
+        <div class="text-base mb-4 font-semibold">开票信息</div>
         <div v-if="state.showInfo">
           <div class="mb-4">
             <span class="text-gray-400">抬头：</span>
@@ -191,7 +232,10 @@ onMounted(() => {
             <span class="text-gray-400">税号：</span>
             <span>{{ state.defaultCompany.taxNumber }}</span>
           </div>
-          <span class="text-blue-500 cursor-pointer" @click="gotoPage('/company')">
+          <span
+            class="text-blue-500 cursor-pointer"
+            @click="gotoPage('/company')"
+          >
             更改开票信息
             <el-icon class="align-middle" :size="16">
               <Edit />
@@ -200,7 +244,10 @@ onMounted(() => {
         </div>
         <div v-else>
           <span>您还没有填写开票信息</span>
-          <span class="ml-1 text-blue-500 cursor-pointer" @click="gotoPage('/company')">
+          <span
+            class="ml-1 text-blue-500 cursor-pointer"
+            @click="gotoPage('/company')"
+          >
             现在填写
             <el-icon class="align-middle" :size="16">
               <Edit />
@@ -209,9 +256,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="w-1/3">
-        <p class="text-base mb-4 font-semibold">
-          邮寄信息
-        </p>
+        <p class="text-base mb-4 font-semibold">邮寄信息</p>
         <div v-if="state.showAddressInfo">
           <div class="mb-4">
             <span class="text-gray-400">收件人：</span>
@@ -225,7 +270,10 @@ onMounted(() => {
             <span class="mr-2">{{ state.defaultAddress.district }}</span>
             <span>{{ state.defaultAddress.addr }}</span>
           </div>
-          <span class="text-blue-500 cursor-pointer" @click="gotoPage('/address')">
+          <span
+            class="text-blue-500 cursor-pointer"
+            @click="gotoPage('/address')"
+          >
             更改邮寄地址
             <el-icon class="align-middle" :size="16">
               <Edit />
@@ -234,7 +282,10 @@ onMounted(() => {
         </div>
         <div v-else>
           <span>您还没有填写邮寄信息</span>
-          <span class="ml-1 text-blue-500 cursor-pointer" @click="gotoPage('/address')">
+          <span
+            class="ml-1 text-blue-500 cursor-pointer"
+            @click="gotoPage('/address')"
+          >
             现在填写
             <el-icon class="align-middle" :size="16">
               <Edit />
@@ -243,8 +294,8 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="flex items-center justify-between mt-6">
-      <div class="flex items-center">
+    <el-form class="mt-6" :inline="true" :model="query" label-width="80px">
+      <el-form-item label="申请时间">
         <el-date-picker
           v-model="state.time"
           type="daterange"
@@ -254,27 +305,41 @@ onMounted(() => {
           value-format="YYYY-MM-DD"
           @change="timeRangeChange"
         />
-
-        <div class="mx-4">
-          <el-select v-model="query.statements" clearable placeholder="发票状态">
-            <el-option v-for="item in state.statementsList" :key="item" :value="item">
-              {{ item }}
-            </el-option>
-          </el-select>
-        </div>
-        <div class="w-52">
-          <el-input v-model="query.purchaserName" clearable placeholder="发票抬头"/>
-        </div>
-      </div>
-      <div>
-        <el-button type="primary" @click="search">
-          查询
-        </el-button>
-        <el-button type="primary">
-          导出
-        </el-button>
-      </div>
-    </div>
+      </el-form-item>
+      <el-form-item label="发票状态">
+        <el-select v-model="query.statements" clearable placeholder="发票状态">
+          <el-option
+            v-for="item in state.statementsList"
+            :key="item"
+            :value="item"
+          >
+            {{ item }}
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="发票抬头">
+        <el-input
+          v-model="query.purchaserName"
+          clearable
+          placeholder="发票抬头"
+        />
+      </el-form-item>
+      <el-form-item label="开票时间">
+        <el-date-picker
+          v-model="state.makeInvoiceTime"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          value-format="YYYY-MM-DD"
+          @change="makeInvoiceTimeRangeChange"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="search"> 查询 </el-button>
+        <el-button type="primary" @click="invoiceExport"> 导出 </el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       v-loading="state.loading"
       border
@@ -283,7 +348,7 @@ onMounted(() => {
         background: '#F5F7FA',
       }"
       :data="state.tableData"
-      class="mt-6"
+      class="mt-2"
     >
       <el-table-column label="申请日期" prop="addTime" align="center" />
       <el-table-column
@@ -293,9 +358,7 @@ onMounted(() => {
         width="250"
       />
       <el-table-column label="金额" align="center">
-        <template #default="scope">
-          {{ scope.row.price }}元
-        </template>
+        <template #default="scope"> {{ scope.row.price }}元 </template>
       </el-table-column>
       <el-table-column label="发票状态" align="center">
         <template #default="scope">
@@ -305,7 +368,10 @@ onMounted(() => {
       <el-table-column label="发票性质" prop="type" align="center" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button type="primary" @click="gotoPage(`/invoice/detail?id=${scope.row.invoiceId}`)">
+          <el-button
+            type="primary"
+            @click="gotoPage(`/invoice/detail?id=${scope.row.invoiceId}`)"
+          >
             详情
           </el-button>
         </template>
@@ -330,13 +396,5 @@ onMounted(() => {
 <style lang="less" scoped>
 .invoice-base-info {
   background-color: #f5f7fa;
-}
-</style>
-
-<style lang="less">
-.invoice {
-  .el-range-editor.el-input__wrapper {
-    width: 250px !important;
-  }
 }
 </style>

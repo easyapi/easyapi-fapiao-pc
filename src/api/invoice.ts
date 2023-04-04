@@ -56,9 +56,10 @@ export async function mergeMakeApi(data): Promise<any> {
  */
 export async function invoiceExportApi(params): Promise<any> {
   return request.get('/invoice-export', {
+    responseType: "blob",
     params: {
       accessToken: localStorage.get('accessToken'),
       ...params,
-    },
+    }
   })
 }
