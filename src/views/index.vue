@@ -364,12 +364,8 @@ onMounted(() => {
       class="mt-2"
     >
       <el-table-column label="申请日期" prop="addTime" align="center" />
-      <el-table-column
-        label="发票抬头"
-        prop="purchaserName"
-        align="center"
-        width="250"
-      />
+      <el-table-column label="发票类型" prop="category" align="center" />
+      <el-table-column label="发票抬头" prop="purchaserName" align="center" width="250" />
       <el-table-column label="金额" align="center">
         <template #default="scope">
           {{ scope.row.price }}元
@@ -380,7 +376,6 @@ onMounted(() => {
           {{ scope.row.statements }}
         </template>
       </el-table-column>
-      <el-table-column label="发票性质" prop="type" align="center" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button

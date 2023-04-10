@@ -10,9 +10,8 @@ const request = axios.create({
 })
 
 export type RequestError = AxiosError<{
+  code?: number
   message?: string
-  result?: any
-  errorMessage?: string
 }>
 
 // 异常拦截处理器
