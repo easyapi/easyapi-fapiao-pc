@@ -3,6 +3,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import CompanyEdit from '../company/components/edit.vue'
 import AddressEdit from '../address/components/edit.vue'
+import { invoiceTag } from '@/utils/invoice-category'
 import {
   deleteCompanyApi,
   getCompanyListApi,
@@ -33,7 +34,6 @@ const state = reactive({
   price: 0 as any,
   form: {
     category: '',
-    property: '',
     type: '企业',
     email: '',
     mobile: '',
@@ -43,6 +43,7 @@ const state = reactive({
     addressId: '',
     outOrderIds: '',
   },
+  invoiceCategories: [],
 })
 
 const formRules = reactive<FormRules>({
@@ -89,6 +90,7 @@ function getShopInfo() {
   getShopInfoApi().then((res) => {
     if (res.code === 1) {
       state.showType = res.content.ifElectronic
+      state.invoiceCategories = res.content.invoiceCategories
       if (state.showType) {
         state.form.property = '电子'
       } else {
@@ -238,8 +240,8 @@ function openCompanyEditModal(event) {
 /**
  * 选择发票类型
  */
-function selectProperty(type) {
-  state.form.property = type
+function selectCategory(type) {
+  state.form.category = type
 }
 
 /**
@@ -307,43 +309,29 @@ onMounted(() => {
       <h3 class="text-base font-semibold my-4">
         发票形式
       </h3>
-      <div class="flex">
-        <div
-          v-if="state.showType"
-          :class="{ selectStyle: state.form.property === '电子' }"
-          class="flex items-center justify-center w-48 h-24 mr-4 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
-          @click="selectProperty('电子')"
-        >
-          <div class="text-center">
-            <p>电子发票</p>
-            <p class="text-xs">
-              最快5分钟开具
-            </p>
-          </div>
-          <img
-            v-if="state.form.property === '电子'"
-            src="../../assets/images/default.png"
-            class="absolute bottom-0 right-0"
-          >
-        </div>
-        <div
-          v-else
-          class="flex items-center justify-center w-48 h-24 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
-          :class="{ selectStyle: state.form.property === '纸质' }"
-          @click="selectProperty('纸质')"
-        >
-          <div class="text-center">
-            <p>纸质发票</p>
-            <p class="text-xs">
-              预计2天送达
-            </p>
-          </div>
-          <img
-            v-if="state.form.property === '纸质'"
-            src="../../assets/images/default.png"
-            class="absolute bottom-0 right-0"
-          >
-        </div>
+      <div class="w-full">
+        <el-row :gutter="20" class="w-11/12" >
+          <el-col :span="8" v-for="(item,index) in state.invoiceCategories" :key="index" >
+            <div
+              class="flex items-center justify-center w-full h-32 mr-4 mb-4 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
+              :class="{ selectStyle: state.form.category === item.category }"
+              @click="selectCategory(item.category)"
+            >
+              <div class="text-center text-xl">
+                <el-tag :style="`background-color:${invoiceTag({category:item.category}).bgColor};color:${invoiceTag({category:item.category}).color};border-color:${invoiceTag({category:item.category}).color}`">
+                  {{ invoiceTag({ category: item.category }).name }}
+                </el-tag>
+                <p class="mt-2">{{item.category}}</p>
+              </div>
+              <img
+                v-if="state.form.category === item.category"
+                src="../../assets/images/default.png"
+                class="absolute bottom-0 right-0"
+              >
+            </div>
+          </el-col>
+        </el-row>
+
       </div>
       <h3 class="text-base font-semibold my-4">
         发票抬头
@@ -358,27 +346,12 @@ onMounted(() => {
           </el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item
-        v-if="state.form.type === '企业' && state.form.property === '纸质'"
-        label="发票类型"
-        prop="category"
-      >
-        <el-radio-group v-model="state.form.category">
-          <el-radio label="增值税普通发票">
-            增值税普通发票
-          </el-radio>
-          <el-radio label="增值税专用发票">
-            增值税专用发票
-          </el-radio>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item v-if="state.form.type === '个人'" label="发票抬头" prop="purchaserName">
         <el-input v-model="state.form.purchaserName" placeholder="可输入个人姓名或事业单位名称" class="w-80" />
       </el-form-item>
       <div v-if="state.form.type === '企业'" class="flex flex-wrap">
         <div
-          v-for="(item, index) in state.companyList"
-          :key="index"
+          v-for="(item, index) in state.companyList" :key="index"
           :class="item.ifDefault ? 'border-blue-600 relative' : ''"
           class="company-item rounded border px-4 pb-4 mr-4 mt-4 cursor-pointer hover:border-blue-600"
           @click="updateCompanySetDefault(item)"
