@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Edit } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { getDefaultCompanyApi } from '../api/company'
 import { getDefaultAddressApi } from '../api/address'
 import { getCustomerApi } from '../api/customer'
@@ -10,7 +11,6 @@ import {
   getInvoiceStatementsListApi,
   invoiceExportApi,
 } from '@/api/invoice'
-import { ElMessage, ElMessageBox } from 'element-plus'
 
 const route = useRoute()
 const router = useRouter()
@@ -49,7 +49,8 @@ const pagination = reactive({
  */
 function getCustomer() {
   getCustomerApi().then((res) => {
-    if (res.code === 1) state.customer = res.content
+    if (res.code === 1)
+      state.customer = res.content
   })
 }
 
@@ -90,15 +91,15 @@ function invoiceExport() {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    let params = {
+    const params = {
       ...query,
     }
     invoiceExportApi(params).then((res) => {
       ElMessage.success('导出成功，请查看文件')
-      let blob = new Blob([res], {
+      const blob = new Blob([res], {
         type: 'application/vnd.ms-excel;charset=utf-8',
       })
-      const fileName = '发票记录.xlsx' //下载文件名称
+      const fileName = '发票记录.xlsx' // 下载文件名称
       const elink = document.createElement('a')
       elink.download = fileName
       elink.style.display = 'none'
@@ -116,7 +117,8 @@ function invoiceExport() {
  */
 function findSetting() {
   findSettingApi({ fieldKeys: 'pc_index_remark' }).then((res) => {
-    if (res.code === 1) state.content = res.content[0].fieldValue
+    if (res.code === 1)
+      state.content = res.content[0].fieldValue
   })
 }
 
@@ -150,7 +152,8 @@ function search() {
  */
 function getInvoiceStatementsList() {
   getInvoiceStatementsListApi().then((res) => {
-    if (res.code === 1) state.statementsList = res.content
+    if (res.code === 1)
+      state.statementsList = res.content
   })
 }
 
@@ -213,7 +216,9 @@ onMounted(() => {
   <div class="invoice">
     <div class="invoice-base-info flex mt-6 p-4">
       <div class="w-1/3">
-        <div class="text-base mb-4 font-semibold">可开票金额</div>
+        <div class="text-base mb-4 font-semibold">
+          可开票金额
+        </div>
         <div class="text-2xl mb-4 tracking-tight">
           ¥{{ state.customer.balance }}元
         </div>
@@ -222,7 +227,9 @@ onMounted(() => {
         </el-button>
       </div>
       <div class="w-1/3">
-        <div class="text-base mb-4 font-semibold">开票信息</div>
+        <div class="text-base mb-4 font-semibold">
+          开票信息
+        </div>
         <div v-if="state.showInfo">
           <div class="mb-4">
             <span class="text-gray-400">抬头：</span>
@@ -256,7 +263,9 @@ onMounted(() => {
         </div>
       </div>
       <div class="w-1/3">
-        <p class="text-base mb-4 font-semibold">邮寄信息</p>
+        <p class="text-base mb-4 font-semibold">
+          邮寄信息
+        </p>
         <div v-if="state.showAddressInfo">
           <div class="mb-4">
             <span class="text-gray-400">收件人：</span>
@@ -336,8 +345,12 @@ onMounted(() => {
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="search"> 查询 </el-button>
-        <el-button type="primary" @click="invoiceExport"> 导出 </el-button>
+        <el-button type="primary" @click="search">
+          查询
+        </el-button>
+        <el-button type="primary" @click="invoiceExport">
+          导出
+        </el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -358,7 +371,9 @@ onMounted(() => {
         width="250"
       />
       <el-table-column label="金额" align="center">
-        <template #default="scope"> {{ scope.row.price }}元 </template>
+        <template #default="scope">
+          {{ scope.row.price }}元
+        </template>
       </el-table-column>
       <el-table-column label="发票状态" align="center">
         <template #default="scope">

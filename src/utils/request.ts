@@ -16,7 +16,7 @@ export type RequestError = AxiosError<{
 }>
 
 // 异常拦截处理器
-const errorHandler = (error: RequestError): Promise<any> => {
+function errorHandler(error: RequestError): Promise<any> {
   if (error.response) {
     const { data = {}, statusText } = error.response
     ElMessage({
@@ -28,7 +28,7 @@ const errorHandler = (error: RequestError): Promise<any> => {
 }
 
 // 请求拦截器
-const requestHandler = (config: AxiosRequestConfig): AxiosRequestConfig | Promise<AxiosRequestConfig> => {
+function requestHandler(config: AxiosRequestConfig): AxiosRequestConfig | Promise<AxiosRequestConfig> {
   return config
 }
 
@@ -36,7 +36,7 @@ const requestHandler = (config: AxiosRequestConfig): AxiosRequestConfig | Promis
 request.interceptors.request.use(requestHandler, errorHandler)
 
 // 响应拦截器
-const responseHandler = (response: { data: any }) => {
+function responseHandler(response: { data: any }) {
   return response.data
 }
 

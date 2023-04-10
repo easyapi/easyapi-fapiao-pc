@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { localStorage } from '@/utils/local-storage'
 import routes from '../../router/route'
 
 const router = useRouter()
@@ -13,15 +12,15 @@ onMounted(() => {})
 watch(
   () => router.currentRoute.value.path,
   (toPath) => {
-    state.pages = routes.filter((x) => x.path === toPath)[0].breadcrumb
+    state.pages = routes.filter(x => x.path === toPath)[0].breadcrumb
   },
-  { immediate: true, deep: true }
+  { immediate: true, deep: true },
 )
 </script>
 
 <template>
   <div class="pb-6 border-b flex items-center">
-    <img src="../../assets/images/logo.png" class="w-6 h-6 mr-2" />
+    <img src="../../assets/images/logo.png" class="w-6 h-6 mr-2">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item
         v-for="(item, index) in state.pages"

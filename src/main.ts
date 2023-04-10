@@ -17,4 +17,5 @@ app.use(router).use(pinia)
 app.use(ElementPlus, {
   locale: zhCn,
 })
+
 app.mount('#app')

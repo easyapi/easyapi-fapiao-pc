@@ -90,19 +90,13 @@ onMounted(() => {
     <div class="mt-6">
       <el-descriptions :column="2" border>
         <el-descriptions-item label="申请时间">
-          {{
-            state.invoiceDetail.addTime
-          }}
+          {{ state.invoiceDetail.addTime }}
         </el-descriptions-item>
         <el-descriptions-item label="开票时间">
-          {{
-            state.invoiceDetail.printTime
-          }}
+          {{ state.invoiceDetail.printTime }}
         </el-descriptions-item>
         <el-descriptions-item label="发票类型">
-          {{
-            state.invoiceDetail.category
-          }}
+          {{ state.invoiceDetail.category }}
         </el-descriptions-item>
         <el-descriptions-item label="发票状态">
           {{ state.invoiceDetail.statements }}
@@ -137,14 +131,10 @@ onMounted(() => {
       </el-descriptions>
       <el-descriptions class="mt-4" :column="2" title="购买方" border>
         <el-descriptions-item label="名称">
-          {{
-            state.invoiceDetail.purchaserName
-          }}
+          {{ state.invoiceDetail.purchaserName }}
         </el-descriptions-item>
         <el-descriptions-item label="纳税人识别号">
-          {{
-            state.invoiceDetail.purchaserTaxpayerNumber
-          }}
+          {{ state.invoiceDetail.purchaserTaxpayerNumber }}
         </el-descriptions-item>
         <el-descriptions-item label="开户行及账号">
           {{ state.invoiceDetail.purchaserBank }}
@@ -157,14 +147,10 @@ onMounted(() => {
       </el-descriptions>
       <el-descriptions class="mt-4" :column="2" title="销售方" border>
         <el-descriptions-item label="名称">
-          {{
-            state.invoiceDetail.sellerName
-          }}
+          {{ state.invoiceDetail.sellerName }}
         </el-descriptions-item>
         <el-descriptions-item label="纳税人识别号">
-          {{
-            state.invoiceDetail.sellerTaxpayerNumber
-          }}
+          {{ state.invoiceDetail.sellerTaxpayerNumber }}
         </el-descriptions-item>
         <el-descriptions-item label="开户行及账号">
           {{ state.invoiceDetail.sellerBank }}

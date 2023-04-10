@@ -2,6 +2,7 @@
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { createCompanyApi, updateCompanyApi } from '@/api/company'
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -50,7 +51,7 @@ function handleClose() {
 /**
  * 提交
  */
-const onSubmit = async (formEl: FormInstance | undefined) => {
+async function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl)
     return
   await formEl.validate((valid) => {
@@ -134,7 +135,7 @@ watch(
           <el-input v-model="state.form.bank" placeholder="请输入开户行" />
         </el-form-item>
         <el-form-item label="开户行账号">
-          <el-input v-model="state.form.bankAccount" placeholder="请输入开户行账号"/>
+          <el-input v-model="state.form.bankAccount" placeholder="请输入开户行账号" />
         </el-form-item>
         <el-form-item label="地址">
           <el-input v-model="state.form.address" placeholder="请输入地址" />

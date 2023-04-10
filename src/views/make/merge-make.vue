@@ -245,7 +245,7 @@ function selectProperty(type) {
 /**
  * 提交
  */
-const onSubmit = async (formEl: FormInstance | undefined) => {
+async function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl)
     return
 
