@@ -32,7 +32,7 @@ export async function getInvoiceApi(id): Promise<any> {
  * @see https://www.easyapi.com
  */
 export async function getInvoiceStatementsListApi(): Promise<any> {
-  return request.get('/api/invoice/record/statements', {
+  return request.get('/invoice/statements', {
     params: {
       accessToken: localStorage.get('accessToken'),
     },
