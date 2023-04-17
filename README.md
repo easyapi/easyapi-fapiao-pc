@@ -18,7 +18,7 @@ EasyAPI电子发票PC端是标准的发票申请与发票记录查询模块，�
 # install dependencies
 yarn install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:3000
 yarn dev
 
 # build for production with minification

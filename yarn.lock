@@ -4319,7 +4319,7 @@ mz@^2.7.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-nanoid@^3.3.4:
+nanoid@^3.3.4, nanoid@^3.3.6:
   version "3.3.6"
   resolved "https://mirrors.cloud.tencent.com/npm/nanoid/-/nanoid-3.3.6.tgz#443380c856d6e9f9824267d960b4236ad583ea4c"
   integrity sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==
@@ -4764,6 +4764,15 @@ postcss@^8.0.9, postcss@^8.1.10, postcss@^8.4.21:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
+postcss@^8.4.22:
+  version "8.4.22"
+  resolved "https://mirrors.cloud.tencent.com/npm/postcss/-/postcss-8.4.22.tgz#c29e6776b60ab3af602d4b513d5bd2ff9aa85dc1"
+  integrity sha512-XseknLAfRHzVWjCEtdviapiBtfLdgyzExD50Rg2ePaucEesyh8Wv4VPdW0nbyDa1ydbrAxV19jvMT4+LFmcNUA==
+  dependencies:
+    nanoid "^3.3.6"
+    picocolors "^1.0.0"
+    source-map-js "^1.0.2"
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://mirrors.cloud.tencent.com/npm/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
@@ -4996,10 +5005,17 @@ rollup-plugin-visualizer@^5.9.0:
     source-map "^0.7.4"
     yargs "^17.5.1"
 
-rollup@^3.18.0, rollup@^3.20.2:
+rollup@^3.18.0:
   version "3.20.2"
   resolved "https://mirrors.cloud.tencent.com/npm/rollup/-/rollup-3.20.2.tgz#f798c600317f216de2e4ad9f4d9ab30a89b690ff"
   integrity sha512-3zwkBQl7Ai7MFYQE0y1MeQ15+9jsi7XxfrqwTb/9EK8D9C9+//EBR4M+CuA1KODRaNbFez/lWxA5vhEGZp4MUg==
+  optionalDependencies:
+    fsevents "~2.3.2"
+
+rollup@^3.20.4:
+  version "3.20.4"
+  resolved "https://mirrors.cloud.tencent.com/npm/rollup/-/rollup-3.20.4.tgz#cde35731c5c0c637de0b532d5d1a84bd802c128e"
+  integrity sha512-n7J4tuctZXUErM9Uc916httwqmTc63zzCr2+TLCiSCpfO/Xuk3g/marGN1IlRJZi+QF3XMYx75PxXRfZDVgaRw==
   optionalDependencies:
     fsevents "~2.3.2"
 
