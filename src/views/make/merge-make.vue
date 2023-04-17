@@ -47,16 +47,20 @@ const state = reactive({
 })
 
 const formRules = reactive<FormRules>({
-  type: [{
-    required: true,
-    message: '请选择抬头类型',
-    trigger: 'change',
-  }],
-  category: [{
-    required: true,
-    message: '请选择发票类型',
-    trigger: 'change',
-  }],
+  type: [
+    {
+      required: true,
+      message: '请选择抬头类型',
+      trigger: 'change',
+    },
+  ],
+  category: [
+    {
+      required: true,
+      message: '请选择发票类型',
+      trigger: 'change',
+    },
+  ],
   purchaserName: [
     {
       required: true,
@@ -64,11 +68,13 @@ const formRules = reactive<FormRules>({
       trigger: 'change',
     },
   ],
-  mobile: [{
-    required: true,
-    message: '请输入接收手机',
-    trigger: 'blur',
-  }],
+  mobile: [
+    {
+      required: true,
+      message: '请输入接收手机',
+      trigger: 'blur',
+    },
+  ],
   email: [
     {
       required: true,
@@ -109,8 +115,7 @@ function findSetting() {
     fieldKeys: 'default-invoice-category',
   }
   findSettingApi(params).then((res) => {
-    if (res.code === 1)
-      state.form.category = res.content[0].fieldValue
+    if (res.code === 1) state.form.category = res.content[0].fieldValue
   })
 }
 
@@ -123,8 +128,7 @@ function getAddressList() {
     if (res.code === 1) {
       state.addressList = res.content
       for (const address of state.addressList) {
-        if (address.ifDefault)
-          state.form.addressId = address.addressId
+        if (address.ifDefault) state.form.addressId = address.addressId
       }
     } else {
       state.addressList = []
@@ -155,8 +159,7 @@ function deleteAddress(addressId) {
  * 设置默认地址
  */
 function defaultAddress(event) {
-  if (event.ifDefault)
-    return
+  if (event.ifDefault) return
 
   defaultAddressApi(event.addressId).then((res) => {
     if (res.code === 1) {
@@ -186,8 +189,7 @@ function getCompanyList() {
     if (res.code === 1) {
       state.companyList = res.content
       for (const company of state.companyList) {
-        if (company.ifDefault)
-          state.form.companyId = company.companyId
+        if (company.ifDefault) state.form.companyId = company.companyId
       }
     } else {
       state.companyList = []
@@ -218,8 +220,7 @@ function deleteCompany(companyId) {
  * 更新默认抬头
  */
 function updateCompanySetDefault(event) {
-  if (event.ifDefault)
-    return
+  if (event.ifDefault) return
 
   updateCompanySetDefaultApi(event.companyId).then((res) => {
     if (res.code === 1) {
@@ -248,8 +249,9 @@ function selectCategory(type) {
  * 提交
  */
 async function onSubmit(formEl: FormInstance | undefined) {
-  if (!formEl)
-    return
+  if (!formEl) return
+
+  if (!state.form.category) return ElMessage.error('请选择发票类型')
 
   if (state.form.property === '纸质' && !state.form.addressId)
     return ElMessage.error('请选择邮寄地址')
@@ -274,8 +276,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
 
           state.form.companyId = ''
         }
-        if (state.form.type === '企业')
-          state.form.purchaserName = ''
+        if (state.form.type === '企业') state.form.purchaserName = ''
 
         const data = state.form
         data.outOrderIds = localStorage.get('outOrderIds')
@@ -306,52 +307,64 @@ onMounted(() => {
       :rules="formRules"
       label-width="auto"
     >
-      <h3 class="text-base font-semibold my-4">
-        发票形式
-      </h3>
+      <h3 class="text-base font-semibold my-4">发票类型</h3>
       <div class="w-full">
-        <el-row :gutter="20" class="w-11/12" >
-          <el-col :span="8" v-for="(item,index) in state.invoiceCategories" :key="index" >
+        <el-row :gutter="20" class="w-11/12">
+          <el-col
+            :span="8"
+            v-for="(item, index) in state.invoiceCategories"
+            :key="index"
+          >
             <div
               class="flex items-center justify-center w-full h-32 mr-4 mb-4 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
               :class="{ selectStyle: state.form.category === item.category }"
               @click="selectCategory(item.category)"
             >
               <div class="text-center text-xl">
-                <el-tag :style="`background-color:${invoiceTag({category:item.category}).bgColor};color:${invoiceTag({category:item.category}).color};border-color:${invoiceTag({category:item.category}).color}`">
+                <el-tag
+                  :style="`background-color:${
+                    invoiceTag({ category: item.category }).bgColor
+                  };color:${
+                    invoiceTag({ category: item.category }).color
+                  };border-color:${
+                    invoiceTag({ category: item.category }).color
+                  }`"
+                >
                   {{ invoiceTag({ category: item.category }).name }}
                 </el-tag>
-                <p class="mt-2">{{item.category}}</p>
+                <p class="mt-2">{{ item.category }}</p>
               </div>
               <img
                 v-if="state.form.category === item.category"
                 src="../../assets/images/default.png"
                 class="absolute bottom-0 right-0"
-              >
+              />
             </div>
           </el-col>
         </el-row>
-
       </div>
-      <h3 class="text-base font-semibold my-4">
-        发票抬头
-      </h3>
+      <h3 class="text-base font-semibold my-4">发票抬头</h3>
       <el-form-item label="抬头类型" prop="type">
         <el-radio-group v-model="state.form.type">
-          <el-radio label="企业">
-            企业
-          </el-radio>
-          <el-radio label="个人">
-            个人
-          </el-radio>
+          <el-radio label="企业"> 企业 </el-radio>
+          <el-radio label="个人"> 个人 </el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="state.form.type === '个人'" label="发票抬头" prop="purchaserName">
-        <el-input v-model="state.form.purchaserName" placeholder="可输入个人姓名或事业单位名称" class="w-80" />
+      <el-form-item
+        v-if="state.form.type === '个人'"
+        label="发票抬头"
+        prop="purchaserName"
+      >
+        <el-input
+          v-model="state.form.purchaserName"
+          placeholder="可输入个人姓名或事业单位名称"
+          class="w-80"
+        />
       </el-form-item>
       <div v-if="state.form.type === '企业'" class="flex flex-wrap">
         <div
-          v-for="(item, index) in state.companyList" :key="index"
+          v-for="(item, index) in state.companyList"
+          :key="index"
           :class="item.ifDefault ? 'border-blue-600 relative' : ''"
           class="company-item rounded border px-4 pb-4 mr-4 mt-4 cursor-pointer hover:border-blue-600"
           @click="updateCompanySetDefault(item)"
@@ -370,7 +383,11 @@ onMounted(() => {
             <el-button type="primary" @click.stop="openCompanyEditModal(item)">
               修改
             </el-button>
-            <el-button type="danger" plain @click.stop="deleteCompany(item.companyId)">
+            <el-button
+              type="danger"
+              plain
+              @click.stop="deleteCompany(item.companyId)"
+            >
               删除
             </el-button>
           </div>
@@ -378,19 +395,17 @@ onMounted(() => {
             v-if="item.ifDefault"
             src="../../assets/images/default.png"
             class="absolute bottom-0 right-0"
-          >
+          />
         </div>
         <div
           v-if="state.companyList.length < 6"
           class="add-company flex border mt-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
           @click="openCompanyEditModal(null)"
         >
-          <img src="../../assets/images/plus.png" alt="">
+          <img src="../../assets/images/plus.png" alt="" />
         </div>
       </div>
-      <h3 class="text-base font-semibold my-4">
-        发票信息
-      </h3>
+      <h3 class="text-base font-semibold my-4">发票信息</h3>
       <el-form-item label="发票金额">
         <span>{{ state.price }} 元</span>
       </el-form-item>
@@ -401,16 +416,30 @@ onMounted(() => {
           class="w-80"
         />
       </el-form-item>
-      <el-form-item v-if="state.form.property === '电子'" label="接收手机" prop="mobile">
-        <el-input v-model="state.form.mobile" placeholder="请输入手机号码" class="w-80" />
+      <el-form-item
+        v-if="state.form.property === '电子'"
+        label="接收手机"
+        prop="mobile"
+      >
+        <el-input
+          v-model="state.form.mobile"
+          placeholder="请输入手机号码"
+          class="w-80"
+        />
       </el-form-item>
-      <el-form-item v-if="state.form.property === '电子'" label="接收邮箱" prop="email">
-        <el-input v-model="state.form.email" placeholder="接收邮箱" class="w-80" />
+      <el-form-item
+        v-if="state.form.property === '电子'"
+        label="接收邮箱"
+        prop="email"
+      >
+        <el-input
+          v-model="state.form.email"
+          placeholder="接收邮箱"
+          class="w-80"
+        />
       </el-form-item>
       <div v-if="state.form.property !== '电子'">
-        <h3 class="text-base font-semibold mt-4">
-          邮寄地址
-        </h3>
+        <h3 class="text-base font-semibold mt-4">邮寄地址</h3>
         <div class="flex flex-wrap">
           <div
             v-for="(item, index) in state.addressList"
@@ -431,17 +460,26 @@ onMounted(() => {
                 {{ item.mobile }}
               </p>
               <p class="overflow">
-                {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{ item.district }}
+                {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{
+                  item.district
+                }}
               </p>
               <p class="overflow">
                 {{ item.addr }}
               </p>
             </div>
             <div class="mt-4">
-              <el-button type="primary" @click.stop="openAddressEditModal(item)">
+              <el-button
+                type="primary"
+                @click.stop="openAddressEditModal(item)"
+              >
                 修改
               </el-button>
-              <el-button type="danger" plain @click.stop="deleteAddress(item.addressId)">
+              <el-button
+                type="danger"
+                plain
+                @click.stop="deleteAddress(item.addressId)"
+              >
                 删除
               </el-button>
             </div>
@@ -449,21 +487,19 @@ onMounted(() => {
               v-if="item.ifDefault"
               src="../../assets/images/default.png"
               class="absolute bottom-0 right-0"
-            >
+            />
           </div>
           <div
             v-if="state.companyList.length < 6"
             class="add-address flex border mt-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
             @click="openAddressEditModal(null)"
           >
-            <img src="../../assets/images/plus.png" alt="">
+            <img src="../../assets/images/plus.png" alt="" />
           </div>
         </div>
       </div>
       <el-form-item class="mt-4">
-        <el-button type="primary" @click="onSubmit(formRef)">
-          提交
-        </el-button>
+        <el-button type="primary" @click="onSubmit(formRef)"> 提交 </el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -481,7 +517,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .selectStyle {
-@apply border border-blue-600 text-blue-600;
+  @apply border border-blue-600 text-blue-600;
 }
 
 .company-item,
@@ -497,6 +533,6 @@ onMounted(() => {
 }
 
 .overflow {
-@apply overflow-hidden overflow-ellipsis whitespace-nowrap;
+  @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
 }
 </style>
