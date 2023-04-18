@@ -65,16 +65,16 @@ onMounted(() => {
   <div v-if="state.invoiceDetail" class="invoiceDetail">
     <div v-if="state.invoiceDetail.state === 1" class="mt-6">
       <el-image
-        v-if="state.invoiceDetail.electronicInvoiceUrl"
+        v-if="state.invoiceDetail.electronicInvoiceImg"
         class="absolute w-24 h-8 opacity-0"
-        :src="state.invoiceDetail.electronicInvoiceUrl"
+        :src="state.invoiceDetail.electronicInvoiceImg"
         :zoom-rate="1.2"
-        :preview-src-list="[state.invoiceDetail.electronicInvoiceUrl]"
+        :preview-src-list="[state.invoiceDetail.electronicInvoiceImg]"
         :initial-index="1"
         :preview-teleported="true"
         fit="cover"
       />
-      <el-button v-if="state.invoiceDetail.electronicInvoiceUrl" type="primary">
+      <el-button v-if="state.invoiceDetail.electronicInvoiceImg" type="primary">
         预览发票
       </el-button>
       <el-link
@@ -82,7 +82,7 @@ onMounted(() => {
         target="_blank"
         :href="state.invoiceDetail.electronicInvoiceUrl"
         type="primary"
-        class="ml-"
+        class="ml-4"
       >
         下载发票
       </el-link>

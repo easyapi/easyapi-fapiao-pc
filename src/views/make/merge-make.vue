@@ -46,6 +46,11 @@ const state = reactive({
   invoiceCategories: [],
 })
 
+const setting = reactive({
+  if_need_mobile: false,
+  if_need_email: false,
+})
+
 const formRules = reactive<FormRules>({
   type: [
     {
@@ -112,10 +117,22 @@ function getShopInfo() {
  */
 function findSetting() {
   const params = {
-    fieldKeys: 'default-invoice-category',
+    fieldKeys: 'default-invoice-category,if_need_mobile,if_need_email',
   }
   findSettingApi(params).then((res) => {
-    if (res.code === 1) state.form.category = res.content[0].fieldValue
+    if (res.code === 1) {
+      res.content.forEach((item) => {
+        if (item.fieldKey === 'default-invoice-category') {
+          state.form.category = item.fieldValue
+        }
+        if (item.fieldKey === 'if_need_mobile') {
+          setting.if_need_mobile = item.fieldValue == 'false' ? false : true
+        }
+        if (item.fieldKey === 'if_need_email') {
+          setting.if_need_email = item.fieldValue == 'false' ? false : true
+        }
+      })
+    }
   })
 }
 
@@ -417,7 +434,7 @@ onMounted(() => {
         />
       </el-form-item>
       <el-form-item
-        v-if="state.form.property === '电子'"
+        v-if="state.form.property === '电子' && setting.if_need_mobile"
         label="接收手机"
         prop="mobile"
       >
@@ -428,7 +445,7 @@ onMounted(() => {
         />
       </el-form-item>
       <el-form-item
-        v-if="state.form.property === '电子'"
+        v-if="state.form.property === '电子' && setting.if_need_email"
         label="接收邮箱"
         prop="email"
       >
