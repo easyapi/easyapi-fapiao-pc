@@ -33,6 +33,7 @@ const state = reactive({
   price: 0 as any,
   form: {
     category: '',
+    property: '',
     type: '企业',
     email: '',
     mobile: '',
@@ -100,6 +101,7 @@ function getShopInfo() {
   getShopInfoApi().then((res) => {
     if (res.code === 1) {
       state.invoiceCategories = res.content.invoiceCategories
+      selectCategory(state.invoiceCategories[0].category)
       getAddressList()
     }
   })
@@ -253,6 +255,7 @@ function openCompanyEditModal(event) {
  */
 function selectCategory(type) {
   state.form.category = type
+  state.form.property = type.includes('电子') ? '电子' : '纸质'
 }
 
 /**
@@ -263,6 +266,8 @@ async function onSubmit(formEl: FormInstance | undefined) {
   if (!state.form.category) return ElMessage.error('请选择发票类型')
   if (state.form.type === '企业' && !state.form.companyId)
     return ElMessage.error('请选择开票抬头')
+  if (state.form.property === '纸质' && !state.form.addressId)
+    return ElMessage.error('请选择邮寄地址')
   await formEl.validate((valid) => {
     if (valid) {
       ElMessageBox.confirm('您确定要开具发票吗？', '提示', {
@@ -411,7 +416,7 @@ onMounted(() => {
         />
       </el-form-item>
       <el-form-item
-        v-if="setting.if_need_mobile"
+        v-if="state.form.property === '电子' && setting.if_need_mobile"
         label="接收手机"
         prop="mobile"
       >
@@ -421,7 +426,11 @@ onMounted(() => {
           class="w-80"
         />
       </el-form-item>
-      <el-form-item v-if="setting.if_need_email" label="接收邮箱" prop="email">
+      <el-form-item
+        v-if="state.form.property === '电子' && setting.if_need_email"
+        label="接收邮箱"
+        prop="email"
+      >
         <el-input
           v-model="state.form.email"
           placeholder="接收邮箱"
@@ -429,8 +438,13 @@ onMounted(() => {
         />
       </el-form-item>
 
-      <h3 class="text-base font-semibold mt-4">邮寄地址</h3>
-      <div class="flex flex-wrap">
+      <h3
+        class="text-base font-semibold mt-4"
+        v-if="state.form.property === '纸质'"
+      >
+        邮寄地址
+      </h3>
+      <div class="flex flex-wrap" v-if="state.form.property === '纸质'">
         <div
           v-for="(item, index) in state.addressList"
           :key="index"
