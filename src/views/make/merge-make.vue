@@ -9,7 +9,6 @@ import {
   getCompanyListApi,
   updateCompanySetDefaultApi,
 } from '@/api/company'
-import { getShopInfoApi } from '@/api/shop'
 import {
   defaultAddressApi,
   deleteAddressApi,
@@ -95,24 +94,12 @@ const formRules = reactive<FormRules>({
 })
 
 /**
- * 获取商店门户信息
- */
-function getShopInfo() {
-  getShopInfoApi().then((res) => {
-    if (res.code === 1) {
-      state.invoiceCategories = res.content.invoiceCategories
-      selectCategory(state.invoiceCategories[0].category)
-      getAddressList()
-    }
-  })
-}
-
-/**
  * 获取发票默认类型
  */
 function findSetting() {
   const params = {
-    fieldKeys: 'default-invoice-category,if_need_mobile,if_need_email',
+    fieldKeys:
+      'default-invoice-category,if_need_mobile,if_need_email,h5_pc_invoice_categories',
   }
   findSettingApi(params).then((res) => {
     if (res.code === 1) {
@@ -125,6 +112,10 @@ function findSetting() {
         }
         if (item.fieldKey === 'if_need_email') {
           setting.if_need_email = item.fieldValue == 'false' ? false : true
+        }
+        if (item.fieldKey === 'h5_pc_invoice_categories') {
+          state.invoiceCategories = JSON.parse(item.fieldValue)
+          selectCategory(state.invoiceCategories[0])
         }
       })
     }
@@ -293,7 +284,7 @@ async function onSubmit(formEl: FormInstance | undefined) {
 onMounted(() => {
   state.price = route.query.price
   getCompanyList()
-  getShopInfo()
+  getAddressList()
   findSetting()
 })
 </script>
@@ -316,25 +307,23 @@ onMounted(() => {
           >
             <div
               class="flex items-center justify-center w-full h-32 mr-4 mb-4 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
-              :class="{ selectStyle: state.form.category === item.category }"
-              @click="selectCategory(item.category)"
+              :class="{ selectStyle: state.form.category === item }"
+              @click="selectCategory(item)"
             >
               <div class="text-center text-xl">
                 <el-tag
                   :style="`background-color:${
-                    invoiceTag({ category: item.category }).bgColor
+                    invoiceTag({ category: item }).bgColor
                   };color:${
-                    invoiceTag({ category: item.category }).color
-                  };border-color:${
-                    invoiceTag({ category: item.category }).color
-                  }`"
+                    invoiceTag({ category: item }).color
+                  };border-color:${invoiceTag({ category: item }).color}`"
                 >
-                  {{ invoiceTag({ category: item.category }).name }}
+                  {{ invoiceTag({ category: item }).name }}
                 </el-tag>
-                <p class="mt-2">{{ item.category }}</p>
+                <p class="mt-2">{{ item }}</p>
               </div>
               <img
-                v-if="state.form.category === item.category"
+                v-if="state.form.category === item"
                 src="../../assets/images/default.png"
                 class="absolute bottom-0 right-0"
               />
