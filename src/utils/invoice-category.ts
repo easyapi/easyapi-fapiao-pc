@@ -23,10 +23,10 @@ export function invoiceTag(invoice: any) {
   if (invoice.category === '增值税专用发票') {
     return { name: '专票', color: '#266253', bgColor: '#fff3f3' }
   }
-  if (invoice.category === '全电电子普通发票') {
-    return { name: '全电普', color: '#00b2c8', bgColor: '#f2fbff' }
+  if (invoice.category === '全电电子普通发票' || invoice.category === '数电普通发票') {
+    return { name: '数电普', color: '#00b2c8', bgColor: '#f2fbff' }
   }
-  if (invoice.category === '全电电子专用发票') {
-    return { name: '全电专', color: '#665823', bgColor: '#f2fbff' }
+  if (invoice.category === '全电电子专用发票' || invoice.category === '数电专用发票') {
+    return { name: '数电专', color: '#665823', bgColor: '#f2fbff' }
   }
 }
