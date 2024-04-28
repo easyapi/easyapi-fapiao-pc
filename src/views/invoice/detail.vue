@@ -114,7 +114,7 @@ onMounted(() => {
           {{ state.invoiceDetail.purchaserAddress }}
         </el-descriptions-item>
         <el-descriptions-item label="手机号码">
-          {{ state.invoiceDetail.addrMobile }}
+          {{ state.invoiceDetail.mobile }}
         </el-descriptions-item>
         <el-descriptions-item label="开票信息">
           {{ state.invoiceDetail.failMsg }}
