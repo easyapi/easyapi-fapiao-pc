@@ -6,7 +6,7 @@ import { localStorage } from '@/utils/local-storage'
  *
  * @see https://www.easyapi.com
  */
-export async function getOutOrderListApi(params): Promise<any> {
+export async function getOutOrderListApi(params: any): Promise<any> {
   return request.get('/out-orders', {
     params: {
       accessToken: localStorage.get('accessToken'),
@@ -20,7 +20,7 @@ export async function getOutOrderListApi(params): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function getOutOrderApi(no): Promise<any> {
+export async function getOutOrderApi(no: string): Promise<any> {
   return request.get(`/out-order/${no}`, {
     params: {
       accessToken: localStorage.get('accessToken'),
@@ -33,7 +33,7 @@ export async function getOutOrderApi(no): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function getOutOrderIdsApi(params): Promise<any> {
+export async function getOutOrderIdsApi(params: any): Promise<any> {
   return request.get('/out-order/ids', {
     params: {
       ...params,
@@ -47,7 +47,7 @@ export async function getOutOrderIdsApi(params): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function amountApi(params): Promise<any> {
+export async function amountApi(params: any): Promise<any> {
   return request.get('/out-order/amount', {
     params: {
       ...params,

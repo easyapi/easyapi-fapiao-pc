@@ -7,7 +7,7 @@ import { localStorage } from '@/utils/local-storage'
  * @see https://www.easyapi.com
  */
 
-export async function getAddressListApi(params): Promise<any> {
+export async function getAddressListApi(params: any): Promise<any> {
   return request.get('/addresses', {
     params: {
       accessToken: localStorage.get('accessToken'),
@@ -21,7 +21,7 @@ export async function getAddressListApi(params): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function getAddressApi(id): Promise<any> {
+export async function getAddressApi(id: number): Promise<any> {
   return request.get(`/address/${id}`, {
     params: {
       accessToken: localStorage.get('accessToken'),
@@ -46,7 +46,7 @@ export async function getDefaultAddressApi(): Promise<any> {
  * @see https://www.easyapi.com
  */
 
-export async function createAddressApi(data): Promise<any> {
+export async function createAddressApi(data: any): Promise<any> {
   data.accessToken = localStorage.get('accessToken')
   return request.post('/address', data)
 }
@@ -57,7 +57,7 @@ export async function createAddressApi(data): Promise<any> {
  * @see https://www.easyapi.com
  */
 
-export async function updateAddressApi(id, data): Promise<any> {
+export async function updateAddressApi(id: number, data: any): Promise<any> {
   data.accessToken = localStorage.get('accessToken')
   return request.put(`/address/${id}`, data)
 }
@@ -67,7 +67,7 @@ export async function updateAddressApi(id, data): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function defaultAddressApi(id): Promise<any> {
+export async function defaultAddressApi(id: number): Promise<any> {
   return request.put(`/address/${id}`, {
     accessToken: localStorage.get('accessToken'),
     ifDefault: true,
@@ -79,7 +79,7 @@ export async function defaultAddressApi(id): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function deleteAddressApi(id): Promise<any> {
+export async function deleteAddressApi(id: number): Promise<any> {
   return request.delete(`/address/${id}`, {
     params: {
       accessToken: localStorage.get('accessToken'),

@@ -6,7 +6,7 @@ import { localStorage } from '@/utils/local-storage'
  *
  * @see https://www.easyapi.com
  */
-export async function getInvoiceListApi(params): Promise<any> {
+export async function getInvoiceListApi(params: any): Promise<any> {
   return request.get('/invoices', {
     params: {
       accessToken: localStorage.get('accessToken'),
@@ -44,7 +44,7 @@ export async function getInvoiceStatementsListApi(): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function mergeMakeApi(data): Promise<any> {
+export async function mergeMakeApi(data: any): Promise<any> {
   data.accessToken = localStorage.get('accessToken')
   return request.post('/merge-make', data)
 }
@@ -54,7 +54,7 @@ export async function mergeMakeApi(data): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function invoiceExportApi(params): Promise<any> {
+export async function invoiceExportApi(params: any): Promise<any> {
   return request.get('/invoice-export', {
     responseType: "blob",
     params: {

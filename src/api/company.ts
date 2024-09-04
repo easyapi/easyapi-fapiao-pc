@@ -6,7 +6,7 @@ import { localStorage } from '@/utils/local-storage'
  *
  * @see https://www.easyapi.com
  */
-export async function getCompanyListApi(params): Promise<any> {
+export async function getCompanyListApi(params: any): Promise<any> {
   return request.get('/companies', {
     params: {
       accessToken: localStorage.get('accessToken'),
@@ -91,7 +91,7 @@ export async function updateCompanySetDefaultApi(id): Promise<any> {
  *
  * @see https://www.easyapi.com
  */
-export async function getCompanyCodeListApi(params): Promise<any> {
+export async function getCompanyCodeListApi(params: any): Promise<any> {
   return request.get('/company/codes', {
     params: {
       accessToken: localStorage.get('accessToken'),
