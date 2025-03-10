@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { getInvoiceApi } from '@/api/invoice'
 import { getOutOrderListApi } from '@/api/out-order'
+import {copyText} from "@/utils/invoice";
+import {ElMessage} from "element-plus";
 
 const route = useRoute()
 
@@ -49,10 +51,22 @@ function getTaxAmount() {
  */
 function getPriceAmount() {
   let sum = 0
-  state.invoiceDetail.invoiceItems.map((item) => {
+  state.invoiceDetail.invoiceItems.map((item: any) => {
     sum += item.sum
   })
   return sum
+}
+
+/**
+ * 复制发票信息
+ */
+function copyInvoiceInfo() {
+  const copyInfo = copyText(state.invoiceDetail)
+  navigator.clipboard.writeText(copyInfo).then(() => {
+    ElMessage.success('复制成功')
+  }).catch(() => {
+    ElMessage.error('该浏览器不支持自动复制')
+  })
 }
 
 onMounted(() => {
@@ -76,6 +90,14 @@ onMounted(() => {
       />
       <el-button v-if="state.invoiceDetail.electronicInvoiceImg" type="primary">
         预览发票
+      </el-button>
+      <el-button
+        link
+        type="primary"
+        class="ml-4"
+        @click="copyInvoiceInfo"
+      >
+        复制发票信息
       </el-button>
       <el-link
         v-if="state.invoiceDetail.electronicInvoiceUrl"
