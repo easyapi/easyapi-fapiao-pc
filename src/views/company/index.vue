@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import Edit from './components/edit.vue'
 import {
   deleteCompanyApi,
   getCompanyListApi,
   getIfManageCompanyApi,
   updateCompanySetDefaultApi,
 } from '@/api/company'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import Edit from './components/edit.vue'
 
 const editRef = ref()
 
@@ -160,7 +160,7 @@ onMounted(() => {
     v-model="state.dialogVisible"
     refs="editRef"
     :company-detail="state.companyDetail"
-    @getCompanyList="getCompanyList"
+    @get-company-list="getCompanyList"
   />
 </template>
 

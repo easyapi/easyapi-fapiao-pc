@@ -1,5 +1,5 @@
-import request from '@/utils/request'
 import { localStorage } from '@/utils/local-storage'
+import request from '@/utils/request'
 
 /**
  * 获取我的客户信息

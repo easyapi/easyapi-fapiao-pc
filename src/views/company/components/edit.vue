@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { createCompanyApi, updateCompanyApi } from '@/api/company'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -70,7 +70,8 @@ async function onSubmit(formEl: FormInstance | undefined) {
               emit('getCompanyList')
             }
           })
-        } else {
+        }
+        else {
           createCompanyApi(data).then((res) => {
             if (res.code === 1) {
               ElMessage.success('添加成功')
@@ -92,7 +93,8 @@ watch(
       if (props.companyDetail) {
         state.title = '编辑抬头'
         Object.assign(state.form, props.companyDetail)
-      } else {
+      }
+      else {
         state.title = '添加抬头'
         state.form = {
           name: '',

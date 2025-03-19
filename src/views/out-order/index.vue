@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ElMessage, ElTable } from 'element-plus'
-import { getOutOrderListApi } from '@/api/out-order'
-import { getOrderTypeListApi } from '@/api/order-type'
 import { getCustomerApi } from '@/api/customer'
+import { getOrderTypeListApi } from '@/api/order-type'
+import { getOutOrderListApi } from '@/api/out-order'
 import { localStorage } from '@/utils/local-storage'
+import { ElMessage, ElTable } from 'element-plus'
 
 const outOrderTableRef = ref<InstanceType<typeof ElTable>>()
 
@@ -83,7 +83,8 @@ function getMinusOutOrderList() {
       state.minusTableData.forEach((item) => {
         state.minusAmount += Number(item.price)
       })
-    } else {
+    }
+    else {
       state.minusAmount = 0
       state.minusTableData = []
     }
@@ -108,7 +109,8 @@ function getOutOrderList() {
       state.outOrderTableData = res.content
       pagination.total = res.totalElements
       changePageCheck()
-    } else {
+    }
+    else {
       state.outOrderTableData = []
       pagination.total = 0
     }
@@ -152,7 +154,8 @@ function calculatePrice() {
 function gotoMakeInvoice() {
   if (state.checkData.length === 0) {
     ElMessage.warning('请选择开票订单')
-  } else {
+  }
+  else {
     const outOrderIds = []
     state.checkData.forEach((item) => {
       outOrderIds.push(item.outOrderId)
@@ -196,7 +199,8 @@ function selectAll(selection) {
         list.push(row)
     })
     state.checkData = JSON.parse(JSON.stringify(list))
-  } else {
+  }
+  else {
     selection.forEach((row) => {
       if (state.checkData.filter(x => x.outOrderId === row.outOrderId).length === 0)
         state.checkData.push(row)
@@ -215,7 +219,8 @@ function handleSelectAllPage(value) {
       outOrderTableRef.value.toggleRowSelection(row, true)
     })
     calculatePrice()
-  } else {
+  }
+  else {
     state.checkData = []
     state.price = 0
     outOrderTableRef.value.clearSelection()

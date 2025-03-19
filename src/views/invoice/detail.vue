@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { getInvoiceApi } from '@/api/invoice'
 import { getOutOrderListApi } from '@/api/out-order'
-import {copyText} from "@/utils/invoice";
-import {ElMessage} from "element-plus";
+import { copyText } from '@/utils/invoice'
+import { ElMessage } from 'element-plus'
 
 const route = useRoute()
 

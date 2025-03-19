@@ -1,5 +1,5 @@
-import request from '@/utils/request'
 import { localStorage } from '@/utils/local-storage'
+import request from '@/utils/request'
 
 /**
  * 获取发票列表
@@ -56,10 +56,10 @@ export async function mergeMakeApi(data: any): Promise<any> {
  */
 export async function invoiceExportApi(params: any): Promise<any> {
   return request.get('/invoice-export', {
-    responseType: "blob",
+    responseType: 'blob',
     params: {
       accessToken: localStorage.get('accessToken'),
       ...params,
-    }
+    },
   })
 }

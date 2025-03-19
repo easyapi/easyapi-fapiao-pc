@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   createAddressApi,
   getAreaListApi,
   updateAddressApi,
 } from '@/api/address'
 import { validMobile } from '@/utils/validate'
+import { ElMessage, ElMessageBox } from 'element-plus'
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -23,7 +24,7 @@ const emit = defineEmits(['update:modelValue', 'getAddressList'])
 const formRef = ref<FormInstance>()
 const show = ref(false)
 
-const mobileCodeVerify = (rule, value, callback) => {
+function mobileCodeVerify(rule, value, callback) {
   if (validMobile(value) === false)
     return callback(new Error('请输入正确格式的11位手机号码'))
 
@@ -69,7 +70,7 @@ function handleClose() {
 /**
  * 获取省市区地址
  */
-const getAreaList = () => {
+function getAreaList() {
   getAreaListApi().then((res) => {
     const arr = []
     res.provinces.forEach((item, index) => {
@@ -103,7 +104,7 @@ const getAreaList = () => {
 /**
  * 提交
  */
-const onSubmit = async (formEl: FormInstance | undefined) => {
+async function onSubmit(formEl: FormInstance | undefined) {
   if (!formEl)
     return
   await formEl.validate((valid) => {
@@ -127,7 +128,8 @@ const onSubmit = async (formEl: FormInstance | undefined) => {
               emit('getAddressList')
             }
           })
-        } else {
+        }
+        else {
           createAddressApi(data).then((res) => {
             if (res.code === 1) {
               ElMessage.success('添加成功')
@@ -155,7 +157,8 @@ watch(
           props.addressDetail.city,
           props.addressDetail.district,
         ]
-      } else {
+      }
+      else {
         state.title = '添加地址'
         state.form = {
           name: '',

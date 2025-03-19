@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { Edit } from '@element-plus/icons-vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { getDefaultCompanyApi } from '../api/company'
-import { getDefaultAddressApi } from '../api/address'
-import { getCustomerApi } from '../api/customer'
-import { findSettingApi } from '../api/setting'
-import { localStorage } from '@/utils/local-storage'
 import {
   getInvoiceListApi,
   getInvoiceStatementsListApi,
   invoiceExportApi,
 } from '@/api/invoice'
+import { localStorage } from '@/utils/local-storage'
+import { Edit } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { getDefaultAddressApi } from '../api/address'
+import { getDefaultCompanyApi } from '../api/company'
+import { getCustomerApi } from '../api/customer'
+import { findSettingApi } from '../api/setting'
 
 const route = useRoute()
 const router = useRouter()
@@ -62,7 +62,8 @@ function getDefaultCompany() {
     if (res.code === 1) {
       state.defaultCompany = res.content
       state.showInfo = true
-    } else if (res.code === 0) {
+    }
+    else if (res.code === 0) {
       state.showInfo = false
     }
   })
@@ -76,7 +77,8 @@ function getDefaultAddress() {
     if (res.code === 1) {
       state.defaultAddress = res.content
       state.showAddressInfo = true
-    } else if (res.code === 0) {
+    }
+    else if (res.code === 0) {
       state.showAddressInfo = false
     }
   })
@@ -126,7 +128,8 @@ function timeRangeChange(time) {
   if (time) {
     query.startAddTime = time[0] ? `${time[0]} 00:00:00` : time[0]
     query.endAddTime = time[1] ? `${time[1]} 23:59:59` : time[1]
-  } else {
+  }
+  else {
     query.startAddTime = ''
     query.endAddTime = ''
   }
@@ -136,7 +139,8 @@ function makeInvoiceTimeRangeChange(time) {
   if (time) {
     query.startPrintTime = time[0] ? `${time[0]} 00:00:00` : time[0]
     query.endPrintTime = time[1] ? `${time[1]} 23:59:59` : time[1]
-  } else {
+  }
+  else {
     query.startPrintTime = ''
     query.endPrintTime = ''
   }
@@ -172,7 +176,8 @@ function getInvoiceList() {
     if (res.code === 1) {
       state.tableData = res.content
       pagination.total = res.totalElements
-    } else {
+    }
+    else {
       state.tableData = []
       pagination.total = 0
     }

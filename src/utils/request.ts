@@ -17,7 +17,7 @@ export type RequestError = AxiosError<{
 // 异常拦截处理器
 function errorHandler(error: RequestError): Promise<any> {
   if (error.response) {
-    if (error.response.data.type == 'application/json') {
+    if (error.response.data.type === 'application/json') {
       // 创建FileReader实例
       const reader = new FileReader()
       reader.readAsText(error.response.data)
@@ -25,10 +25,11 @@ function errorHandler(error: RequestError): Promise<any> {
         const { message } = JSON.parse(reader.result)
         ElMessage({
           type: 'error',
-          message: message,
+          message,
         })
       }
-    } else {
+    }
+    else {
       const { data = {}, statusText } = error.response
       ElMessage({
         type: 'error',

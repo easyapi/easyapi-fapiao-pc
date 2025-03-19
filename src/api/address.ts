@@ -1,5 +1,5 @@
-import request from '@/utils/request'
 import { localStorage } from '@/utils/local-storage'
+import request from '@/utils/request'
 
 /**
  * 获取发票地址列表
@@ -42,7 +42,7 @@ export async function getDefaultAddressApi(): Promise<any> {
 
 /**
  * 添加地址信息
- **
+ *
  * @see https://www.easyapi.com
  */
 

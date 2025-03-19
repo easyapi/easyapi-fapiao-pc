@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ElMessage, ElMessageBox } from 'element-plus'
-import Edit from './components/edit.vue'
 import {
   defaultAddressApi,
   deleteAddressApi,
   getAddressListApi,
 } from '@/api/address'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import Edit from './components/edit.vue'
 
 const editRef = ref()
 
@@ -92,9 +92,7 @@ onMounted(() => {
               {{ item.mobile }}
             </p>
             <p class="overflow">
-              {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{
-                item.district
-              }}
+              {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{ item.district }}
             </p>
             <p class="overflow">
               {{ item.addr }}
@@ -135,7 +133,7 @@ onMounted(() => {
     v-model="state.dialogVisible"
     refs="editRef"
     :address-detail="state.addressDetail"
-    @getAddressList="getAddressList"
+    @get-address-list="getAddressList"
   />
 </template>
 

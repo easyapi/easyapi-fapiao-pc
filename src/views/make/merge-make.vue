@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import CompanyEdit from '../company/components/edit.vue'
-import AddressEdit from '../address/components/edit.vue'
-import { invoiceTag } from '@/utils/invoice-category'
-import {
-  deleteCompanyApi,
-  getCompanyListApi,
-  updateCompanySetDefaultApi,
-} from '@/api/company'
 import {
   defaultAddressApi,
   deleteAddressApi,
   getAddressListApi,
 } from '@/api/address'
-import { findSettingApi } from '@/api/setting'
+import {
+  deleteCompanyApi,
+  getCompanyListApi,
+  updateCompanySetDefaultApi,
+} from '@/api/company'
 import { mergeMakeApi } from '@/api/invoice'
+import { findSettingApi } from '@/api/setting'
+import { invoiceTag } from '@/utils/invoice-category'
 import { localStorage } from '@/utils/local-storage'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import AddressEdit from '../address/components/edit.vue'
+import CompanyEdit from '../company/components/edit.vue'
 
 const formRef = ref<FormInstance>()
 const route = useRoute()
@@ -108,10 +108,10 @@ function findSetting() {
           state.form.category = item.fieldValue
         }
         if (item.fieldKey === 'if_need_mobile') {
-          setting.if_need_mobile = item.fieldValue == 'false' ? false : true
+          setting.if_need_mobile = item.fieldValue != 'false'
         }
         if (item.fieldKey === 'if_need_email') {
-          setting.if_need_email = item.fieldValue == 'false' ? false : true
+          setting.if_need_email = item.fieldValue != 'false'
         }
         if (item.fieldKey === 'h5_pc_invoice_categories') {
           state.invoiceCategories = JSON.parse(item.fieldValue)
@@ -131,9 +131,11 @@ function getAddressList() {
     if (res.code === 1) {
       state.addressList = res.content
       for (const address of state.addressList) {
-        if (address.ifDefault) state.form.addressId = address.addressId
+        if (address.ifDefault)
+          state.form.addressId = address.addressId
       }
-    } else {
+    }
+    else {
       state.addressList = []
       state.form.addressId = ''
     }
@@ -162,7 +164,8 @@ function deleteAddress(addressId) {
  * 设置默认地址
  */
 function defaultAddress(event) {
-  if (event.ifDefault) return
+  if (event.ifDefault)
+    return
 
   defaultAddressApi(event.addressId).then((res) => {
     if (res.code === 1) {
@@ -192,9 +195,11 @@ function getCompanyList() {
     if (res.code === 1) {
       state.companyList = res.content
       for (const company of state.companyList) {
-        if (company.ifDefault) state.form.companyId = company.companyId
+        if (company.ifDefault)
+          state.form.companyId = company.companyId
       }
-    } else {
+    }
+    else {
       state.companyList = []
       state.form.companyId = ''
     }
@@ -223,7 +228,8 @@ function deleteCompany(companyId) {
  * 更新默认抬头
  */
 function updateCompanySetDefault(event) {
-  if (event.ifDefault) return
+  if (event.ifDefault)
+    return
 
   updateCompanySetDefaultApi(event.companyId).then((res) => {
     if (res.code === 1) {
@@ -253,8 +259,10 @@ function selectCategory(type) {
  * 提交
  */
 async function onSubmit(formEl: FormInstance | undefined) {
-  if (!formEl) return
-  if (!state.form.category) return ElMessage.error('请选择发票类型')
+  if (!formEl)
+    return
+  if (!state.form.category)
+    return ElMessage.error('请选择发票类型')
   if (state.form.type === '企业' && !state.form.companyId)
     return ElMessage.error('请选择开票抬头')
   if (state.form.property === '纸质' && !state.form.addressId)
@@ -266,8 +274,10 @@ async function onSubmit(formEl: FormInstance | undefined) {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        if (state.form.type === '个人') state.form.companyId = ''
-        if (state.form.type === '企业') state.form.purchaserName = ''
+        if (state.form.type === '个人')
+          state.form.companyId = ''
+        if (state.form.type === '企业')
+          state.form.purchaserName = ''
         const data = state.form
         data.outOrderIds = localStorage.get('outOrderIds')
         mergeMakeApi(data).then((res) => {
@@ -297,13 +307,15 @@ onMounted(() => {
       :rules="formRules"
       label-width="auto"
     >
-      <h3 class="text-base font-semibold my-4">发票类型</h3>
+      <h3 class="text-base font-semibold my-4">
+        发票类型
+      </h3>
       <div class="w-full">
         <el-row :gutter="20" class="w-11/12">
           <el-col
-            :span="8"
             v-for="(item, index) in state.invoiceCategories"
             :key="index"
+            :span="8"
           >
             <div
               class="flex items-center justify-center w-full h-32 mr-4 mb-4 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
@@ -320,22 +332,30 @@ onMounted(() => {
                 >
                   {{ invoiceTag({ category: item }).name }}
                 </el-tag>
-                <p class="mt-2">{{ item }}</p>
+                <p class="mt-2">
+                  {{ item }}
+                </p>
               </div>
               <img
                 v-if="state.form.category === item"
                 src="../../assets/images/default.png"
                 class="absolute bottom-0 right-0"
-              />
+              >
             </div>
           </el-col>
         </el-row>
       </div>
-      <h3 class="text-base font-semibold my-4">发票抬头</h3>
+      <h3 class="text-base font-semibold my-4">
+        发票抬头
+      </h3>
       <el-form-item label="抬头类型" prop="type">
         <el-radio-group v-model="state.form.type">
-          <el-radio label="企业"> 企业 </el-radio>
-          <el-radio label="个人"> 个人 </el-radio>
+          <el-radio label="企业">
+            企业
+          </el-radio>
+          <el-radio label="个人">
+            个人
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item
@@ -383,17 +403,19 @@ onMounted(() => {
             v-if="item.ifDefault"
             src="../../assets/images/default.png"
             class="absolute bottom-0 right-0"
-          />
+          >
         </div>
         <div
           v-if="state.companyList.length < 6"
           class="add-company flex border mt-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
           @click="openCompanyEditModal(null)"
         >
-          <img src="../../assets/images/plus.png" alt="" />
+          <img src="../../assets/images/plus.png" alt="">
         </div>
       </div>
-      <h3 class="text-base font-semibold my-4">发票信息</h3>
+      <h3 class="text-base font-semibold my-4">
+        发票信息
+      </h3>
       <el-form-item label="发票金额">
         <span>{{ state.price }} 元</span>
       </el-form-item>
@@ -428,12 +450,12 @@ onMounted(() => {
       </el-form-item>
 
       <h3
-        class="text-base font-semibold mt-4"
         v-if="state.form.property === '纸质'"
+        class="text-base font-semibold mt-4"
       >
         邮寄地址
       </h3>
-      <div class="flex flex-wrap" v-if="state.form.property === '纸质'">
+      <div v-if="state.form.property === '纸质'" class="flex flex-wrap">
         <div
           v-for="(item, index) in state.addressList"
           :key="index"
@@ -477,30 +499,32 @@ onMounted(() => {
             v-if="item.ifDefault"
             src="../../assets/images/default.png"
             class="absolute bottom-0 right-0"
-          />
+          >
         </div>
         <div
           v-if="state.companyList.length < 6"
           class="add-address flex border mt-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
           @click="openAddressEditModal(null)"
         >
-          <img src="../../assets/images/plus.png" alt="" />
+          <img src="../../assets/images/plus.png" alt="">
         </div>
       </div>
       <el-form-item class="mt-4">
-        <el-button type="primary" @click="onSubmit(formRef)"> 提交 </el-button>
+        <el-button type="primary" @click="onSubmit(formRef)">
+          提交
+        </el-button>
       </el-form-item>
     </el-form>
   </div>
   <CompanyEdit
     v-model="state.companyEditDialog"
     :company-detail="state.companyDetail"
-    @getCompanyList="getCompanyList"
+    @get-company-list="getCompanyList"
   />
   <AddressEdit
     v-model="state.addressEditDialog"
     :address-detail="state.addressDetail"
-    @getAddressList="getAddressList"
+    @get-address-list="getAddressList"
   />
 </template>
 
