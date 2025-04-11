@@ -1,7 +1,6 @@
 import main from '@/views/index.vue'
 import outOrder from '@/views/out-order/index.vue'
 import invoiceDetail from '@/views/invoice/detail.vue'
-import address from '@/views/address/index.vue'
 import company from '@/views/company/index.vue'
 import mergeMake from '@/views/make/merge-make.vue'
 import singleOrder from '@/views/make/single-order.vue'
@@ -46,21 +45,6 @@ const routes = [
       {
         title: '发票详情',
         path: '/invoice/detail',
-      },
-    ],
-  },
-  {
-    path: '/address',
-    name: 'address',
-    component: address,
-    breadcrumb: [
-      {
-        title: '发票管理',
-        path: '/',
-      },
-      {
-        title: '邮寄地址管理',
-        path: '/address',
       },
     ],
   },

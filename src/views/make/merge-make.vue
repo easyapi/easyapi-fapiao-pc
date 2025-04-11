@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
 import {
-  defaultAddressApi,
-  deleteAddressApi,
-  getAddressListApi,
-} from '@/api/address'
-import {
   deleteCompanyApi,
   getCompanyListApi,
   updateCompanySetDefaultApi,
@@ -15,7 +10,6 @@ import { findSettingApi } from '@/api/setting'
 import { invoiceTag } from '@/utils/invoice-category'
 import { localStorage } from '@/utils/local-storage'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import AddressEdit from '../address/components/edit.vue'
 import CompanyEdit from '../company/components/edit.vue'
 
 const formRef = ref<FormInstance>()
@@ -28,7 +22,6 @@ const state = reactive({
   addressEditDialog: false,
   companyDetail: null,
   addressDetail: null,
-  addressList: [],
   price: 0 as any,
   form: {
     category: '',
@@ -120,67 +113,6 @@ function findSetting() {
       })
     }
   })
-}
-
-/**
- * 获地址列表
- */
-function getAddressList() {
-  const params = {}
-  getAddressListApi(params).then((res) => {
-    if (res.code === 1) {
-      state.addressList = res.content
-      for (const address of state.addressList) {
-        if (address.ifDefault)
-          state.form.addressId = address.addressId
-      }
-    }
-    else {
-      state.addressList = []
-      state.form.addressId = ''
-    }
-  })
-}
-
-/**
- * 删除地址
- */
-function deleteAddress(addressId) {
-  ElMessageBox.confirm('您确定要删除该地址吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    deleteAddressApi(addressId).then((res) => {
-      if (res.code === 1) {
-        ElMessage.success(res.message)
-        getAddressList()
-      }
-    })
-  })
-}
-
-/**
- * 设置默认地址
- */
-function defaultAddress(event) {
-  if (event.ifDefault)
-    return
-
-  defaultAddressApi(event.addressId).then((res) => {
-    if (res.code === 1) {
-      ElMessage.success(res.message)
-      getAddressList()
-    }
-  })
-}
-
-/**
- * 打开地址抬头弹窗
- */
-function openAddressEditModal(event) {
-  state.addressEditDialog = true
-  state.addressDetail = event
 }
 
 /**
@@ -294,7 +226,6 @@ async function onSubmit(formEl: FormInstance | undefined) {
 onMounted(() => {
   state.price = route.query.price
   getCompanyList()
-  getAddressList()
   findSetting()
 })
 </script>
@@ -449,66 +380,6 @@ onMounted(() => {
         />
       </el-form-item>
 
-      <h3
-        v-if="state.form.property === '纸质'"
-        class="text-base font-semibold mt-4"
-      >
-        邮寄地址
-      </h3>
-      <div v-if="state.form.property === '纸质'" class="flex flex-wrap">
-        <div
-          v-for="(item, index) in state.addressList"
-          :key="index"
-          :class="item.ifDefault ? 'border-blue-600 relative' : ''"
-          class="address-item rounded border px-4 pb-4 mr-4 mt-4 cursor-pointer hover:border-blue-600"
-          @click="defaultAddress(item)"
-        >
-          <div class="flex justify-between items-center border-b h-10 mb-2">
-            <span class="text-base font-semibold">{{ item.name }}</span>
-            <el-tag v-if="item.ifDefault" type="primary" effect="dark">
-              默认
-            </el-tag>
-            <span v-else class="text-blue-400">设为默认</span>
-          </div>
-          <div class="leading-7">
-            <p class="overflow">
-              {{ item.mobile }}
-            </p>
-            <p class="overflow">
-              {{ item.province }}&nbsp;&nbsp;{{ item.city }}&nbsp;&nbsp;{{
-                item.district
-              }}
-            </p>
-            <p class="overflow">
-              {{ item.addr }}
-            </p>
-          </div>
-          <div class="mt-4">
-            <el-button type="primary" @click.stop="openAddressEditModal(item)">
-              修改
-            </el-button>
-            <el-button
-              type="danger"
-              plain
-              @click.stop="deleteAddress(item.addressId)"
-            >
-              删除
-            </el-button>
-          </div>
-          <img
-            v-if="item.ifDefault"
-            src="../../assets/images/default.png"
-            class="absolute bottom-0 right-0"
-          >
-        </div>
-        <div
-          v-if="state.companyList.length < 6"
-          class="add-address flex border mt-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
-          @click="openAddressEditModal(null)"
-        >
-          <img src="../../assets/images/plus.png" alt="">
-        </div>
-      </div>
       <el-form-item class="mt-4">
         <el-button type="primary" @click="onSubmit(formRef)">
           提交
@@ -520,11 +391,6 @@ onMounted(() => {
     v-model="state.companyEditDialog"
     :company-detail="state.companyDetail"
     @get-company-list="getCompanyList"
-  />
-  <AddressEdit
-    v-model="state.addressEditDialog"
-    :address-detail="state.addressDetail"
-    @get-address-list="getAddressList"
   />
 </template>
 

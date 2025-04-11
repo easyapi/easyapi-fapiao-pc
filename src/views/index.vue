@@ -7,7 +7,6 @@ import {
 import { localStorage } from '@/utils/local-storage'
 import { Edit } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getDefaultAddressApi } from '../api/address'
 import { getDefaultCompanyApi } from '../api/company'
 import { getCustomerApi } from '../api/customer'
 import { findSettingApi } from '../api/setting'
@@ -19,8 +18,6 @@ const state = reactive({
   customer: { balance: 0 }, // 开票用户客户信息
   showInfo: true,
   defaultCompany: {},
-  showAddressInfo: true,
-  defaultAddress: {},
   statementsList: [],
   tableData: [],
   content: '', // 底部备注
@@ -65,21 +62,6 @@ function getDefaultCompany() {
     }
     else if (res.code === 0) {
       state.showInfo = false
-    }
-  })
-}
-
-/**
- * 获取默认邮寄地址
- */
-function getDefaultAddress() {
-  getDefaultAddressApi().then((res) => {
-    if (res.code === 1) {
-      state.defaultAddress = res.content
-      state.showAddressInfo = true
-    }
-    else if (res.code === 0) {
-      state.showAddressInfo = false
     }
   })
 }
@@ -210,7 +192,6 @@ onMounted(() => {
 
   getCustomer()
   getDefaultCompany()
-  getDefaultAddress()
   getInvoiceList()
   getInvoiceStatementsList()
   findSetting()
@@ -259,46 +240,6 @@ onMounted(() => {
           <span
             class="ml-1 text-blue-500 cursor-pointer"
             @click="gotoPage('/company')"
-          >
-            现在填写
-            <el-icon class="align-middle" :size="16">
-              <Edit />
-            </el-icon>
-          </span>
-        </div>
-      </div>
-      <div class="w-1/3">
-        <p class="text-base mb-4 font-semibold">
-          邮寄信息
-        </p>
-        <div v-if="state.showAddressInfo">
-          <div class="mb-4">
-            <span class="text-gray-400">收件人：</span>
-            <span class="mr-4">{{ state.defaultAddress.name }}</span>
-            <span>{{ state.defaultAddress.mobile }}</span>
-          </div>
-          <div class="mb-4">
-            <span class="text-gray-400">地址：</span>
-            <span>{{ state.defaultAddress.province }}</span>
-            <span class="mx-2">{{ state.defaultAddress.city }}</span>
-            <span class="mr-2">{{ state.defaultAddress.district }}</span>
-            <span>{{ state.defaultAddress.addr }}</span>
-          </div>
-          <span
-            class="text-blue-500 cursor-pointer"
-            @click="gotoPage('/address')"
-          >
-            更改邮寄地址
-            <el-icon class="align-middle" :size="16">
-              <Edit />
-            </el-icon>
-          </span>
-        </div>
-        <div v-else>
-          <span>您还没有填写邮寄信息</span>
-          <span
-            class="ml-1 text-blue-500 cursor-pointer"
-            @click="gotoPage('/address')"
           >
             现在填写
             <el-icon class="align-middle" :size="16">
