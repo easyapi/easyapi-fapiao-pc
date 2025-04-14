@@ -165,6 +165,8 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
+@import "tailwindcss";
+
 .company {
   .company-item,
   .add-company {

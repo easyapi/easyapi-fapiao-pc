@@ -8,6 +8,7 @@ import router from './router'
 import 'element-plus/dist/index.css'
 import './app.less'
 import './assets/styles/index.css'
+import './assets/styles/tailwind.css'
 
 const app = createApp(App)
 const pinia = createPinia()

@@ -7,6 +7,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import { visualizer } from 'rollup-plugin-visualizer'
 import AutoImport from 'unplugin-auto-import/vite'
 
+import tailwindcss from '@tailwindcss/postcss'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { loadEnv } from 'vite'
@@ -57,6 +58,14 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         },
       }),
     ],
+
+    css: {
+      postcss: {
+        plugins: [
+          tailwindcss(),
+        ],
+      },
+    },
 
     build: {
       cssCodeSplit: false,

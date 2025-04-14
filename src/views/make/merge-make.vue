@@ -395,6 +395,8 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
+@import "tailwindcss";
+
 .selectStyle {
   @apply border border-blue-600 text-blue-600;
 }
