@@ -1,13 +1,13 @@
 import type { ConfigEnv, UserConfig } from 'vite'
 import path from 'node:path'
-import legacy from '@vitejs/plugin-legacy'
+import tailwindcss from '@tailwindcss/postcss'
 
+import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { visualizer } from 'rollup-plugin-visualizer'
-import AutoImport from 'unplugin-auto-import/vite'
 
-import tailwindcss from '@tailwindcss/postcss'
+import AutoImport from 'unplugin-auto-import/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
 import { loadEnv } from 'vite'
