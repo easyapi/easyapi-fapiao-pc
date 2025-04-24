@@ -1,10 +1,10 @@
-import main from '@/views/index.vue'
-import outOrder from '@/views/out-order/index.vue'
-import invoiceDetail from '@/views/invoice/detail.vue'
 import company from '@/views/company/index.vue'
+import main from '@/views/index.vue'
+import invoiceDetail from '@/views/invoice/detail.vue'
 import mergeMake from '@/views/make/merge-make.vue'
 import singleOrder from '@/views/make/single-order.vue'
 import singleQueryOrder from '@/views/make/single-query-order.vue'
+import outOrder from '@/views/out-order/index.vue'
 
 const routes = [
   {
