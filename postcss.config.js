@@ -1,6 +1,7 @@
 module.exports = {
   plugins: {
-    tailwindcss: {},
+    'postcss-less': {}, // 支持LESS语法解析
+    '@tailwindcss/postcss': {},
     autoprefixer: {},
   },
 }

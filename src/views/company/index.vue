@@ -103,7 +103,7 @@ onMounted(() => {
       >
         <div
           :class="item.ifDefault ? ' border-blue-600 relative ' : ''"
-          class="company-item rounded border px-4 pb-4 mr-4 mb-4 cursor-pointer hover:border-blue-600"
+          class="company-item rounded border border-[var(--el-border-color)] px-4 pb-4 mr-4 mb-4 cursor-pointer hover:border-blue-600"
         >
           <div class="flex justify-between items-center border-b h-10 mb-2">
             <span class="text-base font-semibold">{{ item.name }}</span>
@@ -146,7 +146,7 @@ onMounted(() => {
       </div>
       <div
         v-if="state.tableData.length < 6"
-        class="add-company flex border mb-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
+        class="add-company flex border border-[var(--el-border-color)] mb-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
         @click="openEditModal(null)"
       >
         <img src="../../assets/images/plus.png" alt="">

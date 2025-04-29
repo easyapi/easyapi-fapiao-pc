@@ -238,7 +238,7 @@ onMounted(() => {
       :rules="formRules"
       label-width="auto"
     >
-      <h3 class="text-base font-semibold my-4">
+      <h3 class="text-base font-semibold !my-4">
         发票类型
       </h3>
       <div class="w-full">
@@ -249,7 +249,7 @@ onMounted(() => {
             :span="8"
           >
             <div
-              class="flex items-center justify-center w-full h-32 mr-4 mb-4 rounded border cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
+              class="flex items-center justify-center w-full h-32 mr-4 mb-4 rounded border border-[var(--el-border-color)] cursor-pointer relative hover:border-blue-600 hover:text-blue-600"
               :class="{ selectStyle: state.form.category === item }"
               @click="selectCategory(item)"
             >
@@ -276,7 +276,7 @@ onMounted(() => {
           </el-col>
         </el-row>
       </div>
-      <h3 class="text-base font-semibold my-4">
+      <h3 class="text-base font-semibold !my-4">
         发票抬头
       </h3>
       <el-form-item label="抬头类型" prop="type">
@@ -305,10 +305,10 @@ onMounted(() => {
           v-for="(item, index) in state.companyList"
           :key="index"
           :class="item.ifDefault ? 'border-blue-600 relative' : ''"
-          class="company-item rounded border px-4 pb-4 mr-4 mt-4 cursor-pointer hover:border-blue-600"
+          class="company-item rounded border border-[var(--el-border-color)] px-4 pb-4 mb-4 mr-4 cursor-pointer hover:border-blue-600"
           @click="updateCompanySetDefault(item)"
         >
-          <div class="flex justify-between items-center border-b h-10 mb-2">
+          <div class="flex justify-between items-center border-b border-[var(--el-border-color)] mb-4 h-10 mb-2">
             <span class="text-base font-semibold">{{ item.name }}</span>
             <el-tag v-if="item.ifDefault" type="primary" effect="dark">
               默认
@@ -338,13 +338,13 @@ onMounted(() => {
         </div>
         <div
           v-if="state.companyList.length < 6"
-          class="add-company flex border mt-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
+          class="add-company flex border border-[var(--el-border-color)] mb-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
           @click="openCompanyEditModal(null)"
         >
           <img src="../../assets/images/plus.png" alt="">
         </div>
       </div>
-      <h3 class="text-base font-semibold my-4">
+      <h3 class="text-base font-semibold !my-4">
         发票信息
       </h3>
       <el-form-item label="发票金额">

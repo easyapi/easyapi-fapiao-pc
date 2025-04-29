@@ -10,20 +10,23 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { getDefaultCompanyApi } from '../api/company'
 import { getCustomerApi } from '../api/customer'
 import { findSettingApi } from '../api/setting'
+import ChangeReceiveMode from '@/components/ChangeReceiveMode/index.vue'
 
 const route = useRoute()
 const router = useRouter()
 
 const state = reactive({
-  customer: { balance: 0 }, // 开票用户客户信息
+  customer: { balance: 0 } as any, // 开票用户客户信息
   showInfo: true,
-  defaultCompany: {},
-  statementsList: [],
-  tableData: [],
+  defaultCompany: {} as any,
+  statementsList: [] as any,
+  tableData: [] as any,
   content: '', // 底部备注
   loading: false,
   time: '',
   makeInvoiceTime: '',
+
+  changeMode:  false, // 是否显示更改接收方式弹窗
 })
 
 const query = reactive({
@@ -177,6 +180,13 @@ function handleSizeChange(size) {
 }
 
 /**
+ * 改变接收方式
+ */
+function changeMode() {
+  state.changeMode = true
+}
+
+/**
  * 跳转
  */
 function gotoPage(path) {
@@ -248,8 +258,44 @@ onMounted(() => {
           </span>
         </div>
       </div>
+      <div class="w-1/3">
+        <div class="text-base mb-4 font-semibold">
+          接收方式
+        </div>
+        <div v-if="state.showInfo">
+          <div class="mb-4">
+            <span class="text-gray-400">邮箱：</span>
+            <span>{{ state.customer.email }}</span>
+          </div>
+          <div class="mb-4">
+            <span class="text-gray-400">手机号码：</span>
+            <span>{{ state.customer.mobile }}</span>
+          </div>
+          <span
+            class="text-blue-500 cursor-pointer"
+            @click="changeMode()"
+          >
+            更改接收方式
+            <el-icon class="align-middle" :size="16">
+              <Edit />
+            </el-icon>
+          </span>
+        </div>
+        <div v-else>
+          <span>您还没有填写开票信息</span>
+          <span
+            class="ml-1 text-blue-500 cursor-pointer"
+            @click="gotoPage('/company')"
+          >
+            现在填写
+            <el-icon class="align-middle" :size="16">
+              <Edit />
+            </el-icon>
+          </span>
+        </div>
+      </div>
     </div>
-    <el-form class="mt-6" :inline="true" :model="query" label-width="80px">
+    <el-form class="!mt-6" :inline="true" :model="query" label-width="80px">
       <el-form-item label="申请时间">
         <el-date-picker
           v-model="state.time"
@@ -262,7 +308,7 @@ onMounted(() => {
         />
       </el-form-item>
       <el-form-item label="发票状态">
-        <el-select v-model="query.statements" clearable placeholder="发票状态">
+        <el-select v-model="query.statements" clearable placeholder="发票状态" class="!w-60">
           <el-option
             v-for="item in state.statementsList"
             :key="item"
@@ -346,6 +392,7 @@ onMounted(() => {
       />
     </div>
     <div v-if="state.content" class="mt-6" v-html="state.content" />
+    <ChangeReceiveMode v-model="state.changeMode" :company-detail="state.companyDetail" />
   </div>
 </template>
 

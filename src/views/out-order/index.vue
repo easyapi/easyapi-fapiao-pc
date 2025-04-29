@@ -351,7 +351,7 @@ onMounted(() => {
         @size-change="handleSizeChange"
       />
     </div>
-    <div class="border mt-6 text-right p-3 flex justify-end">
+    <div class="border border-[var(--el-border-color)] mt-6 text-right p-3 flex justify-end">
       <div class="flex items-center">
         <sapn>已选订单数：{{ state.checkData.length }}个</sapn>
         <span class="ml-6">开票金额：</span>
