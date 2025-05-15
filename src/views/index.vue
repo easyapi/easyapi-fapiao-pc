@@ -4,13 +4,13 @@ import {
   getInvoiceStatementsListApi,
   invoiceExportApi,
 } from '@/api/invoice'
+import ChangeReceiveMode from '@/components/ChangeReceiveMode/index.vue'
 import { localStorage } from '@/utils/local-storage'
 import { Edit } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getDefaultCompanyApi } from '../api/company'
 import { getCustomerApi } from '../api/customer'
 import { findSettingApi } from '../api/setting'
-import ChangeReceiveMode from '@/components/ChangeReceiveMode/index.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -26,7 +26,8 @@ const state = reactive({
   time: '',
   makeInvoiceTime: '',
 
-  changeMode:  false, // 是否显示更改接收方式弹窗
+  changeMode: false, // 是否显示更改接收方式弹窗
+  companyDetail: {},
 })
 
 const query = reactive({
@@ -109,7 +110,7 @@ function findSetting() {
   })
 }
 
-function timeRangeChange(time) {
+function timeRangeChange(time: any) {
   if (time) {
     query.startAddTime = time[0] ? `${time[0]} 00:00:00` : time[0]
     query.endAddTime = time[1] ? `${time[1]} 23:59:59` : time[1]
@@ -120,7 +121,7 @@ function timeRangeChange(time) {
   }
 }
 
-function makeInvoiceTimeRangeChange(time) {
+function makeInvoiceTimeRangeChange(time: any) {
   if (time) {
     query.startPrintTime = time[0] ? `${time[0]} 00:00:00` : time[0]
     query.endPrintTime = time[1] ? `${time[1]} 23:59:59` : time[1]
@@ -169,12 +170,12 @@ function getInvoiceList() {
   })
 }
 
-function handleCurrentChange(page) {
+function handleCurrentChange(page: number) {
   pagination.page = page
   getInvoiceList()
 }
 
-function handleSizeChange(size) {
+function handleSizeChange(size: number) {
   pagination.size = size
   getInvoiceList()
 }
@@ -189,7 +190,7 @@ function changeMode() {
 /**
  * 跳转
  */
-function gotoPage(path) {
+function gotoPage(path: string) {
   router.push(path)
 }
 
@@ -260,7 +261,7 @@ onMounted(() => {
       </div>
       <div class="w-1/3">
         <div class="text-base mb-4 font-semibold">
-          接收方式
+          接收信息
         </div>
         <div v-if="state.showInfo">
           <div class="mb-4">
@@ -275,7 +276,7 @@ onMounted(() => {
             class="text-blue-500 cursor-pointer"
             @click="changeMode()"
           >
-            更改接收方式
+            更改接收信息
             <el-icon class="align-middle" :size="16">
               <Edit />
             </el-icon>
@@ -392,7 +393,7 @@ onMounted(() => {
       />
     </div>
     <div v-if="state.content" class="mt-6" v-html="state.content" />
-    <ChangeReceiveMode v-model="state.changeMode" :company-detail="state.companyDetail" />
+    <ChangeReceiveMode v-model="state.changeMode" :customer-detail="state.customer" @get-customer="getCustomer" />
   </div>
 </template>
 

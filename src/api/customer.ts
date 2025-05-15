@@ -13,3 +13,11 @@ export async function getCustomerApi(): Promise<any> {
     },
   })
 }
+
+/**
+ * 修改我的客户信息
+ */
+export async function updateCustomerApi(id: number, data: any): Promise<any> {
+  data.accessToken = localStorage.get('accessToken')
+  return request.put(`/customer/${id}`, data)
+}

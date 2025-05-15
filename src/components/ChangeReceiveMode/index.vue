@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { FormInstance, FormRules } from 'element-plus'
-import { createCompanyApi, updateCompanyApi } from '@/api/company'
+import type { FormInstance } from 'element-plus'
+import { updateCustomerApi } from '@/api/customer'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const props = defineProps({
@@ -8,13 +8,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  companyDetail: {
+  customerDetail: {
     type: Object,
-    default: null,
+    default: () => {},
   },
 })
 
-const emit = defineEmits(['update:modelValue', 'getCompanyList'])
+const emit = defineEmits(['update:modelValue', 'getCustomer'])
 
 const formRef = ref<FormInstance>()
 
@@ -22,6 +22,7 @@ const state = reactive({
   showDialog: false,
   title: '',
   form: {} as any,
+  customerId: null as any,
 })
 
 /**
@@ -46,24 +47,13 @@ async function onSubmit(formEl: FormInstance | undefined) {
         type: 'warning',
       }).then(() => {
         const data = state.form
-        if (state.form.companyId) {
-          updateCompanyApi(state.form.companyId, data).then((res) => {
-            if (res.code === 1) {
-              ElMessage.success('编辑成功')
-              handleClose()
-              emit('getCompanyList')
-            }
-          })
-        }
-        else {
-          createCompanyApi(data).then((res) => {
-            if (res.code === 1) {
-              ElMessage.success('添加成功')
-              handleClose()
-              emit('getCompanyList')
-            }
-          })
-        }
+        updateCustomerApi(state.customerId, data).then((res) => {
+          if (res.code === 1) {
+            ElMessage.success(res.message)
+            handleClose()
+            emit('getCustomer')
+          }
+        })
       })
     }
   })
@@ -73,6 +63,13 @@ watch(
   () => props.modelValue,
   (value) => {
     state.showDialog = value
+    if (value) {
+      state.form = {
+        email: props.customerDetail.email,
+        mobile: props.customerDetail.mobile,
+      }
+      state.customerId = props.customerDetail.customerId
+    }
   },
   { immediate: true },
 )
