@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { ElMessage } from 'element-plus'
 import { getInvoiceApi } from '@/api/invoice'
 import { getOutOrderListApi } from '@/api/out-order'
 import { copyText } from '@/utils/invoice'
-import { ElMessage } from 'element-plus'
 
 const route = useRoute()
 
@@ -10,6 +10,8 @@ const state = reactive({
   invoiceDetail: null,
   outOrderList: [],
 })
+
+const invoiceImageRef = ref()
 
 /**
  * 获取外部订单列表
@@ -40,7 +42,7 @@ function getInvoice() {
  */
 function getTaxAmount() {
   let sum = 0
-  state.invoiceDetail.invoiceItems.map((item) => {
+  state.invoiceDetail.invoiceItems.forEach((item) => {
     sum += item.tax
   })
   return sum
@@ -51,7 +53,7 @@ function getTaxAmount() {
  */
 function getPriceAmount() {
   let sum = 0
-  state.invoiceDetail.invoiceItems.map((item: any) => {
+  state.invoiceDetail.invoiceItems.forEach((item: any) => {
     sum += item.sum
   })
   return sum
@@ -69,6 +71,13 @@ function copyInvoiceInfo() {
   })
 }
 
+/**
+ * 预览发票
+ */
+function previewInvoice() {
+  invoiceImageRef.value?.showPreview?.()
+}
+
 onMounted(() => {
   getInvoice()
   getOutOrderList()
@@ -80,15 +89,20 @@ onMounted(() => {
     <div v-if="state.invoiceDetail.state === 1" class="mt-6">
       <el-image
         v-if="state.invoiceDetail.electronicInvoiceImg"
+        ref="invoiceImageRef"
         class="absolute w-24 h-8 opacity-0"
         :src="state.invoiceDetail.electronicInvoiceImg"
         :zoom-rate="1.2"
         :preview-src-list="[state.invoiceDetail.electronicInvoiceImg]"
-        :initial-index="1"
+        :initial-index="0"
         :preview-teleported="true"
         fit="cover"
       />
-      <el-button v-if="state.invoiceDetail.electronicInvoiceImg" type="primary">
+      <el-button
+        v-if="state.invoiceDetail.electronicInvoiceImg"
+        type="primary"
+        @click="previewInvoice"
+      >
         预览发票
       </el-button>
       <el-button
