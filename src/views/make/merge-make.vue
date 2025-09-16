@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   deleteCompanyApi,
   getCompanyListApi,
@@ -9,7 +10,6 @@ import { mergeMakeApi } from '@/api/invoice'
 import { findSettingApi } from '@/api/setting'
 import { invoiceTag } from '@/utils/invoice-category'
 import { localStorage } from '@/utils/local-storage'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import CompanyEdit from '../company/components/edit.vue'
 
 const formRef = ref<FormInstance>()

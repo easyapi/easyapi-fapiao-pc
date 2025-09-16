@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
-import { createCompanyApi, updateCompanyApi } from '@/api/company'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { createCompanyApi, updateCompanyApi } from '@/api/company'
 
 const props = defineProps({
   modelValue: {

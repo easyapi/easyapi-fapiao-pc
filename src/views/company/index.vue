@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   deleteCompanyApi,
   getCompanyListApi,
   getIfManageCompanyApi,
   updateCompanySetDefaultApi,
 } from '@/api/company'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import Edit from './components/edit.vue'
 
 const editRef = ref()
@@ -105,7 +105,7 @@ onMounted(() => {
           :class="item.ifDefault ? ' border-blue-600 relative ' : ''"
           class="company-item rounded border border-[var(--el-border-color)] px-4 pb-4 mr-4 mb-4 cursor-pointer hover:border-blue-600"
         >
-          <div class="flex justify-between items-center border-b h-10 mb-2">
+          <div class="flex justify-between items-center border-b border-gray-200 h-10 mb-2">
             <span class="text-base font-semibold">{{ item.name }}</span>
             <el-tag v-if="item.ifDefault" type="primary" effect="dark">
               默认
@@ -146,7 +146,7 @@ onMounted(() => {
       </div>
       <div
         v-if="state.tableData.length < 6"
-        class="add-company flex border border-[var(--el-border-color)] mb-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
+        class="add-company flex border border-[var(--el-border-color)] px-4 pb-4 mb-4 mr-4 items-center justify-center cursor-pointer rounded hover:shadow-md"
         @click="openEditModal(null)"
       >
         <img src="../../assets/images/plus.png" alt="">
@@ -164,17 +164,32 @@ onMounted(() => {
   />
 </template>
 
-<style lang="less" scoped>
-@import "tailwindcss";
-
+<style scoped>
 .company {
-  .company-item,
-  .add-company {
-    width: 345px;
+  .company-item {
+    min-width: 280px;
+    width: calc(33.333% - 16px);
     height: 250px;
+    flex: 0 0 calc(33.333% - 16px);
+  }
+  .add-company {
+    min-width: 280px;
+    width: calc(33.333% - 16px);
+    height: 250px;
+    flex: 0 0 calc(33.333% - 16px);
   }
   .overflow {
     @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .company {
+    .company-item,
+    .add-company {
+      width: 100%;
+      flex: 0 0 100%;
+    }
   }
 }
 </style>

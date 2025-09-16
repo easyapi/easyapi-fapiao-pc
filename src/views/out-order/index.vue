@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { ElMessage, ElTable } from 'element-plus'
 import { getCustomerApi } from '@/api/customer'
 import { getOrderTypeListApi } from '@/api/order-type'
 import { getOutOrderListApi } from '@/api/out-order'
 import { localStorage } from '@/utils/local-storage'
-import { ElMessage, ElTable } from 'element-plus'
 
 const outOrderTableRef = ref<InstanceType<typeof ElTable>>()
 
