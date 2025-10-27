@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { Edit } from '@element-plus/icons-vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   getInvoiceListApi,
   getInvoiceStatementsListApi,
   invoiceExportApi,
 } from '@/api/invoice'
 import ChangeReceiveMode from '@/components/ChangeReceiveMode/index.vue'
+import {
+  invoiceState,
+  invoiceTag,
+} from '@/utils/invoice-category'
 import { localStorage } from '@/utils/local-storage'
+import { Edit, QuestionFilled } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { getDefaultCompanyApi } from '../api/company'
 import { getCustomerApi } from '../api/customer'
 import { findSettingApi } from '../api/setting'
@@ -357,16 +361,61 @@ onMounted(() => {
       class="mt-2"
     >
       <el-table-column label="申请日期" prop="addTime" align="center" />
-      <el-table-column label="发票类型" prop="category" align="center" />
+      <el-table-column label="发票类型" align="center">
+        <template #default="scope">
+          <el-tag :style="`background-color:${invoiceTag(scope.row).bgColor};color:${invoiceTag(scope.row).color};border-color:${invoiceTag(scope.row).bgColor}`">
+            {{ invoiceTag(scope.row).name }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="发票抬头" prop="purchaserName" align="center" width="250" />
       <el-table-column label="金额" align="center">
         <template #default="scope">
-          {{ scope.row.price }}元
+          <div :class="scope.row.price < 0 ? 'text-red-600' : ''">
+            {{ scope.row.price }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="发票状态" align="center">
         <template #default="scope">
-          {{ scope.row.statements }}
+          <el-tooltip
+            v-if="scope.row.statements === '开票失败' || scope.row.statements === '开票中'"
+            class="item"
+            effect="dark"
+            :content="scope.row.failMsg"
+            placement="right"
+          >
+            <el-tag
+              :style="`background-color:${invoiceState(scope.row.statements).bgColor};color:${invoiceState(scope.row.statements).color};border-color:${invoiceState(scope.row.statements).bgColor}`"
+            >
+              {{ scope.row.statements }}
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tag>
+          </el-tooltip>
+          <el-tooltip
+            v-else-if="scope.row.statements === '审核未通过'"
+            class="item"
+            effect="dark"
+            :content="scope.row.consoleReason"
+            placement="right"
+          >
+            <el-tag
+              :style="`background-color:${invoiceState(scope.row.statements).bgColor};color:${invoiceState(scope.row.statements).color};border-color:${invoiceState(scope.row.statements).bgColor}`"
+            >
+              {{ scope.row.statements }}
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tag>
+          </el-tooltip>
+          <el-tag
+            v-else
+            :style="`background-color:${invoiceState(scope.row.statements).bgColor};color:${invoiceState(scope.row.statements).color};border-color:${invoiceState(scope.row.statements).bgColor}`"
+          >
+            {{ scope.row.statements }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">

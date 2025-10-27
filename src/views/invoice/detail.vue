@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ElMessage } from 'element-plus'
 import { getInvoiceApi } from '@/api/invoice'
 import { getOutOrderListApi } from '@/api/out-order'
 import { copyText } from '@/utils/invoice'
+import { ElMessage } from 'element-plus'
 
 const route = useRoute()
 
@@ -85,12 +85,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="state.invoiceDetail" class="invoiceDetail">
+  <div v-if="state.invoiceDetail" class="invoiceDetail relative">
     <div v-if="state.invoiceDetail.state === 1" class="mt-6">
       <el-image
         v-if="state.invoiceDetail.electronicInvoiceImg"
         ref="invoiceImageRef"
-        class="absolute w-24 h-8 opacity-0"
+        class="absolute w-0 h-0 opacity-0"
         :src="state.invoiceDetail.electronicInvoiceImg"
         :zoom-rate="1.2"
         :preview-src-list="[state.invoiceDetail.electronicInvoiceImg]"
