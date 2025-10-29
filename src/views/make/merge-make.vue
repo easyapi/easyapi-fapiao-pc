@@ -101,10 +101,10 @@ function findSetting() {
           state.form.category = item.fieldValue
         }
         if (item.fieldKey === 'if_need_mobile') {
-          setting.if_need_mobile = item.fieldValue != 'false'
+          setting.if_need_mobile = item.fieldValue !== 'false'
         }
         if (item.fieldKey === 'if_need_email') {
-          setting.if_need_email = item.fieldValue != 'false'
+          setting.if_need_email = item.fieldValue !== 'false'
         }
         if (item.fieldKey === 'h5_pc_invoice_categories') {
           state.invoiceCategories = JSON.parse(item.fieldValue)
@@ -403,17 +403,15 @@ onMounted(() => {
 
 .company-item,
 .add-company {
-  width: 345px;
-  height: 140px;
+  @apply w-[345px] h-[140px];
 }
 
 .address-item,
 .add-address {
-  width: 345px;
-  height: 200px;
+  @apply w-[345px] h-[200px];
 }
 
 .overflow {
-  @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
+  @apply overflow-hidden text-ellipsis whitespace-nowrap;
 }
 </style>
