@@ -164,7 +164,8 @@ onMounted(() => {
   />
 </template>
 
-<style scoped>
+<style lang="less" scoped>
+@import "tailwindcss";
 .company {
   .company-item {
     min-width: 280px;
@@ -179,7 +180,9 @@ onMounted(() => {
     flex: 0 0 calc(33.333% - 16px);
   }
   .overflow {
-    @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
+    @apply overflow-hidden;
+    @apply text-ellipsis;
+    @apply whitespace-nowrap;
   }
 }
 

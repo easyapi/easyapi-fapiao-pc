@@ -398,20 +398,26 @@ onMounted(() => {
 @import "tailwindcss";
 
 .selectStyle {
-  @apply border border-blue-600 text-blue-600;
+  @apply border;
+  @apply border-blue-600;
+  @apply text-blue-600;
 }
 
 .company-item,
 .add-company {
-  @apply w-[345px] h-[140px];
+  width: 345px;
+  height: 140px;
 }
 
 .address-item,
 .add-address {
-  @apply w-[345px] h-[200px];
+  width: 345px;
+  height: 200px;
 }
 
 .overflow {
-  @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  @apply overflow-hidden;
+  @apply text-ellipsis;
+  @apply whitespace-nowrap;
 }
 </style>
